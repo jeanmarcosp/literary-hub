@@ -1,3 +1,4 @@
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
@@ -36,27 +37,52 @@ app.listen(port, () => {
 
 //below blocks from chatgpt as scaffold
 
-// Define a MongoDB model for your data
+// a MongoDB model for your data
 const Entry = mongoose.model('Entry', {
-    // Define your schema here
-  });
+  author: String,  
+  title: String,
+  poemText: String,  
+});
 
-// Create an endpoint to populate your database
+// an endpoint to populate your database
 app.get('/populate', async (req, res) => {
-    try {
-      // Fetch data from the external API
-      const response = await axios.get('YOUR_API_ENDPOINT');
-      const data = response.data;
-  
-      // Insert data into your MongoDB database
-      await Entry.insertMany(data);
-  
-      res.status(200).json({ message: 'Data inserted into the database' });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Error populating the database' });
+  try {
+    // populate your MongoDB database with poems
+    await fetchDataFromPoetryDB();
+
+    res.status(200).json({ message: 'Data inserted into the database' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error populating the database' });
+  }
+});
+
+const fetchDataFromPoetryDB = async () => {
+  try {
+    // get all authors
+    const authorsResponse = await axios.get('https://poetrydb.org/author');
+    const authors = authorsResponse.data.authors;
+
+    // get all poems for each author
+    for (const author of authors) {
+      const poemsResponse = await axios.get(`https://poetrydb.org/author/${author}`);
+      const poems = poemsResponse.data;
+
+      // put into database
+      for (const poem of poems) {
+        const title = poem.title;
+        const poemText = poem.lines.join('\n');
+        await Entry.create({ author, title, poemText });
+      }
     }
-  });
+
+    console.log('Data inserted into the database.');
+  } catch (error) {
+    console.error('Error:', error);
+  } finally {
+    mongoose.disconnect();
+  }
+};
 
 //run `yarn start` and check database to see if it worked
 //we might need to destructure code so we are not repopulating the db everytime
