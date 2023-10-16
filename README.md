@@ -17,6 +17,12 @@ TODO:  descriptions of code organization and tools and libraries used
 `yarn add @react-navigation/native-stack`\
 `yarn add @react-navigation/bottom-tabs`
 
+`cd mongo-api`\
+`yarn add body-parser express cors jsonwebtoken mongoose nodemailer nodemon axios`\
+`yarn start`
+- should see "Connected to MongoDB" and "Server running on port 3000"
+- leave running on terminal and open new terminal to continue set up
+
 ## Deployment
 
 TODO: how to deploy the project
