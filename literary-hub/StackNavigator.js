@@ -5,7 +5,8 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import ExploreScreen from "./screens/ExploreScreen";
-import ProfileScreen from "./screens/ProfileScreen";
+import ProfileScreen from "./screens/Profile/ProfileScreen";
+import ProfileNavigator from "./screens/Profile/ProfileNavigator";
 import HomeScreen from "./screens/HomeScreen";
 
 const StackNavigator = () => {
@@ -48,7 +49,7 @@ const StackNavigator = () => {
 
         <Tab.Screen
           name="Profile"
-          component={ProfileScreen}
+          component={ProfileNavigator}
           options={{
             tabBarLabel: "Profile",
             tabBarLabelStyle: { color: "black" },

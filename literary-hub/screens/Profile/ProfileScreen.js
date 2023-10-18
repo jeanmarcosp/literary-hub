@@ -1,11 +1,11 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView } from 'react-native'
 import React from 'react'
 
 const ProfileScreen = () => {
   return (
-    <View style={styles.container}>
-      <Text>ProfileScreen</Text>
-    </View>
+    <SafeAreaView style={styles.container}>
+      <Text>ProfileScreen heheh</Text>
+    </SafeAreaView>
   )
 }
 
@@ -16,6 +16,5 @@ const styles = StyleSheet.create({
       flex: 1,
       backgroundColor: '#fff',
       alignItems: 'center',
-      justifyContent: 'center',
     },
   });
