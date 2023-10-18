@@ -4,7 +4,6 @@
   "description": "backend mongodb database for literary hub project",
   "main": "index.js",
   "scripts": {
-    "populate": "nodemon populatePoems.js",
     "start": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
