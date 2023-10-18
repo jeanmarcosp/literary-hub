@@ -20,6 +20,7 @@ async function fetchDataFromAPI() {
         const poemText = poem.lines.join('\n');
         const lineCount = poem.linecount;
         await Poem.create({ author, title, content: poemText, lineCount}); // Use Poem model
+
       }
     }
 
