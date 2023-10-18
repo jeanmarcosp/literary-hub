@@ -33,31 +33,3 @@ mongoose
 app.listen(port, () => {
   console.log("Server running on port 3000");
 });
-
-//below blocks from chatgpt as scaffold
-
-// Define a MongoDB model for your data
-const Entry = mongoose.model('Entry', {
-    // Define your schema here
-  });
-
-// Create an endpoint to populate your database
-app.get('/populate', async (req, res) => {
-    try {
-      // Fetch data from the external API
-      const response = await axios.get('YOUR_API_ENDPOINT');
-      const data = response.data;
-  
-      // Insert data into your MongoDB database
-      await Entry.insertMany(data);
-  
-      res.status(200).json({ message: 'Data inserted into the database' });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Error populating the database' });
-    }
-  });
-
-//run `yarn start` and check database to see if it worked
-//we might need to destructure code so we are not repopulating the db everytime
-//we run the app
