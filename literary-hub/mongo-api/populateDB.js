@@ -17,7 +17,9 @@ async function fetchDataFromAPI() {
       for (const poem of poems) {
         const title = poem.title;
         const poemText = poem.lines.join('\n');
-        await Poem.create({ author, title, content: poemText }); // Use Poem model
+        const lineCount = poem.linecount;
+        await Poem.create({ author, title, content: poemText, lineCount}); // Use Poem model
+
       }
     }
 
