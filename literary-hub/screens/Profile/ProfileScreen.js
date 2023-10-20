@@ -1,16 +1,21 @@
-import { StyleSheet, Text, View, SafeAreaView, Image } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
+import { Ionicons } from "@expo/vector-icons";
+
 
 const ProfileScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Image 
         source={{ uri: 'https://davidbruceblog.files.wordpress.com/2014/05/img_9760.jpg' }} 
-        style={{width: 100, height: 100, borderRadius: 100/ 2}} 
+        style={styles.profilePic}
       />
-      <Text style={styles.name}>Ava Robinson</Text>
-      <Text style={styles.username}>@dietcokelover89</Text>
       
+      <View style={styles.names}>
+        <Text style={styles.name}>Ava Robinson</Text>
+        <Text style={styles.username}>@dietcokelover89</Text>
+      </View>
+
       <View style={styles.metrics}>
         <View style={styles.metric}>
           <Text style={styles.metricNumber}>26</Text>
@@ -27,6 +32,13 @@ const ProfileScreen = () => {
           <Text style={styles.metricName}>Following</Text>
         </View>
       </View>
+
+      <TouchableOpacity>
+        <View style={styles.followButton}>
+          <Ionicons name="person-add-outline" size={17} color="white" />
+          <Text style={styles.followText}>Follow</Text>
+        </View>
+      </TouchableOpacity>
     </SafeAreaView>
   )
 }
@@ -38,7 +50,17 @@ const styles = StyleSheet.create({
       flex: 1,
       backgroundColor: '#fff',
       alignItems: 'center',
-      paddingTop: 50,
+    },
+
+    profilePic: {
+      width: 100,
+      height: 100,
+      borderRadius: 100/ 2,
+      marginTop: 20,
+    },
+
+    names: {
+      marginTop: 10,
     },
 
     name: {
@@ -50,9 +72,9 @@ const styles = StyleSheet.create({
     },
 
     metrics: {
-      flex: 1,
       flexDirection: 'row',
       columnGap: 20,
+      marginTop: 10,
     },
 
     metric: {
@@ -65,5 +87,23 @@ const styles = StyleSheet.create({
 
     metricName: {
 
+    },
+
+    followButton: {
+      flexDirection: 'row',
+      columnGap: 10,
+      alignItems: 'center',
+      borderWidth: 1,
+      borderColor: '#000',
+      borderRadius: 100,
+      paddingHorizontal: 20,
+      paddingVertical: 5,
+      backgroundColor: '#000',
+      marginTop: 15,
+    },
+
+    followText: {
+      fontSize: 17,
+      color: '#fff'
     }
   });
