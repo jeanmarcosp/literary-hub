@@ -1,11 +1,13 @@
 import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity } from 'react-native'
-import React from 'react'
+import { React, useState }from 'react'
 import { Ionicons } from "@expo/vector-icons";
-import SegmentedControl from '@react-native-segmented-control/segmented-control';
 
 
 
 const ProfileScreen = () => {
+
+  const [segmentedControlView, setSegmentedControlView] = useState('Collections')
+
   return (
     <SafeAreaView style={styles.container}>
       <Image 
@@ -41,6 +43,38 @@ const ProfileScreen = () => {
           <Text style={styles.followText}>Follow</Text>
         </View>
       </TouchableOpacity>
+
+      <View style={styles.segmentedControl}>
+        <TouchableOpacity onPress={() => setSegmentedControlView('Collections')}>
+          <View style={styles.segmentedControlSelected}>
+            <Text style={styles.segmentedControlSelectedText}>Collections</Text>
+          </View>
+        </TouchableOpacity>
+        
+        <TouchableOpacity onPress={() => setSegmentedControlView('Liked poems')}>
+          <View style={styles.segmentedControlUnselected}>
+            <Text style={styles.segmentedControlUnselectedText}>Liked poems</Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => setSegmentedControlView('Saved quotes')}>
+          <View style={styles.segmentedControlUnselected}>
+            <Text style={styles.segmentedControlUnselectedText}>Saved quotes</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.collection}>
+        <Image
+          source={{ uri: 'https://davidbruceblog.files.wordpress.com/2014/05/img_9760.jpg' }}
+          style={styles.collectionPic}
+        />
+        <View style={styles.collectionText}>
+          <Text style={styles.collectionName}>Zen zone</Text>
+          <Text style={styles.collectionStat}>26 poems</Text>
+        </View>
+        
+      </View>
 
     </SafeAreaView>
   )
@@ -108,5 +142,64 @@ const styles = StyleSheet.create({
     followText: {
       fontSize: 17,
       color: '#fff'
-    }
+    },
+
+    segmentedControl: {
+      flexDirection: 'row',
+      marginTop: 20,
+      borderWidth: 1,
+      borderRadius: 5,
+      borderColor: '#E2E5E6',
+      paddingHorizontal: 2,
+      paddingVertical: 2,
+      backgroundColor: '#F4F5F4',
+    },
+
+    segmentedControlSelected: {
+      borderRadius: 5,
+      width: 118,
+      paddingVertical: 10,
+      backgroundColor: '#6C7476',
+      alignItems: 'center',
+    },
+
+    segmentedControlSelectedText: {
+      color: 'white',
+      fontSize: 15,
+    },
+
+    segmentedControlUnselected: {
+      borderRadius: 5,
+      width: 118,
+      paddingVertical: 10,
+      alignItems: 'center',
+    },
+
+    segmentedControlUnselectedText: {
+      fontSize: 15,
+    },
+
+    collection: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      columnGap: 20,
+    },
+
+    collectionPic: {
+      width: 70,
+      height: 70,
+      borderRadius: 10,
+    },
+
+    collectionText: {
+      rowGap: 5,
+    },
+
+    collectionName: {
+      fontSize: 18,
+    },
+
+    collectionStat: {
+      fontSize: 15,
+    },
   });
