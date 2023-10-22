@@ -1,6 +1,8 @@
 import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { Ionicons } from "@expo/vector-icons";
+import SegmentedControl from '@react-native-segmented-control/segmented-control';
+
 
 
 const ProfileScreen = () => {
@@ -39,6 +41,7 @@ const ProfileScreen = () => {
           <Text style={styles.followText}>Follow</Text>
         </View>
       </TouchableOpacity>
+
     </SafeAreaView>
   )
 }
