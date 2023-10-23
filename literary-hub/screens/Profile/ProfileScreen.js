@@ -27,6 +27,21 @@ const ProfileScreen = () => {
     },
   ]
 
+  const likedPoemData = [
+    {
+      id: '1',
+      title: 'The Road Not Taken',
+      author: 'Robert Frost',
+      image: 'https://davidbruceblog.files.wordpress.com/2014/05/img_9760.jpg'
+    },
+    {
+      id: '2',
+      title: 'Oxymandias',
+      author: 'Percy Shelley',
+      image: 'https://davidbruceblog.files.wordpress.com/2014/05/img_9760.jpg'
+    }
+  ]
+
   const CollectionsView = () => {
     return (
       <FlatList
@@ -72,8 +87,46 @@ const ProfileScreen = () => {
 
   const LikedPoemsView = () => {
     return (
-      <View>
-        <Text>Liked Poems</Text>
+      <FlatList
+        data={likedPoemData}
+        renderItem={({item}) => 
+          <LikedPoem
+            title={item.title}
+            author={item.author}
+            image={item.image}
+          />
+        }
+        keyExtractor={item => item.id}
+        style={styles.collections}
+      />
+    )
+  }
+
+  const LikedPoem = ({title, author, image}) => {
+
+    const [liked, setLiked] = useState(true);
+
+    return (
+      <View style={styles.collection}>
+        <TouchableOpacity>
+          <View style={styles.collectionMain}>
+            <Image
+              source={{ uri: `${image}` }}
+              style={styles.collectionPic}
+            />
+            <View style={styles.collectionText}>
+              <Text style={styles.collectionName}>{title}</Text>
+              <Text style={styles.collectionStat}>{author}</Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => setLiked(!liked)}>
+          {(liked ? 
+            <Ionicons name="heart" size={25} color="red" /> :
+            <Ionicons name="heart-outline" size={25} color="red" />
+          )}
+        </TouchableOpacity>
       </View>
     )
   }
