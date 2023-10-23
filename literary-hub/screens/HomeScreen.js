@@ -80,6 +80,8 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width,
     paddingTop: 100,
     paddingHorizontal: 16,
+    alignItems: 'center', // Center horizontally
+    justifyContent: 'center', // Center vertically
   },
   pageContent: {
     fontSize: 18,
