@@ -4,6 +4,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
+import styled from 'styled-components';
 
 const HomeScreen = () => {
   const [annotationMode, handleAnnotationMode] = useState(false);
@@ -11,13 +12,13 @@ const HomeScreen = () => {
 
   return (
     <SafeAreaView style={styles.container} id='page'>
-      <Text>HomeScreen</Text>
+      <Text>Home Page</Text>
       <View style={styles.poemContainer} id='poem'>
         <Text>Sample Poem</Text>
       </View>
 
       <View style={styles.userInteractions} id='interactions'>
-
+        <View  >
         {annotationMode ?
           <Pressable onPress={() => {
             handleAnnotationMode(false);
@@ -27,12 +28,12 @@ const HomeScreen = () => {
           <Pressable onPress={() => {
             handleAnnotationMode(true);
           }}><MaterialCommunityIcons name="toggle-switch-off-outline" size={30} color="black" /></Pressable>
-          }
-        <Ionicons name="ellipsis-horizontal-outline" size={24} color="black" />
+        }
+        </View>
         <View style={styles.columnView}>
           {/* This is the third element in the user interactions flexbox */}
           <Feather name="plus" size={24} color="black" />
-          
+
 
           {liked ?
             <Pressable onPress={() => {
@@ -61,7 +62,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
-    //justifyContent: 'center',
+    justifyContent: 'center',
     flexDirection: 'column'
   },
 
@@ -70,24 +71,27 @@ const styles = StyleSheet.create({
     borderColor: 'blue',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 47,
     width: 296,
     height: 603
   },
 
   userInteractions: {
-    alignItems: 'baseline',
+    width: 344,
+    height: 97,
+    flexShrink: 0,
+    alignItems: 'flex-end',
     gap: 77,
     paddingHorizontal: 30,
     flexDirection: 'row',
     marginLeft: 23,
     marginRight: 23,
-    marginBottom: 20
+    marginBottom: 20,
+    marginTop: 20,
   },
   columnView: {
+    alignItems: 'flex-end',
     gap: 12,
     flex: 1, // Make the column view occupy the remaining space
     flexDirection: 'column',
-    alignItems: 'flex-end',
-  },
+  }
 });
