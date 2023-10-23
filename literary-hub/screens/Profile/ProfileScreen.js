@@ -42,6 +42,24 @@ const ProfileScreen = () => {
     }
   ]
 
+  const savedQuotesData = [
+    {
+      id: '1',
+      poemId: '1',
+      quote: 'Tis better to have loved and lost than never to have loved at all'
+    },
+    {
+      id: '2',
+      poemId: '2',
+      quote: 'A light from the shadows shall spring; Renewed shall be blade that was broken, The crownless again shall be king'
+    },
+    {
+      id: '3',
+      poemId: '3',
+      quote: 'Tread softly because you tread on my dreams'
+    },
+  ]
+
   const CollectionsView = () => {
     return (
       <FlatList
@@ -133,8 +151,43 @@ const ProfileScreen = () => {
 
   const SavedQuotesView = () => {
     return (
-      <View>
-        <Text>Saved Quotes</Text>
+      <FlatList
+        data={savedQuotesData}
+        renderItem={({item}) => 
+          <SavedQuote
+            poemId={item.poemId}
+            quote={item.quote}
+          />
+        }
+        keyExtractor={item => item.id}
+        style={styles.collections}
+      />
+    )
+  }
+
+  const SavedQuote = ({poemId, quote}) => {
+
+    const [saved, setSaved] = useState(true);
+
+    return (
+      <View style={styles.savedQuote}>
+        <Text style={styles.savedQuoteText}>"{quote}"</Text>
+        <View style={styles.savedQuoteCTAs}>
+          <TouchableOpacity>
+            <View style={styles.viewPoem}>
+              <Text style={styles.viewPoemText}>View poem</Text>
+              <Ionicons name="chevron-forward" size={17} color="black" />
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => setSaved(!saved)}>
+            {(saved ? 
+              <Ionicons name="bookmark" size={25} color="black" /> :
+              <Ionicons name="bookmark-outline" size={25} color="black" />
+            )}
+          </TouchableOpacity>
+        </View>
+        
       </View>
     )
   }
@@ -363,6 +416,35 @@ const styles = StyleSheet.create({
     },
 
     ownershipText: {
+      fontSize: 15,
+    },
+
+    savedQuote: {
+      rowGap: 10,
+      borderWidth: 1,
+      borderRadius: 10,
+      borderColor: '#E2E5E6',
+      marginBottom: 15,
+      paddingHorizontal: 10,
+      paddingVertical: 10,
+      backgroundColor: '#F4F5F4'
+    },
+
+    savedQuoteText: {
+      fontSize: 18,
+    },
+
+    savedQuoteCTAs: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+
+    viewPoem: {
+      flexDirection: 'row',
+    },
+
+    viewPoemText: {
       fontSize: 15,
     }
   });
