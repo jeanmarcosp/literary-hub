@@ -1,34 +1,27 @@
-import React, { useState } from 'react';
-import { View, TextInput, FlatList, Text, StyleSheet } from 'react-native';
+import React, { useState } from "react";
+import { View, TextInput, FlatList, Text, StyleSheet } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 const SearchBar = () => {
-  const [searchText, setSearchText] = useState('');
+  const [searchText, setSearchText] = useState("");
   const [searchResults, setSearchResults] = useState([]);
 
   const handleSearch = (text) => {
-    const results = Array.from({ length: 10 }, (_, i) => ({ id: i, name: `Result ${i}` }));
+    const results = Array.from({ length: 10 }, (_, i) => ({
+      id: i,
+      name: `Result ${i}`,
+    }));
     setSearchResults(results);
   };
 
   return (
     <View style={styles.container}>
+      <Ionicons name="search" size={24} color="gray" style={styles.icon} />
       <TextInput
+        style={styles.input}
         placeholder="Search"
-        onChangeText={(text) => {
-          setSearchText(text);
-          handleSearch(text);
-        }}
         value={searchText}
-        style={styles.textInput}
-      />
-      <FlatList
-        data={searchResults}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <View style={styles.resultItem}>
-            <Text>{item.name}</Text>
-          </View>
-        )}
+        onChangeText={(text) => setSearchText(text)}
       />
     </View>
   );
@@ -36,21 +29,26 @@ const SearchBar = () => {
 
 const styles = StyleSheet.create({
   container: {
+    width: 370,
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "white",
+    borderRadius: 50,
+    paddingHorizontal: 10,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 7,
+    marginLeft:10,
+    marginTop:10,
+    marginBottom:10,
+  },
+  icon: {
+    marginRight: 10,
+  },
+  input: {
     flex: 1,
-    padding: 16,
-    borderRadius: 100,
-  },
-  textInput: {
     height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 16,
-    paddingHorizontal: 8,
-  },
-  resultItem: {
-    borderBottomWidth: 1,
-    borderColor: 'lightgray',
-    paddingVertical: 8,
+    padding: 0,
   },
 });
 
