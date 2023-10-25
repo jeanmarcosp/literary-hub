@@ -17,6 +17,8 @@ TODO:  descriptions of code organization and tools and libraries used
 `yarn add @react-navigation/native-stack`\
 `yarn add @react-navigation/bottom-tabs`
 `npm install @react-navigation/stack`
+`npm install axios`
+``
 
 `cd mongo-api`\
 `yarn add body-parser express cors jsonwebtoken mongoose nodemailer nodemon axios`\
