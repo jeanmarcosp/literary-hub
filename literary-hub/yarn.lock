@@ -5470,11 +5470,6 @@ react-freeze@^1.0.0:
   resolved "https://registry.npmjs.org/react-freeze/-/react-freeze-1.0.3.tgz"
   integrity sha512-ZnXwLQnGzrDpHBHiC56TXFXvmolPeMjTn1UOm610M4EXGzbEDR7oOIyS2ZiItgbs6eZc4oU/a0hpk8PrcKvv5g==
 
-react-google-fonts@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.npmjs.org/react-google-fonts/-/react-google-fonts-1.2.1.tgz"
-  integrity sha512-17Qep4YpnMPkLhUjvLyCDbnEVK8yMsFTiSO7EViVwCaN+rho1TejqBs5vD4zVIEpZepe+xhxbf3frF8CCik8/A==
-
 "react-is@^16.12.0 || ^17.0.0 || ^18.0.0", react-is@^18.0.0:
   version "18.2.0"
   resolved "https://registry.npmjs.org/react-is/-/react-is-18.2.0.tgz"
