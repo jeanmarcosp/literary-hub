@@ -2,23 +2,34 @@ import "react-native-gesture-handler";
 import React from "react";
 import { View, TouchableOpacity, Image, Text, StyleSheet } from "react-native";
 import Like from "./Like";
+import { Ionicons } from "@expo/vector-icons";
 
-const PoemCard = ({ title, author, caption }) => {
+const PoemCard = ({ title, author, excerpt }) => {
   return (
     <TouchableOpacity style={styles.card}>
       <View style={styles.container}>
         <View style={styles.info}>
           <View style={styles.text}>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
               <Text style={styles.title}>{title}</Text>
               <Text style={styles.author}>{author}</Text>
+              <Like />
             </View>
-            <Text style={styles.caption}>{caption}</Text>
+            <Text style={styles.excerpt}>{excerpt}</Text>
           </View>
+          <TouchableOpacity>
+          <View style={styles.viewPoem}>
+            <Text style={styles.viewPoemText}>View poem</Text>
+            <Ionicons name="chevron-forward" size={17} color="black" />
+          </View>
+        </TouchableOpacity>
         </View>
-        <View style={{flexDirection: "row", alignItems: "center", marginRight:0}}>
-          <Like />
-        </View>
+  
       </View>
     </TouchableOpacity>
   );
@@ -29,23 +40,20 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   container: {
+    paddingHorizontal: 18,
+    paddingVertical: 18,
     backgroundColor: "white",
-    borderRadius: 10,
+    borderRadius: 12,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 7,
-    flexDirection: "row",
-    justifyContent: "space-around",
   },
   info: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    marginBottom:0,
   },
   text: {
     flexDirection: "column",
     justifyContent: "space-between",
-    padding: 15,
   },
   title: {
     fontFamily: "PromptRegular",
@@ -55,14 +63,23 @@ const styles = StyleSheet.create({
   author: {
     fontFamily: "PromptRegular",
     fontSize: 20,
-    padding: 15,
+    paddingHorizontal: 25,
     color: "grey",
   },
-  caption: {
+  excerpt: {
     fontFamily: "PromptRegular",
-    fontSize: 15,
+    fontSize: 16,
     color: "#373F41",
-    paddingTop: 0,
+    marginTop:10,
+  },
+  viewPoem: {
+    flexDirection: "row",
+    marginTop:10,
+  },
+  viewPoemText: {
+    fontFamily: "PromptRegular",
+    fontSize: 13,
+    color: "#373F41",
   },
 });
 

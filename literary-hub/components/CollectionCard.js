@@ -1,5 +1,5 @@
 import "react-native-gesture-handler";
-import React from "react";
+import {React, useState} from "react";
 import { View, TouchableOpacity, Image, Text, StyleSheet } from "react-native";
 import Like from "./Like";
 

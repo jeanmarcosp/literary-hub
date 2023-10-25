@@ -15,7 +15,7 @@ TODO:  descriptions of code organization and tools and libraries used
 `yarn add @react-navigation/native`\
 `npx expo install react-native-screens react-native-safe-area-context`\
 `yarn add @react-navigation/native-stack`\
-`yarn add @react-navigation/bottom-tabs`
+`yarn add @react-navigation/bottom-tabs`\
 `npm install @react-navigation/stack`
 
 `cd mongo-api`\
