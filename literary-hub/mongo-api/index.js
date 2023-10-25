@@ -38,6 +38,13 @@ app.listen(port, () => {
   console.log("Server running on port 3000");
 });
 
+
+
+const generateSecretKey = () => {
+  const secretKey = crypto.randomBytes(32).toString("hex");
+  return secretKey;
+};
+const secretKey = generateSecretKey();
 // endpoint for login
 app.post("/login", async (req, res) => {
   try {
@@ -61,6 +68,7 @@ app.post("/login", async (req, res) => {
       console.log("error", error);
   }
 });
+
 //endpoint to get all the poems in database, use this endpoint to populate homepage
 app.get("/get-poems", async (req, res) => {
   try {
