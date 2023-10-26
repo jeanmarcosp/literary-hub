@@ -156,7 +156,7 @@ const HomeScreen = () => {
 
   return (
     <SafeAreaView style={styles.container} id='page'>
-      <Text>Home Page</Text>
+      {/* <Text>Home Page</Text> */}
       <View style={styles.poemContainer} id='poem'>
         {randomPoem && (
         <ScrollView
@@ -244,7 +244,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderColor: 'blue',
     alignItems: 'center',
-    //justifyContent: 'center',
+    justifyContent: 'center',
     position: 'relative',
   },
 
@@ -277,14 +277,14 @@ const styles = StyleSheet.create({
   toggle: {
     //alignItems: 'flex-end',
     flex: 1, // Make the column view occupy the remaining space
-    left: 25,
+    left: 20,
     position: 'absolute',
     bottom: 30,
   },
 
   page: {
     width: Dimensions.get('window').width,
-    paddingTop: 100,
+    paddingTop: 50,
     paddingHorizontal: 16,
   },
 
