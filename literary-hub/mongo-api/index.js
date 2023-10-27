@@ -38,17 +38,36 @@ app.listen(port, () => {
   console.log("Server running on port 3000");
 });
 
-// end point to get a random poem from database
-app.get('/random-poem', async (req, res) => {
+
+
+const generateSecretKey = () => {
+  const secretKey = crypto.randomBytes(32).toString("hex");
+  return secretKey;
+};
+const secretKey = generateSecretKey();
+// endpoint for login
+app.post("/login", async (req, res) => {
   try {
-    const randomPoem = await Poem.aggregate([{ $sample: { size: 1 } }]); 
-    res.json(randomPoem);
+      const { email, password } = req.body;
+      console.log("Email received:", email);
+      const user = await User.findOne({ email });
+      if (!user) {
+          return res.status(404).json({ message: "Invalid email" });
+      }
+      if (user.password != password) {
+          return res.status(404).json({ message: "Invalid password" });
+      }
+
+
+      const token = jwt.sign({ userId: user._id }, secretKey);
+      res.status(200).json({ token });
+
+
+
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error fetching a random poem' });
+      console.log("error", error);
   }
 });
-
 
 //endpoint to get all the poems in database, use this endpoint to populate homepage
 app.get("/get-poems", async (req, res) => {

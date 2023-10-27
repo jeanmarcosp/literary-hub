@@ -20,7 +20,8 @@ const userSchema = new mongoose.Schema({
     default: false,
   },
   verificationToken: String,
-  likedPoems: [{ type: mongoose.Schema.Types.ObjectId, ref: "Poem" }]
+  likedPoems: [{ type: mongoose.Schema.Types.ObjectId, ref: "Poem" }],
+  likedCollections: [{ type: mongoose.Schema.Types.ObjectId, ref: "Collection" }],
 });
 
 const User = mongoose.model("User", userSchema);
