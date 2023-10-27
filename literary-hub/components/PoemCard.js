@@ -1,31 +1,36 @@
-import 'react-native-gesture-handler'
-import React from 'react';
-import { View, TouchableOpacity, Image, Text, StyleSheet } from 'react-native';
-import Like from './Like';
+import "react-native-gesture-handler";
+import React from "react";
+import { View, TouchableOpacity, Image, Text, StyleSheet } from "react-native";
+import Like from "./Like";
+import { Ionicons } from "@expo/vector-icons";
 
-const PoemCard = ({ title, author, caption}) => {
+const PoemCard = ({ title, author, excerpt }) => {
   return (
-    <TouchableOpacity style={styles.card}
-    >
+    <TouchableOpacity style={styles.card}>
       <View style={styles.container}>
-
         <View style={styles.info}>
           <View style={styles.text}>
-            <View style={{flexDirection:'row', alignItems: 'center'}}>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
               <Text style={styles.title}>{title}</Text>
               <Text style={styles.author}>{author}</Text>
+              <Like />
             </View>
-              <Text style={styles.caption}>{caption}</Text>
-            
+            <Text style={styles.excerpt}>{excerpt}</Text>
           </View>
-          
+          <TouchableOpacity>
+          <View style={styles.viewPoem}>
+            <Text style={styles.viewPoemText}>View poem</Text>
+            <Ionicons name="chevron-forward" size={17} color="black" />
+          </View>
+        </TouchableOpacity>
         </View>
-        
-        <Like />
-
+  
       </View>
-      
-
     </TouchableOpacity>
   );
 };
@@ -35,53 +40,47 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   container: {
-    padding: 5,
-    justifyContent: "space-between",
-    borderColor: "#373F41",
-    backgroundColor: "#FFFFFF",
-    borderRadius: 10,
-    shadowOffset: {width: 0, height: 1},
-    shadowOpacity: 1,
-    shadowRadius: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    paddingHorizontal: 18,
+    paddingVertical: 18,
+    backgroundColor: "white",
+    borderRadius: 12,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 7,
   },
   info: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-
+    marginBottom:0,
   },
   text: {
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    padding: 20,
+    flexDirection: "column",
+    justifyContent: "space-between",
   },
   title: {
-    fontSize: 20,
+    fontFamily: "PromptRegular",
+    fontSize: 22,
     color: "#373F41",
-  },
-  image: {
-    width: 110,
-    height: 110,
-    borderRadius: 10,
-    padding: 20,
   },
   author: {
+    fontFamily: "PromptRegular",
     fontSize: 20,
-    padding: 15,
-    color: 'grey',
+    paddingHorizontal: 25,
+    color: "grey",
   },
-  caption: {
-    fontSize: 15,
+  excerpt: {
+    fontFamily: "PromptRegular",
+    fontSize: 16,
     color: "#373F41",
-    paddingTop: 15
+    marginTop:10,
   },
-  topRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between'
-  }
+  viewPoem: {
+    flexDirection: "row",
+    marginTop:10,
+  },
+  viewPoemText: {
+    fontFamily: "PromptRegular",
+    fontSize: 13,
+    color: "#373F41",
+  },
 });
 
 export default PoemCard;
