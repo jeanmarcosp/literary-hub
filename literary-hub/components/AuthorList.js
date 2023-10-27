@@ -1,37 +1,38 @@
-import React from 'react';
-import { View, FlatList, Text } from 'react-native';
-import AuthorCard from './AuthorCard'; // Assuming you have a separate file for the AuthorCard component
+import React from "react";
+import { View, FlatList, Text, StyleSheet } from "react-native";
+import AuthorCard from "./AuthorCard"; 
 
 const authorsData = [
   {
     id: 1,
-    title: 'Robert Frost',
-    coverImage: require('../assets/author-images/robert-frost.jpeg'),
+    title: "Robert Frost",
+    coverImage: require("../assets/author-images/robert-frost.jpg.webp"),
   },
   {
     id: 2,
-    title: 'Robert Frost',
-    coverImage: require('../assets/author-images/robert-frost.jpeg'),
+    title: "Margaret Atwood",
+    coverImage: require("../assets/author-images/margaret-atwood.jpg"),
   },
-  // Add more author data items as needed
+  {
+    id: 3,
+    title: "Emily Dickinson",
+    coverImage: require("../assets/author-images/emily-dick.webp"),
+  },
 ];
 
 const AuthorList = () => {
+  return (
+    <View>
+      <FlatList
+        data={authorsData}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+          <AuthorCard coverImage={item.coverImage} title={item.title} />
+        )}
+        horizontal
+      />
+    </View>
+  );
+};
 
-    return (
-      <View>
-      <Text>Author Collections</Text>
-        <FlatList
-          data={authorsData}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <AuthorCard coverImage={item.coverImage} title={item.title} />
-          )}
-          
-          horizontal
-        />
-      </View>
-    );
-  };
-  
-  export default AuthorList;
+export default AuthorList;
