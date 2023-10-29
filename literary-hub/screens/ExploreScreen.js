@@ -14,6 +14,11 @@ import TrendingCollections from "../components/TrendingCollections";
 import Quote from "../components/Quote";
 
 const ExploreScreen = () => {
+  const [fontsLoaded] = useFonts({
+    PromptRegular: Prompt_400Regular,
+    PromptMedium: Prompt_500Medium,
+    PromptSemiBold: Prompt_600SemiBold,
+  });
   const [segmentedControlView, setSegmentedControlView] = useState('Collections')
   return (
     <SafeAreaView style={styles.container}>
