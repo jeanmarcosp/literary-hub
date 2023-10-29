@@ -32,10 +32,9 @@ const ExploreScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
-      <SearchBar />
-      <Text style={styles.text}>Author Collections</Text>
-      <AuthorList />
-      
+        <SearchBar />
+        <Text style={styles.text}>Author Collections</Text>
+        <AuthorList />
         <Text style={styles.text}>Trending</Text>
         <View style={styles.segmentedControl}>
           <TouchableOpacity
@@ -59,7 +58,6 @@ const ExploreScreen = () => {
               </Text>
             </View>
           </TouchableOpacity>
-
           <TouchableOpacity onPress={() => setSegmentedControlView("Poems")}>
             <View
               style={
@@ -79,7 +77,6 @@ const ExploreScreen = () => {
               </Text>
             </View>
           </TouchableOpacity>
-
           <TouchableOpacity onPress={() => setSegmentedControlView("Quotes")}>
             <View
               style={
@@ -105,7 +102,7 @@ const ExploreScreen = () => {
           {segmentedControlView === "Poems" && <TrendingPoems />}
           {segmentedControlView === "Quotes" && <Quote />}
         </View>
-        </ScrollView>
+      </ScrollView>
     </SafeAreaView>
   );
 };
