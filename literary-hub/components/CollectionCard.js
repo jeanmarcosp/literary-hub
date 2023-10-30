@@ -1,5 +1,5 @@
 import "react-native-gesture-handler";
-import {React, useState} from "react";
+import { React, useState } from "react";
 import { View, TouchableOpacity, Image, Text, StyleSheet } from "react-native";
 import Like from "./Like";
 
@@ -17,7 +17,9 @@ const CollectionCard = ({ coverImage, title, caption, creator }) => {
             <Text style={styles.caption}>{caption}</Text>
           </View>
         </View>
-        <Like />
+        <View style={{marginTop:22}}>
+          <Like />
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -36,6 +38,7 @@ const styles = StyleSheet.create({
     shadowRadius: 7,
     flexDirection: "row",
     justifyContent: "space-around",
+    alignItems: "flex-start",
   },
   info: {
     flexDirection: "row",

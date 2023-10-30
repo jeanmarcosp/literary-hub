@@ -16,10 +16,10 @@ TODO:  descriptions of code organization and tools and libraries used
 `npx expo install react-native-screens react-native-safe-area-context`\
 `yarn add @react-navigation/native-stack`\
 `yarn add @react-navigation/bottom-tabs`\
-`npm install @react-navigation/stack`
-`npm install axios`
+`npm install @react-navigation/stack`\
+`npm install axios`\
 `npx expo install expo-font @expo-google-fonts/inter`
-``
+
 
 `cd mongo-api`\
 `yarn add body-parser express cors jsonwebtoken mongoose nodemailer nodemon axios`\

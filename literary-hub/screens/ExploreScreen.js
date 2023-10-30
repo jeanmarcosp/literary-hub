@@ -1,5 +1,12 @@
-import { StyleSheet, Text, View, SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
-import {React, useState} from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
+import { React, useState } from "react";
 import AuthorList from "../components/AuthorList";
 import SearchBar from "../components/SearchBar.js";
 import { Ionicons } from "@expo/vector-icons";
@@ -12,9 +19,16 @@ import {
 import TrendingPoems from "../components/TrendingPoems";
 import TrendingCollections from "../components/TrendingCollections";
 import Quote from "../components/Quote";
+import { FlatList } from "react-native-gesture-handler";
 
 const ExploreScreen = () => {
-  const [segmentedControlView, setSegmentedControlView] = useState('Collections')
+  const [fontsLoaded] = useFonts({
+    PromptRegular: Prompt_400Regular,
+    PromptMedium: Prompt_500Medium,
+    PromptSemiBold: Prompt_600SemiBold,
+  });
+  const [segmentedControlView, setSegmentedControlView] =
+    useState("Collections");
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
@@ -44,10 +58,7 @@ const ExploreScreen = () => {
               </Text>
             </View>
           </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={() => setSegmentedControlView("Poems")}
-          >
+          <TouchableOpacity onPress={() => setSegmentedControlView("Poems")}>
             <View
               style={
                 segmentedControlView === "Poems"
@@ -66,10 +77,7 @@ const ExploreScreen = () => {
               </Text>
             </View>
           </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={() => setSegmentedControlView("Quotes")}
-          >
+          <TouchableOpacity onPress={() => setSegmentedControlView("Quotes")}>
             <View
               style={
                 segmentedControlView === "Quotes"
@@ -90,17 +98,10 @@ const ExploreScreen = () => {
           </TouchableOpacity>
         </View>
         <View style={styles.leftAligned}>
-        {segmentedControlView === 'Collections' &&
-          <TrendingCollections />
-        }
-        {segmentedControlView === 'Poems' &&
-          <TrendingPoems />
-        }
-        {segmentedControlView === 'Quotes' &&
-          <Quote />
-        }
-        
-      </View>
+          {segmentedControlView === "Collections" && <TrendingCollections />}
+          {segmentedControlView === "Poems" && <TrendingPoems />}
+          {segmentedControlView === "Quotes" && <Quote />}
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -119,43 +120,43 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   segmentedControl: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: 5,
     marginLeft: 10,
     width: 370,
     paddingHorizontal: 2,
     paddingVertical: 2,
-    backgroundColor: 'white',
-    justifyContent: 'space-between',
+    backgroundColor: "white",
+    justifyContent: "space-between",
   },
   segmentedControlSelected: {
     borderRadius: 100,
     width: 118,
     paddingVertical: 10,
-    backgroundColor: '#644980',
-    alignItems: 'center',
-    borderWidth:1,
-    borderColor: '#644980',
+    backgroundColor: "#644980",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#644980",
   },
 
   segmentedControlSelectedText: {
     fontFamily: "PromptRegular",
     fontSize: 15,
-    color:"white"
+    color: "white",
   },
 
   segmentedControlUnselected: {
     borderRadius: 100,
-    borderWidth:1,
+    borderWidth: 1,
     width: 118,
     paddingVertical: 10,
-    paddingHorizontal:10,
-    alignItems: 'center',
+    paddingHorizontal: 10,
+    alignItems: "center",
   },
 
   segmentedControlUnselectedText: {
     fontFamily: "PromptRegular",
     fontSize: 15,
-    color: '#644980',
+    color: "#644980",
   },
 });
