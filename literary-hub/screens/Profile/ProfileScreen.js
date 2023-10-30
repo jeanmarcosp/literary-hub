@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity, FlatList } from 'react-native'
 import { React, useState }from 'react'
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from '@react-navigation/native';
 
 
 
@@ -61,20 +62,31 @@ const ProfileScreen = () => {
   ]
 
   const CollectionsView = () => {
+
+    const navigation = useNavigation();
+    
     return (
-      <FlatList
-        data={collectionData}
-        renderItem={({item}) => 
-          <Collection
-            title={item.title}
-            poemNumber={item.poemNumber}
-            author={item.author}
-            image={item.image}
-          />
-        }
-        keyExtractor={item => item.id}
-        style={styles.collections}
-      />
+      <View>
+        <TouchableOpacity onPress={() => navigation.navigate('CreateCollectionScreen')}>
+          <View style={styles.createCollectionCTA}>
+            <Ionicons name="add" size={22} color="blue" />
+            <Text style={styles.createCollectionText}>Create new collection</Text>
+          </View>
+        </TouchableOpacity>
+        <FlatList
+          data={collectionData}
+          renderItem={({item}) => 
+            <Collection
+              title={item.title}
+              poemNumber={item.poemNumber}
+              author={item.author}
+              image={item.image}
+            />
+          }
+          keyExtractor={item => item.id}
+          style={styles.collections}
+        />
+      </View>
     )
   }
 
@@ -369,6 +381,18 @@ const styles = StyleSheet.create({
 
     leftAligned: {
       paddingHorizontal: 17,
+    },
+
+    createCollectionCTA: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      columnGap: 7,
+      marginTop: 15,
+    },
+
+    createCollectionText: {
+      fontSize: 17,
+      color: 'blue'
     },
 
     collections: {
