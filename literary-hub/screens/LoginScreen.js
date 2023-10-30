@@ -17,14 +17,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import logo from "../assets/logo-purple.png";
 
 const LoginScreen = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("annaadobamen@yahoo.com");
+  const [password, setPassword] = useState("hopethisworks!");
   const navigation = useNavigation();
   useEffect(() => {
     const checkLoginStatus = async () => {
       try {
         const token = await AsyncStorage.getItem("authToken");
-      } catch {}
+      } catch { }
     };
   });
   const handleLogin = () => {
@@ -33,7 +33,9 @@ const LoginScreen = () => {
       password: password,
     };
     axios
-      .post("http://localhost:3000/login", user)
+      .post("http://192.168.1.163:3000/login", {
+        ... user
+      })
       .then((response) => {
         console.log(response);
         const token = response.data.token;
