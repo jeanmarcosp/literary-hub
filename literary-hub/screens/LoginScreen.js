@@ -18,8 +18,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { setUser } from "../state/actions/userActions";
 
 const LoginScreen = () => {
-  const [email, setEmail] = useState("annaadobamen@yahoo.com");
-  const [password, setPassword] = useState("hopethisworks!");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigation = useNavigation();
 
   const user = useSelector((state) => state.user); // Use the useSelector hook to access the user data
