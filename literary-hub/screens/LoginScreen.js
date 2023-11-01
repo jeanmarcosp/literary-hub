@@ -30,7 +30,7 @@ const LoginScreen = () => {
     const checkLoginStatus = async () => {
       try {
         const token = await AsyncStorage.getItem("authToken");
-      } catch {}
+      } catch { }
     };
   });
 
@@ -40,7 +40,9 @@ const LoginScreen = () => {
       password: password,
     };
     axios
-      .post("http://localhost:3000/login", user)
+      .post("http://192.168.1.163:3000/login", {
+        ... user
+      })
       .then((response) => {
         console.log(response);
         const token = response.data.token;
