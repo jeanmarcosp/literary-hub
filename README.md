@@ -18,7 +18,10 @@ TODO:  descriptions of code organization and tools and libraries used
 `yarn add @react-navigation/bottom-tabs`\
 `npm install @react-navigation/stack`\
 `npm install axios`\
-`npx expo install expo-font @expo-google-fonts/inter`
+`npx expo install expo-font @expo-google-fonts/inter`\
+`yarn add jwt-decode`\
+`yarn add redux react-redux`
+
 
 
 `cd mongo-api`\
