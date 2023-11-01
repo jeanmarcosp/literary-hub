@@ -40,7 +40,7 @@ const LoginScreen = () => {
       password: password,
     };
     axios
-      .post("http://192.168.1.163:3000/login", {
+      .post(`${ROOT_URL}/login`, {
         ... user
       })
       .then((response) => {
