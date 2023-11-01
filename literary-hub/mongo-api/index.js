@@ -6,7 +6,7 @@ const nodemailer = require("nodemailer");
 const axios = require("axios");
 
 const app = express();
-const port = 3000;
+const port = process.env.port || 3000;
 const cors = require("cors");
 app.use(cors());
 

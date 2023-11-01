@@ -14,6 +14,9 @@ import { useSelector, useDispatch } from 'react-redux';
 
 
 export default function App() {
+
+  global.ROOT_URL = 'https://literary-hub-backend.onrender.com'
+
   let [fontsLoaded] = useFonts({
     Inter_900Black,
     PromptRegular: Prompt_400Regular,
