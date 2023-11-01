@@ -10,12 +10,14 @@ import {
   Dimensions,
   TouchableOpacity,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import axios from "axios";
+import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
+import CollectionBottomSheet from "../components/CollectionBottomSheet";
 
 const HomeScreen = () => {
   const [annotationMode, handleAnnotationMode] = useState(false);
@@ -23,6 +25,20 @@ const HomeScreen = () => {
   const [randomPoem, setRandomPoem] = useState(null);
   const [poemPages, setPoemPages] = useState([]);
   const [pageCount, setPageCount] = useState(0);
+
+  const bottomSheetRef = useRef(null);
+	const [title, setTitle] = useState('Passing my data 🔥');
+
+	const handleClosePress = () => {
+    bottomSheetRef.current?.close();
+  }
+	const handleOpenPress = () => {
+    console.log('1');
+    bottomSheetRef.current?.expand();
+    console.log('2');
+  };
+
+  
 
   const pageWidth = Dimensions.get("window").width; // Get the screen width
   const linesPerPage = 20;
@@ -63,6 +79,7 @@ const HomeScreen = () => {
   return (
     <SafeAreaView style={styles.container} id="page">
       {/* <Text>Home Page</Text> */}
+      
       <View style={styles.poemContainer} id="poem">
         {randomPoem && (
           <ScrollView
@@ -128,8 +145,11 @@ const HomeScreen = () => {
         </View> */}
         <View style={styles.columnView}>
           {/* This is the third element in the user interactions flexbox */}
-          <Feather name="plus" size={30} color="black" />
-
+          <Pressable onPress={handleOpenPress}>
+            <Feather  name="plus" size={30} color="black" />
+          </Pressable>
+          
+          
           {liked ? (
             <Pressable
               onPress={() => {
@@ -148,9 +168,13 @@ const HomeScreen = () => {
             </Pressable>
           )}
         </View>
+        
       </View>
+      
       {/* <Text>Number of Pages: {pageCount}</Text>  */}
       {/* saves page count for when we want to do dots on the bottom */}
+        <CollectionBottomSheet ref={bottomSheetRef} title="Anna" />
+	
     </SafeAreaView>
   );
 };
@@ -165,7 +189,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     flexDirection: "column",
   },
-
+  bottomSheet: {
+    flex: 1,
+		alignItems: 'center',
+		justifyContent: 'center'
+  },
   poemContainer: {
     flex: 1,
     borderColor: "blue",
