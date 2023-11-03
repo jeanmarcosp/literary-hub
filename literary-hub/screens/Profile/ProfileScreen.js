@@ -301,11 +301,15 @@ const styles = StyleSheet.create({
     },
 
     name: {
-      fontSize: 20
+      fontSize: 20,
+      fontFamily: 'HammersmithOne',
+      color: '#373F41'
     },
 
     username: {
-      fontSize: 15
+      fontSize: 15,
+      fontFamily: 'HammersmithOne',
+      color: '#6C7476'
     },
 
     metrics: {
@@ -320,10 +324,13 @@ const styles = StyleSheet.create({
 
     metricNumber: {
       fontSize: 20,
+      fontFamily: 'HammersmithOne',
+      color: '#373F41'
     },
 
     metricName: {
-
+      fontFamily: 'Sarabun-ExtraLight',
+      color: '#6C7476'
     },
 
     followButton: {
