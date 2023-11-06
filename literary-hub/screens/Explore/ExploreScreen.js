@@ -7,12 +7,12 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { React, useState } from "react";
-import AuthorList from "../components/AuthorList";
-import SearchBar from "../components/SearchBar.js";
+import AuthorList from "../../components/AuthorList";
+import SearchBar from "../../components/SearchBar.js";
 import { Ionicons } from "@expo/vector-icons";
-import TrendingPoems from "../components/TrendingPoems";
-import TrendingCollections from "../components/TrendingCollections";
-import Quote from "../components/Quote";
+import TrendingPoems from "../../components/TrendingPoems";
+import TrendingCollections from "../../components/TrendingCollections";
+import Quote from "../../components/Quote";
 
 const ExploreScreen = () => {
   const [segmentedControlView, setSegmentedControlView] =
@@ -103,9 +103,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   text: {
-    fontFamily: "PromptSemiBold",
+    fontFamily: "HammersmithOne",
     fontSize: 28,
     marginLeft: 10,
+    paddingVertical: 10
   },
   segmentedControl: {
     flexDirection: "row",
@@ -128,7 +129,7 @@ const styles = StyleSheet.create({
   },
 
   segmentedControlSelectedText: {
-    fontFamily: "PromptRegular",
+    fontFamily: "HammersmithOne",
     fontSize: 15,
     color: "white",
   },
@@ -143,7 +144,7 @@ const styles = StyleSheet.create({
   },
 
   segmentedControlUnselectedText: {
-    fontFamily: "PromptRegular",
+    fontFamily: "HammersmithOne",
     fontSize: 15,
     color: "#644980",
   },

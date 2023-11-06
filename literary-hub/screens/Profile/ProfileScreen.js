@@ -69,7 +69,7 @@ const ProfileScreen = () => {
       <View>
         <TouchableOpacity onPress={() => navigation.navigate('CreateCollectionScreen')}>
           <View style={styles.createCollectionCTA}>
-            <Ionicons name="add" size={22} color="blue" />
+            <Ionicons name="add" size={22} color="#373F41" />
             <Text style={styles.createCollectionText}>Create new collection</Text>
           </View>
         </TouchableOpacity>
@@ -301,11 +301,15 @@ const styles = StyleSheet.create({
     },
 
     name: {
-      fontSize: 20
+      fontSize: 20,
+      fontFamily: 'HammersmithOne',
+      color: '#373F41'
     },
 
     username: {
-      fontSize: 15
+      fontSize: 15,
+      fontFamily: 'HammersmithOne',
+      color: '#6C7476'
     },
 
     metrics: {
@@ -320,52 +324,55 @@ const styles = StyleSheet.create({
 
     metricNumber: {
       fontSize: 20,
+      fontFamily: 'HammersmithOne',
+      color: '#373F41'
     },
 
     metricName: {
-
+      fontFamily: 'Sarabun-Regular',
+      color: '#6C7476'
     },
 
     followButton: {
       flexDirection: 'row',
       columnGap: 10,
       alignItems: 'center',
-      borderWidth: 1,
-      borderColor: '#000',
       borderRadius: 100,
       paddingHorizontal: 20,
-      paddingVertical: 5,
-      backgroundColor: '#000',
+      paddingVertical: 7,
+      backgroundColor: '#644980',
       marginTop: 15,
     },
 
     followText: {
       fontSize: 17,
-      color: '#fff'
+      fontFamily: 'HammersmithOne',
+      color: '#fff',
     },
 
     segmentedControl: {
       flexDirection: 'row',
       marginTop: 20,
       borderWidth: 1,
-      borderRadius: 5,
+      borderRadius: 100,
       borderColor: '#E2E5E6',
       paddingHorizontal: 2,
       paddingVertical: 2,
-      backgroundColor: '#F4F5F4',
+      backgroundColor: '#E1DBE6',
     },
 
     segmentedControlSelected: {
-      borderRadius: 5,
+      borderRadius: 100,
       width: 118,
       paddingVertical: 10,
-      backgroundColor: '#6C7476',
+      backgroundColor: '#fff',
       alignItems: 'center',
     },
 
     segmentedControlSelectedText: {
-      color: 'white',
+      color: '#373F41',
       fontSize: 15,
+      fontFamily: 'HammersmithOne'
     },
 
     segmentedControlUnselected: {
@@ -377,6 +384,8 @@ const styles = StyleSheet.create({
 
     segmentedControlUnselectedText: {
       fontSize: 15,
+      fontFamily: 'HammersmithOne',
+      color: '#373F41',
     },
 
     leftAligned: {
@@ -392,7 +401,8 @@ const styles = StyleSheet.create({
 
     createCollectionText: {
       fontSize: 17,
-      color: 'blue'
+      color: '#373F41',
+      fontFamily: 'HammersmithOne'
     },
 
     collections: {
@@ -424,10 +434,14 @@ const styles = StyleSheet.create({
 
     collectionName: {
       fontSize: 18,
+      fontFamily: 'HammersmithOne',
+      color: '#373F41'
     },
 
     collectionStat: {
       fontSize: 15,
+      fontFamily: 'Sarabun-Regular',
+      color: '#6C7476'
     },
 
     ownershipTag: {
@@ -456,6 +470,8 @@ const styles = StyleSheet.create({
 
     savedQuoteText: {
       fontSize: 18,
+      fontFamily: 'Sarabun-Regular',
+      color: '#373F41'
     },
 
     savedQuoteCTAs: {
@@ -469,6 +485,8 @@ const styles = StyleSheet.create({
     },
 
     viewPoemText: {
-      fontSize: 15,
+      fontSize: 17,
+      fontFamily: 'Sarabun-SemiBold',
+      color: '#6C7476'
     }
   });

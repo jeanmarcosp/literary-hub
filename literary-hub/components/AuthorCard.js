@@ -2,23 +2,15 @@ import "react-native-gesture-handler";
 import React from "react";
 import { View, TouchableOpacity, Image, Text, StyleSheet } from "react-native";
 import Like from "./Like";
-import {
-  useFonts,
-  Prompt_400Regular,
-  Prompt_500Medium,
-  Prompt_600SemiBold,
-} from "@expo-google-fonts/prompt";
+import { useNavigation } from "@react-navigation/native";
 
 const AuthorCard = ({ coverImage, title }) => {
   // Load the "Prompt" fonts for Regular (400), Medium (500), and Semi-Bold (600) weights
-  const [fontsLoaded] = useFonts({
-    PromptRegular: Prompt_400Regular,
-    PromptMedium: Prompt_500Medium,
-    PromptSemiBold: Prompt_600SemiBold,
-  });
+  // hi
+  const navigation = useNavigation();
 
   return (
-    <TouchableOpacity style={styles.card}>
+    <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('AuthorCollectionScreen')}>
       <View style={styles.container}>
         <View style={styles.topRow}>
           <Image source={coverImage} style={styles.image} />
@@ -27,10 +19,10 @@ const AuthorCard = ({ coverImage, title }) => {
         <View>
           <Text
             style={{
-              fontFamily: "PromptMedium",
+              fontFamily: "Sarabun-Regular",
               textAlign: "left",
               textAlignVertical: "center",
-              fontSize: 22,
+              fontSize: 18,
               lineHeight: 28,
               marginTop: 17,
             }}
@@ -66,9 +58,9 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   title: {
-    fontFamily: "PromptMedium",
+    fontFamily: "HammersmithOne",
     display: "flex",
-    fontSize: 24,
+    fontSize: 10,
     color: "#373F41",
     padding: 0,
     lineHeight: 30,
