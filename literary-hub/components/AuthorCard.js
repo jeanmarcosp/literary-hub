@@ -19,7 +19,7 @@ const AuthorCard = ({ coverImage, title }) => {
         <View>
           <Text
             style={{
-              fontFamily: "HammersmithOne",
+              fontFamily: "Sarabun-Regular",
               textAlign: "left",
               textAlignVertical: "center",
               fontSize: 18,
