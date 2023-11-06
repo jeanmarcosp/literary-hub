@@ -4,7 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
-import ExploreScreen from "./screens/ExploreScreen";
+import ExploreNavigator from "./screens/Explore/ExploreNavigator";
 import ProfileNavigator from "./screens/Profile/ProfileNavigator";
 import HomeScreen from "./screens/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
@@ -33,7 +33,7 @@ const StackNavigator = () => {
 
         <Tab.Screen
           name="Explore"
-          component={ExploreScreen}
+          component={ExploreNavigator}
           options={{
             tabBarLabel: "Explore",
             tabBarLabelStyle: { color: "black" },

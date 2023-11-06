@@ -7,12 +7,12 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { React, useState } from "react";
-import AuthorList from "../components/AuthorList";
-import SearchBar from "../components/SearchBar.js";
+import AuthorList from "../../components/AuthorList";
+import SearchBar from "../../components/SearchBar.js";
 import { Ionicons } from "@expo/vector-icons";
-import TrendingPoems from "../components/TrendingPoems";
-import TrendingCollections from "../components/TrendingCollections";
-import Quote from "../components/Quote";
+import TrendingPoems from "../../components/TrendingPoems";
+import TrendingCollections from "../../components/TrendingCollections";
+import Quote from "../../components/Quote";
 
 const ExploreScreen = () => {
   const [segmentedControlView, setSegmentedControlView] =

@@ -2,10 +2,14 @@ import "react-native-gesture-handler";
 import { React, useState } from "react";
 import { View, TouchableOpacity, Image, Text, StyleSheet } from "react-native";
 import Like from "./Like";
+import { useNavigation } from "@react-navigation/native";
 
 const CollectionCard = ({ coverImage, title, caption, creator }) => {
+
+  const navigation = useNavigation();
+
   return (
-    <TouchableOpacity style={styles.card}>
+    <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('CollectionScreen')}>
       <View style={styles.container}>
         <View style={styles.info}>
           <Image source={coverImage} style={styles.image} />

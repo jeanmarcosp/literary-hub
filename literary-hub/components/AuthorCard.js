@@ -8,6 +8,7 @@ import {
   Prompt_500Medium,
   Prompt_600SemiBold,
 } from "@expo-google-fonts/prompt";
+import { useNavigation } from "@react-navigation/native";
 
 const AuthorCard = ({ coverImage, title }) => {
   // Load the "Prompt" fonts for Regular (400), Medium (500), and Semi-Bold (600) weights
@@ -17,8 +18,10 @@ const AuthorCard = ({ coverImage, title }) => {
     PromptSemiBold: Prompt_600SemiBold,
   });
 
+  const navigation = useNavigation();
+
   return (
-    <TouchableOpacity style={styles.card}>
+    <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('AuthorCollectionScreen')}>
       <View style={styles.container}>
         <View style={styles.topRow}>
           <Image source={coverImage} style={styles.image} />
