@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   title: {
-    fontFamily: "Sarabun-Regular",
+    fontFamily: "HammersmithOne",
     display: "flex",
     fontSize: 10,
     color: "#373F41",
