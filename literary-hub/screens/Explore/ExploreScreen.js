@@ -103,9 +103,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   text: {
-    fontFamily: "PromptSemiBold",
+    fontFamily: "HammersmithOne",
     fontSize: 28,
     marginLeft: 10,
+    paddingVertical: 10
   },
   segmentedControl: {
     flexDirection: "row",
@@ -128,7 +129,7 @@ const styles = StyleSheet.create({
   },
 
   segmentedControlSelectedText: {
-    fontFamily: "PromptRegular",
+    fontFamily: "HammersmithOne",
     fontSize: 15,
     color: "white",
   },
@@ -143,7 +144,7 @@ const styles = StyleSheet.create({
   },
 
   segmentedControlUnselectedText: {
-    fontFamily: "PromptRegular",
+    fontFamily: "HammersmithOne",
     fontSize: 15,
     color: "#644980",
   },

@@ -22,7 +22,7 @@ const AuthorCard = ({ coverImage, title }) => {
               fontFamily: "HammersmithOne",
               textAlign: "left",
               textAlignVertical: "center",
-              fontSize: 22,
+              fontSize: 18,
               lineHeight: 28,
               marginTop: 17,
             }}
