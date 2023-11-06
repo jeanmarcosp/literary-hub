@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   title: {
-    fontFamily: "PromptRegular",
+    fontFamily:"HammersmithOne",
     fontSize: 22,
     color: "#373F41",
   },
@@ -65,12 +65,12 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   creator: {
-    fontFamily: "PromptRegular",
+    fontFamily: "Sarabun-Regular",
     fontSize: 17,
     color: "gray",
   },
   caption: {
-    fontFamily: "PromptRegular",
+    fontFamily: "Sarabun-Regular",
     fontSize: 15,
     color: "#373F41",
     paddingTop: 10,
