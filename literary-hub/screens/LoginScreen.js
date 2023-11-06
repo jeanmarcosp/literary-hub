@@ -14,30 +14,42 @@ import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import logo from "../assets/logo-purple.png";
+import { useSelector, useDispatch } from "react-redux";
+import { setUser } from "../state/actions/userActions";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigation = useNavigation();
+
+  const user = useSelector((state) => state.user); // Use the useSelector hook to access the user data
+  const userId = user ? user.id : null; // Extract the user ID
+  const dispatch = useDispatch();
+
   useEffect(() => {
     const checkLoginStatus = async () => {
       try {
         const token = await AsyncStorage.getItem("authToken");
-      } catch {}
+      } catch { }
     };
   });
+
   const handleLogin = () => {
     const user = {
       email: email,
       password: password,
     };
     axios
-      .post("http://localhost:3000/login", user)
+      .post("http://192.168.1.163:3000/login", {
+        ... user
+      })
       .then((response) => {
         console.log(response);
         const token = response.data.token;
         AsyncStorage.setItem("authToken", token);
+
+        // Dispatch the action to store user information
+        dispatch(setUser({ id: response.data.userId, username: null }));
         navigation.navigate("Main");
       })
       .catch((error) => {
@@ -51,24 +63,12 @@ const LoginScreen = () => {
   };
 
   return (
-    <SafeAreaView
-      style={{ flex: 1, backgroundColor: "white", alignItems: "center" }}
-    >
-      <View style={{ marginTop: 50 }}></View>
+    <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView>
         <View style={{ alignItems: "center", justifyContent: "center" }}>
-          <Text
-            style={{
-              fontFamily: "Inter_900Black",
-              fontSize: 30,
-              fontWeight: "bold",
-              marginTop: 25,
-            }}
-          >
-            Login
-          </Text>
+          <Text style={styles.loginHeader}>Login</Text>
         </View>
-        <View style={{ marginTop: 40 }}>
+        <View>
           <View style={styles.inputView}>
             <MaterialCommunityIcons
               style={{ marginLeft: 8 }}
@@ -81,13 +81,7 @@ const LoginScreen = () => {
               value={email}
               onChangeText={(text) => setEmail(text)}
               placeholderTextColor={"gray"}
-              marg
-              style={{
-                color: "gray",
-                marginVertical: 10,
-                width: 300,
-                fontSize: email ? 16 : 16,
-              }}
+              style={styles.textBox}
               placeholder="Enter your Email"
             />
           </View>
@@ -104,56 +98,24 @@ const LoginScreen = () => {
                 value={password}
                 onChangeText={(text) => setPassword(text)}
                 placeholderTextColor={"gray"}
-                style={{
-                  color: "gray",
-                  marginVertical: 10,
-                  width: 300,
-                  fontSize: password ? 16 : 16,
-                }}
+                style={styles.textBox}
                 placeholder="Enter your Password"
               />
             </View>
           </View>
 
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-              marginTop: 12,
-            }}
-          >
-            <Text style={{ flex: 0, fontWeight: "500", color: "#007FFF" }}>
-              Forgot password
-            </Text>
+          <View style={styles.forgotPasswordContainer}>
+            <Text style={styles.forgotPasswordText}>Forgot password</Text>
           </View>
         </View>
 
-        <View style={{ marginTop: 45 }}>
-          <Pressable
-            onPress={handleLogin}
-            style={{
-              width: 200,
-              backgroundColor: "#644980",
-              padding: 15,
-              marginLeft: "auto",
-              marginRight: "auto",
-            }}
-          >
-            <Text
-              style={{
-                textAlign: "center",
-                fontWeight: "bold",
-                fontSize: 16,
-                color: "white",
-              }}
-            >
-              Login
-            </Text>
+        <View>
+          <Pressable onPress={handleLogin} style={styles.loginContainer}>
+            <Text style={styles.loginText}>Login</Text>
           </Pressable>
 
-          <Pressable style={{ marginTop: 10 }}>
-            <Text style={{ textAlign: "center", fontSize: 14 }}>
+          <Pressable>
+            <Text style={styles.signUpText}>
               Don't have an account? Sign up
             </Text>
           </Pressable>
@@ -166,6 +128,11 @@ const LoginScreen = () => {
 export default LoginScreen;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "white",
+    alignItems: "center",
+  },
   inputView: {
     flexDirection: "row",
     alignItems: "center",
@@ -174,5 +141,46 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     paddingVertical: 5,
     borderRadius: 5,
+  },
+  loginHeader: {
+    fontFamily: "PromptSemiBold",
+    fontSize: 30,
+    marginTop: 75,
+    marginBottom: 30,
+  },
+  loginContainer: {
+    width: 200,
+    backgroundColor: "#644980",
+    padding: 15,
+    marginLeft: "auto",
+    marginRight: "auto",
+    marginBottom: 10,
+  },
+  loginText: {
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: 16,
+    color: "white",
+  },
+  textBox: {
+    color: "gray",
+    marginVertical: 10,
+    width: 300,
+    fontSize: 16,
+  },
+  forgotPasswordContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: 12,
+    marginBottom: 45,
+  },
+  forgotPasswordText: {
+    fontWeight: "500",
+    color: "#007FFF",
+  },
+  signUpText: {
+    textAlign: "center",
+    fontSize: 14,
   },
 });

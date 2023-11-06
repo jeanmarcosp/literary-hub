@@ -10,23 +10,11 @@ import { React, useState } from "react";
 import AuthorList from "../components/AuthorList";
 import SearchBar from "../components/SearchBar.js";
 import { Ionicons } from "@expo/vector-icons";
-import {
-  useFonts,
-  Prompt_400Regular,
-  Prompt_500Medium,
-  Prompt_600SemiBold,
-} from "@expo-google-fonts/prompt";
 import TrendingPoems from "../components/TrendingPoems";
 import TrendingCollections from "../components/TrendingCollections";
 import Quote from "../components/Quote";
-import { FlatList } from "react-native-gesture-handler";
 
 const ExploreScreen = () => {
-  const [fontsLoaded] = useFonts({
-    PromptRegular: Prompt_400Regular,
-    PromptMedium: Prompt_500Medium,
-    PromptSemiBold: Prompt_600SemiBold,
-  });
   const [segmentedControlView, setSegmentedControlView] =
     useState("Collections");
   return (
