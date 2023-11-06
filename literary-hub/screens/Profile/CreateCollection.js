@@ -14,7 +14,9 @@ const CreateCollection = () => {
                 <View style={styles.main}>
                     <Text style={styles.title}>Create new collection</Text>
                     <TouchableOpacity onPress={() => {navigation.goBack()}}>
-                        <Ionicons name="close" size={30} color="black" />
+                        <View style={styles.closeCTA}>
+                            <Ionicons name="close" size={23} color="#644980" />
+                        </View>
                     </TouchableOpacity>
                 </View>
 
@@ -68,7 +70,7 @@ const styles = StyleSheet.create({
 
     container: {
         paddingHorizontal: 25,
-        paddingTop: 10,
+        paddingTop: 20,
     },
 
     main: {
@@ -78,7 +80,14 @@ const styles = StyleSheet.create({
     },
 
     title: {
-        fontSize: 20,
+        fontSize: 25,
+        fontFamily: 'HammersmithOne'
+    },
+
+    closeCTA: {
+        backgroundColor: '#F7EEFF',
+        borderRadius: 100,
+        padding: 4,
     },
 
     coverPhotoSection: {
@@ -87,11 +96,14 @@ const styles = StyleSheet.create({
     },
 
     header: {
-        fontSize: 17,
+        fontSize: 18,
+        fontFamily: 'HammersmithOne'
     },
 
     headerDescription: {
-        color: '#9CB5BB'
+        color: '#9CB5BB',
+        fontFamily: 'Sarabun-Medium',
+        fontSize: 15,
     },
 
     emptyCoverPhoto: {
@@ -113,7 +125,7 @@ const styles = StyleSheet.create({
 
     editPhotoCTA: {
         alignSelf: 'baseline',
-        paddingHorizontal: 5,
+        paddingHorizontal: 7,
         paddingVertical: 5,
         borderWidth: 1,
         borderRadius: 3,
@@ -122,7 +134,9 @@ const styles = StyleSheet.create({
     },
 
     editPhotoText: {
-        color: '#6C7476',
+        color: '#373F41',
+        fontFamily: 'HammersmithOne',
+        fontSize: 15,
     },
 
     nameSection: {
@@ -145,13 +159,14 @@ const styles = StyleSheet.create({
         alignSelf: 'baseline',
         paddingVertical: 10,
         paddingHorizontal: 30,
-        backgroundColor: '#373F41',
+        backgroundColor: '#644980',
         marginTop: 40,
         alignSelf: 'center'
     },
 
     createText: {
         fontSize: 18,
+        fontFamily: 'HammersmithOne',
         color: 'white'
     }
 })
