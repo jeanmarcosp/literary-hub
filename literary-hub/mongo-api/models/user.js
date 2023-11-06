@@ -3,6 +3,10 @@ const mongoose = require("mongoose");
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
+    required: true,
+  },
+  username: {
+    type: String,
     unique: true,
     required: true,
   },
@@ -15,6 +19,7 @@ const userSchema = new mongoose.Schema({
     { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   ],
   followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  following: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   verified: {
     type: Boolean,
     default: false,
@@ -22,6 +27,7 @@ const userSchema = new mongoose.Schema({
   verificationToken: String,
   likedPoems: [{ type: mongoose.Schema.Types.ObjectId, ref: "Poem" }],
   likedCollections: [{ type: mongoose.Schema.Types.ObjectId, ref: "Collection" }],
+  readPoems: [{ type: mongoose.Schema.Types.ObjectId, ref: "Poem" }],
 });
 
 const User = mongoose.model("User", userSchema);
