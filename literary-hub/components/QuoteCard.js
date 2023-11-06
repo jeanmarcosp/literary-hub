@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
 
   savedQuoteText: {
     fontSize: 16,
-    fontFamily: "PromptRegular",
+    fontFamily: "Sarabun-Regular",
     color: "#373F41",
   },
 
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
   },
 
   viewPoemText: {
-    fontFamily: "PromptRegular",
+    fontFamily: "HammersmithOne",
     fontSize: 13,
     color: "#373F41",
   },

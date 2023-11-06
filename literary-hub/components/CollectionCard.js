@@ -2,10 +2,14 @@ import "react-native-gesture-handler";
 import { React, useState } from "react";
 import { View, TouchableOpacity, Image, Text, StyleSheet } from "react-native";
 import Like from "./Like";
+import { useNavigation } from "@react-navigation/native";
 
 const CollectionCard = ({ coverImage, title, caption, creator }) => {
+
+  const navigation = useNavigation();
+
   return (
-    <TouchableOpacity style={styles.card}>
+    <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('CollectionScreen')}>
       <View style={styles.container}>
         <View style={styles.info}>
           <Image source={coverImage} style={styles.image} />
@@ -51,7 +55,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   title: {
-    fontFamily: "PromptRegular",
+    fontFamily:"HammersmithOne",
     fontSize: 22,
     color: "#373F41",
   },
@@ -61,12 +65,12 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   creator: {
-    fontFamily: "PromptRegular",
+    fontFamily: "Sarabun-Regular",
     fontSize: 17,
     color: "gray",
   },
   caption: {
-    fontFamily: "PromptRegular",
+    fontFamily: "Sarabun-Regular",
     fontSize: 15,
     color: "#373F41",
     paddingTop: 10,
