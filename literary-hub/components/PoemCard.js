@@ -56,18 +56,18 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   title: {
-    fontFamily: "PromptRegular",
+    fontFamily: "Sarabun-Bold",
     fontSize: 22,
     color: "#373F41",
   },
   author: {
-    fontFamily: "PromptRegular",
-    fontSize: 20,
+    fontFamily: "Sarabun-Regular",
+    fontSize: 15,
     paddingHorizontal: 25,
     color: "grey",
   },
   excerpt: {
-    fontFamily: "PromptRegular",
+    fontFamily: "Sarabun-Regular",
     fontSize: 16,
     color: "#373F41",
     marginTop:10,
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     marginTop:10,
   },
   viewPoemText: {
-    fontFamily: "PromptRegular",
+    fontFamily: "HammersmithOne",
     fontSize: 13,
     color: "#373F41",
   },
