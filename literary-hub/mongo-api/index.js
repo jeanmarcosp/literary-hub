@@ -256,11 +256,11 @@ app.post('/create-collection', async (req, res) => {
 });
 
 //endpoint for getting logged in user info
-app.get("/profile:userId", async (req, res) => {
+app.get("/profile/:userId", async (req, res) => {
   try {
     const userId = req.params.userId;
 
-    const user = await User.findById(userId).select('-password');
+    const user = await User.findById(userId);
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
