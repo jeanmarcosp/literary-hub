@@ -15,23 +15,25 @@ import Like from "../components/Like";
 import getUserId from "../hooks/getUserId";
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import CollectionBottomSheet from "../components/CollectionBottomSheet";
+import { setUser } from "../state/actions/userActions";
 
 const HomeScreen = () => {
   const [annotationMode, handleAnnotationMode] = useState(false);
   const [randomPoem, setRandomPoem] = useState(null);
   const [poemPages, setPoemPages] = useState([]);
   const [pageCount, setPageCount] = useState(0);
+  const [liked, handleLike] = useState(false);
+  const [userData, setUserData] = useState(null);
+  const userCollections = [];
+
 
   const bottomSheetRef = useRef(null);
-	const [title, setTitle] = useState('Passing my data 🔥');
 
 	const handleClosePress = () => {
     bottomSheetRef.current?.close();
   }
 	const handleOpenPress = () => {
-    console.log('1');
     bottomSheetRef.current?.expand();
-    console.log('2');
   };
 
   
@@ -40,7 +42,7 @@ const HomeScreen = () => {
   const linesPerPage = 15;
 
   const userId = getUserId();
-  console.log("User ID:", userId);
+
 
   useEffect(() => {
     axios
@@ -73,6 +75,18 @@ const HomeScreen = () => {
         console.error("Error fetching random poem:", error);
       });
   }, []);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:3000/getuser",{ params:{ id: userId } } )
+      .then((response) =>{
+        // Update the userData state with the fetched data
+        setUserData(response.data);
+      })
+      .catch((error) => {
+        console.log("not working");
+      })
+  });
 
   return (
     <SafeAreaView style={styles.container} id="page">
@@ -134,8 +148,8 @@ const HomeScreen = () => {
             <Feather  name="plus" size={30} color="black" />
           </Pressable>
           
-          
-          {liked ? (
+          <Like></Like>
+          {/* {liked ? (
             <Pressable
               onPress={() => {
                 handleLike(false);
@@ -151,14 +165,14 @@ const HomeScreen = () => {
             >
               <FontAwesome name="heart-o" size={28} color="black" />
             </Pressable>
-          )}
+          )} */}
         </View>
         
       </View>
       
       {/* <Text>Number of Pages: {pageCount}</Text>  */}
       {/* saves page count for when we want to do dots on the bottom */}
-        <CollectionBottomSheet ref={bottomSheetRef} title="Anna" />
+        <CollectionBottomSheet ref={bottomSheetRef} title="Add to Collection" poem={randomPoem} userData={userData}/>
 	
     </SafeAreaView>
   );
