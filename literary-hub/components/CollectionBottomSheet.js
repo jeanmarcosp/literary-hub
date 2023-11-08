@@ -163,6 +163,7 @@ const styles = StyleSheet.create({
     margin: 10,
     width: Dimensions.get('window').width * 0.5,
     alignSelf: 'center',
+    alignItems:'center',
   },
   buttonText: {
     color: 'white',
