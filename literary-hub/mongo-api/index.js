@@ -227,3 +227,48 @@ app.put("/collections/:collectionId/:userId/unlike", async (req, res) => {
     );
   }
 });
+
+//endpoint for creating a collection
+app.post('/create-collection', async (req, res) => {
+  try {
+    const { userId, title, coverArt, likes = 0, poemsInCollection = [] } = req.body;
+
+    // Validate user input (you can add more validation as needed)
+    if (!userId || !title) {
+      return res.status(400).json({ error: 'User and title are required fields' });
+    }
+
+    const newCollection = new Collection({
+      user: userId,
+      title: title,
+      coverArt: "",
+      likes: 0,
+      poemsInCollection: [],
+    });
+
+    const savedCollection = await newCollection.save();
+    res.status(201).json(savedCollection); // 201 status code indicates a resource was created
+
+  } catch (error) {
+    console.error('Error creating collection:', error);
+    res.status(500).json({ error: 'An error occurred while creating the collection.' });
+  }
+});
+
+//endpoint for getting logged in user info
+app.get("/profile/:userId", async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ user });
+  } catch (error) {
+    console.error('Error while getting the profile:', error);
+    res.status(500).json({ message: "Error while getting the profile" });
+  }
+});
