@@ -1,6 +1,6 @@
-import React, { forwardRef, useRef, useState, useEffect } from 'react';
+import React, { forwardRef, useRef, useState, useEffect, useCallback } from 'react';
 import { View, StyleSheet, Text, Button, TouchableOpacity, Alert, Dimensions } from 'react-native';
-import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import BottomSheet, { BottomSheetScrollView, BottomSheetBackdrop} from '@gorhom/bottom-sheet';
 import axios from "axios";
 import DialogInput from 'react-native-dialog-input';
 
@@ -9,6 +9,15 @@ const CollectionBottomSheet = forwardRef((props, ref) => {
   const [collections, setCollections] = useState([]);
   const [isDialogVisible, setDialogVisible] = useState(false);
 
+  const renderBackdrop = useCallback(
+    props => (
+      <BottomSheetBackdrop
+        {...props}
+        disappearsOnIndex={1}
+        appearsOnIndex={2}
+      />
+    ),
+    [])
   const showDialog = () => {
     setDialogVisible(true);
   };
@@ -89,10 +98,11 @@ const CollectionBottomSheet = forwardRef((props, ref) => {
         }
       }}
       index={-1}
-      snapPoints={['25%', '50%', '50%']}
+      snapPoints={['25%', '50%', '75%']}
       enablePanDownToClose={true}
       handleIndicatorStyle={{ backgroundColor: '#fff' }}
       backgroundStyle={{ backgroundColor: '#222' }}
+      backdropComponent={renderBackdrop}
     >
       <View style={styles.contentContainer}>
         <Text style={styles.containerHeadline}>{props.title}</Text>
@@ -112,9 +122,12 @@ const CollectionBottomSheet = forwardRef((props, ref) => {
           {collections.map((collection) => (
 
             <View key={collection._id} style={styles.collectionRow}>
-              <View style={{ justifyContent: 'flex-start', gap: 10 }}>
-
+              <View style={{ justifyContent: 'center', gap: 5 }}>
                 <Text style={styles.collectionTitle}>{collection.title}</Text>
+                <Text style={styles.collectionLength}>
+  {collection.poemsInCollection.length}{' '}
+  {collection.poemsInCollection.length === 1 ? 'poem' : 'poems'}
+</Text>
 
               </View>
               <TouchableOpacity
@@ -187,7 +200,12 @@ const styles = StyleSheet.create({
   collectionTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    padding: 10,
+    padding: 5,
+  },
+  collectionLength: {
+    fontSize: 16,
+    fontWeight: 100,
+    padding: 5,
   },
   collectionPoems: {
     fontSize: 10,
