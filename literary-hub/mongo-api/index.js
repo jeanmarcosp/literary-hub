@@ -127,7 +127,7 @@ app.post("/collection/new", async (req, res) => {
     await newCollection.save();
     await User.updateOne(
       {_id: user},
-      {$push: {likedCollections: newCollection._id}}
+      {$push: {createdCollections: newCollection._id}}
     );
 
     res.status(201).json({ message: "Collection created successfully", collection: newCollection });
