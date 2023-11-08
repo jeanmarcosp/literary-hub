@@ -46,7 +46,7 @@ const HomeScreen = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/random-poem")
+      .get(`${ROOT_URL}/random-poem`)
       .then((response) => {
         setRandomPoem(response.data[0]);
         const lines = response.data[0].content.split("\n"); // split the poem into lines
