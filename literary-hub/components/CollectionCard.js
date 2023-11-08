@@ -13,7 +13,9 @@ const CollectionCard = ({ coverImage, title, caption, creator }) => {
       <View style={styles.container}>
 
         <View style={styles.info}>
-          <Image source={coverImage} style={styles.image} />
+          <Image source={{
+            uri: coverImage,
+          }} style={styles.image} />
           <View style={styles.text}>
             <View>
               <Text style={styles.title}>{title}</Text>

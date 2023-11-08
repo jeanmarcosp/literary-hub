@@ -20,6 +20,7 @@ const collectionSchema = new mongoose.Schema({
       ref: "Poem",
     },
   ],
+  caption: { type: String },
 });
 
 const Collection = mongoose.model("Collection", collectionSchema);

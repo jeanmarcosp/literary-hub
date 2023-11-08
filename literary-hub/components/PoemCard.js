@@ -5,6 +5,7 @@ import Like from "./Like";
 import { Ionicons } from "@expo/vector-icons";
 
 const PoemCard = ({ title, author, excerpt }) => {
+  console.log(excerpt.split('\n').slice(0, 2).join('\n'))
   return (
     <TouchableOpacity style={styles.card}>
       <View style={styles.container}>
@@ -20,16 +21,15 @@ const PoemCard = ({ title, author, excerpt }) => {
               <Text style={styles.author}>{author}</Text>
               <Like />
             </View>
-            <Text style={styles.excerpt}>{excerpt}</Text>
+            <Text style={styles.excerpt}>{excerpt.split('\n').slice(0, 2).join('\n')}</Text>
           </View>
           <TouchableOpacity>
-          <View style={styles.viewPoem}>
-            <Text style={styles.viewPoemText}>View poem</Text>
-            <Ionicons name="chevron-forward" size={17} color="black" />
-          </View>
-        </TouchableOpacity>
+            <View style={styles.viewPoem}>
+              <Text style={styles.viewPoemText}>View poem</Text>
+              <Ionicons name="chevron-forward" size={17} color="black" />
+            </View>
+          </TouchableOpacity>
         </View>
-  
       </View>
     </TouchableOpacity>
   );
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
   },
 
   info: {
-    marginBottom:0,
+    marginBottom: 0,
   },
 
   text: {
@@ -73,12 +73,12 @@ const styles = StyleSheet.create({
     fontFamily: "Sarabun-Regular",
     fontSize: 16,
     color: "#373F41",
-    marginTop:10,
+    marginTop: 10,
   },
 
   viewPoem: {
     flexDirection: "row",
-    marginTop:10,
+    marginTop: 10,
   },
 
   viewPoemText: {

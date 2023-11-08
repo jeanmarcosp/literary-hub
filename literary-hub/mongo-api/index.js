@@ -58,9 +58,97 @@ app.post("/login", async (req, res) => {
     }
 
     const token = jwt.sign({ userId: user._id }, secretKey);
-    res.status(200).json({ token, userId: user._id  });
+    res.status(200).json({ token, userId: user._id });
   } catch (error) {
     console.log("error", error);
+  }
+});
+//endpoint to get list of user collections
+app.get('/getcollections', async (req, res) => {
+  try {
+    const { id } = req.query;
+
+    // Find collections by user ID
+    const collections = await Collection.find({ user: id });
+
+    // Store the collections in an array
+    const collectionsArray = collections.map((collection) => collection.toObject());
+
+    res.status(200).json(collectionsArray);
+  } catch (error) {
+    console.error("Error fetching collections:", error);
+    res.status(500).json({ message: "Could not fetch collections" });
+  }
+});
+//endpoint to add poem to colection
+app.post('/addpoemtocollection', async (req, res) => {
+  try {
+    const { poemId, collectionId } = req.body;
+
+    // Find the collection by its ID
+    const collection = await Collection.findById(collectionId);
+
+    if (!collection) {
+      return res.status(404).json({ message: 'Collection not found' });
+    }
+
+    // Check if the poemId is already in the poemsInCollection array
+    if (collection.poemsInCollection.includes(poemId)) {
+      return res.status(400).json({ message: 'Poem already in the collection' });
+    }
+
+    // If the poem is not in the collection, add it
+    collection.poemsInCollection.push(poemId);
+    await collection.save();
+
+    res.status(200).json({ message: 'Poem added to collection', collection });
+  } catch (error) {
+    console.error('Error adding poem to collection:', error);
+    res.status(500).json({ message: 'Could not add poem to collection' });
+  }
+});
+
+
+//endpoint to create new collection
+app.post("/collection/new", async (req, res) => {
+  try {
+    const { user, title } = req.body;
+    if (!title) {
+      return res.status(400).json({ message: "Title is required" });
+    }
+    const existingCollection = await Collection.findOne({ user, title });
+    if (existingCollection) {
+      return res.status(400).json({ message: "Collection already exists" })
+    }
+
+    // create new collection
+    const newCollection = new Collection({ user, title });
+    // Save the new collection to the database
+    await newCollection.save();
+    await User.updateOne(
+      {_id: user},
+      {$push: {createdCollections: newCollection._id}}
+    );
+
+    res.status(201).json({ message: "Collection created successfully", collection: newCollection });
+  } catch (error) {
+    console.log("error", error);
+    res.status(500).json({ message: "Error creatng collecton" });
+  }
+});
+
+// endpoint to get userdata
+app.get("/getuser", async (req, res) => {
+  try {
+    const { id } = req.query;
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ message: "Can't find user" });
+    }
+    res.json(user);
+  } catch (error) {
+    console.log("error", error);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
@@ -73,6 +161,7 @@ app.get('/random-poem', async (req, res) => {
     res.status(500).json({ error: 'Error fetching a random poem' });
   }
 });
+
 
 //endpoint to get all the poems in database, use this endpoint to populate homepage
 app.get("/get-poems", async (req, res) => {
@@ -270,5 +359,43 @@ app.get("/profile/:userId", async (req, res) => {
   } catch (error) {
     console.error('Error while getting the profile:', error);
     res.status(500).json({ message: "Error while getting the profile" });
+  }
+});
+
+//endpoint for returning liked poems, takes in array of poems
+app.get('/poems-by-ids', async (req, res) => {
+  try {
+    const poemIds = req.query.poemIds; // Retrieve poem IDs from the query parameters
+
+    // Fetch poems by their IDs
+    const poems = await Poem.find({ _id: { $in: poemIds } });
+
+    if (!poems || poems.length === 0) {
+      return res.status(404).json({ message: "No poems found for the provided IDs" });
+    }
+
+    res.status(200).json(poems);
+  } catch (error) {
+    console.error('Error while getting poems by IDs:', error);
+    res.status(500).json({ message: "Error while getting poems by IDs" });
+  }
+});
+
+//endpoint for returning collections, takes in array of collections
+app.get('/collections-by-ids', async (req, res) => {
+  try {
+    const collectionIds = req.query.collectionIds; // Retrieve collection IDs from the query parameters
+
+    // Fetch collections by their IDs
+    const collections = await Collection.find({ _id: { $in: collectionIds } });
+
+    if (collections.length === 0) {
+      return res.status(404).json({ message: "No collections found for the provided IDs" });
+    }
+
+    res.status(200).json(collections);
+  } catch (error) {
+    console.error('Error while getting collections by IDs:', error);
+    res.status(500).json({ message: "Error while getting collections by IDs" });
   }
 });

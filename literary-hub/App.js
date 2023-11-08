@@ -12,6 +12,7 @@ import { useFonts } from 'expo-font'
 import { Provider } from "react-redux";
 import store from "./state/store";
 import { useSelector, useDispatch } from 'react-redux';
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 
 export default function App() {
@@ -43,8 +44,13 @@ export default function App() {
   }
   return (
     <Provider store={store}>
-      <StackNavigator />
+    <GestureHandlerRootView style={{flex:1}}>
+        <StackNavigator />
+    </GestureHandlerRootView>
     </Provider>
+    
+      
+    
   );
 }
 
