@@ -27,10 +27,8 @@ const ProfileScreen = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await axios.get(
-          `${ROOT_URL}/profile/${userId}`
-        );
-        console.log(response.data.user.email)
+        const response = await axios.get(`${ROOT_URL}/profile/${userId}`);
+        console.log(response.data.user.email);
         const user = response.data.user;
 
         setUser(user);
@@ -161,28 +159,6 @@ const ProfileScreen = () => {
           style={styles.collections}
         />
       </View>
-    );
-  };
-
-  const Collection = ({ title, poemNumber, author, image }) => {
-    return (
-      <TouchableOpacity>
-        <View style={styles.collection}>
-          <View style={styles.collectionMain}>
-            <Image source={{ uri: `${image}` }} style={styles.collectionPic} />
-            <View style={styles.collectionText}>
-              <Text style={styles.collectionName}>{title}</Text>
-              <Text style={styles.collectionStat}>{poemNumber} poems</Text>
-            </View>
-          </View>
-
-          {author === username && (
-            <View style={styles.ownershipTag}>
-              <Text style={styles.ownershipText}>Self</Text>
-            </View>
-          )}
-        </View>
-      </TouchableOpacity>
     );
   };
 
@@ -356,7 +332,9 @@ const ProfileScreen = () => {
       </View>
 
       <View style={styles.leftAligned}>
-        {segmentedControlView === "Collections" && <CollectionsView collections={collections}/>}
+        {segmentedControlView === "Collections" && (
+          <CollectionsView collections={collections} />
+        )}
         {segmentedControlView === "Liked poems" && (
           <LikedPoemsView poems={poems} />
         )}
