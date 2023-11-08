@@ -85,16 +85,21 @@ app.post('/addpoemtocollection', async (req, res) => {
   try {
     const { poemId, collectionId } = req.body;
 
-    // Find the collection by its ID and update it to add the poem ID to the `poemsInCollection` array
-    const collection = await Collection.findByIdAndUpdate(
-      collectionId,
-      { $addToSet: { poemsInCollection: poemId } },
-      { new: true }
-    );
+    // Find the collection by its ID
+    const collection = await Collection.findById(collectionId);
 
     if (!collection) {
       return res.status(404).json({ message: 'Collection not found' });
     }
+
+    // Check if the poemId is already in the poemsInCollection array
+    if (collection.poemsInCollection.includes(poemId)) {
+      return res.status(400).json({ message: 'Poem already in the collection' });
+    }
+
+    // If the poem is not in the collection, add it
+    collection.poemsInCollection.push(poemId);
+    await collection.save();
 
     res.status(200).json({ message: 'Poem added to collection', collection });
   } catch (error) {
@@ -102,6 +107,7 @@ app.post('/addpoemtocollection', async (req, res) => {
     res.status(500).json({ message: 'Could not add poem to collection' });
   }
 });
+
 
 //endpoint to create new collection
 app.post("/collection/new", async (req, res) => {

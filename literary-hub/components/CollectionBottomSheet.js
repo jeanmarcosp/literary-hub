@@ -9,6 +9,7 @@ const CollectionBottomSheet = forwardRef((props, ref) => {
   const [collections, setCollections] = useState([]);
   const [isDialogVisible, setDialogVisible] = useState(false);
 
+
   const showDialog = () => {
     setDialogVisible(true);
   };
@@ -97,12 +98,12 @@ const CollectionBottomSheet = forwardRef((props, ref) => {
         <Text style={styles.containerHeadline}>{props.title}</Text>
 
         <TouchableOpacity style={styles.button} onPress={showDialog}>
-          <Text style={styles.buttonText}>Create New Collection</Text>
+          <Text style={styles.buttonText}>Add to New Collection</Text>
         </TouchableOpacity>
 
         <DialogInput
           isDialogVisible={isDialogVisible}
-          title={'Create New Collection'}
+          title={'Add to New Collection'}
           hintInput={'Enter collection title'}
           submitInput={(inputText) => handleSubmitNewCollection(inputText)}
           closeDialog={closeDialog}
@@ -110,22 +111,16 @@ const CollectionBottomSheet = forwardRef((props, ref) => {
 
 {collections.map((collection) => (
           <View key={collection._id} style={styles.collectionRow}>
-            <View style={styles.collectionInfo}>
               <Text style={styles.collectionTitle}>{collection.title}</Text>
-              <Text style={styles.collectionPoems}>
-                {collection.poems.length} Poems
-              </Text>
-            </View>
             <TouchableOpacity
               style={styles.collectionButton}
               onPress={() => {
-                if (!isPoemInCollection(collection, props.poem._id)) {
                   addPoemToCollection(props.poem._id, collection._id);
-                }
+                
               }}
             >
               <Text style={styles.buttonText}>
-                {isPoemInCollection(collection, props.poem._id) ? 'Added' : 'Add'}
+                Add
               </Text>
             </TouchableOpacity>
           </View>
@@ -161,8 +156,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 10,
-    margin: 5,
-    backgroundColor: '#f5f5f5',
+    margin: 3,
+    backgroundColor: '#f6f5f5',
     borderRadius: 5,
   },
   collectionInfo: {
@@ -171,6 +166,7 @@ const styles = StyleSheet.create({
   collectionTitle: {
     fontSize: 16,
     fontWeight: 'bold',
+    padding:10,
   },
   collectionPoems: {
     fontSize: 12,
