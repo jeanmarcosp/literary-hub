@@ -8,7 +8,6 @@ const CollectionBottomSheet = forwardRef((props, ref) => {
   const sheetRef = useRef(null);
   const [collections, setCollections] = useState([]);
   const [isDialogVisible, setDialogVisible] = useState(false);
-  const [inCollection, handleInCollection] = useState(false);
 
   const showDialog = () => {
     setDialogVisible(true);
@@ -38,7 +37,7 @@ const CollectionBottomSheet = forwardRef((props, ref) => {
 
   const isPoeminCollection = (poemId, poems) => {
     const isPoemInCollection = poems?.includes(poemId);
-  return isPoemInCollection ?? false;
+    return isPoemInCollection ?? false;
 
   }
   const handleSubmitNewCollection = (inputText) => {
@@ -51,6 +50,7 @@ const CollectionBottomSheet = forwardRef((props, ref) => {
       .post('http://localhost:3000/collection/new', newCollection)
       .then((response) => {
         console.log(response);
+        addPoemToCollection(props.poem._id, response.data.collection._id);
         closeDialog();
       })
       .catch((error) => {
@@ -110,11 +110,10 @@ const CollectionBottomSheet = forwardRef((props, ref) => {
           />
 
           {collections.map((collection) => (
-            
+
             <View key={collection._id} style={styles.collectionRow}>
-              <Text style={{}}>Image Placeholder </Text>
               <View style={{ justifyContent: 'flex-start', gap: 10 }}>
-                
+
                 <Text style={styles.collectionTitle}>{collection.title}</Text>
 
               </View>
@@ -126,9 +125,14 @@ const CollectionBottomSheet = forwardRef((props, ref) => {
                 }}
               >
 
-                <Text style={styles.buttonText}>
-                  {isPoeminCollection(props.poem._id, collection.poemsInCollection)? 'Added':'Add'}
-                </Text>
+                {props.poem && collection && props.poem._id && collection._id ? (
+                  <Text style={styles.buttonText}>
+                    {isPoeminCollection(props.poem._id, collection.poemsInCollection) ? 'Added' : 'Add'}
+                  </Text>
+                ) : (
+                  <Text style={styles.buttonText}>Invalid IDs</Text>
+                )}
+
               </TouchableOpacity>
 
             </View>
@@ -169,7 +173,7 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width * 0.7,
     justifyContent: 'space-between',
     alignItems: 'center',
-    alignSelf:'center',
+    alignSelf: 'center',
     padding: 10,
     margin: 3,
     backgroundColor: '#f6f5f5',
