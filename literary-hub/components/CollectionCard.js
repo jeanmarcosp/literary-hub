@@ -31,9 +31,10 @@ const CollectionCard = ({ coverImage, title, caption, creator }) => {
 
 const styles = StyleSheet.create({
   card: {
-    padding: 10,
   },
+
   container: {
+    paddingHorizontal: 10,
     justifyContent: "space-between",
     backgroundColor: "white",
     borderRadius: 12,
@@ -41,34 +42,40 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 7,
     flexDirection: "row",
-    justifyContent: "space-around",
     alignItems: "flex-start",
+    marginBottom: 10,
   },
+
   info: {
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
   },
+
   text: {
     flexDirection: "column",
     justifyContent: "space-between",
     padding: 20,
   },
+
   title: {
     fontFamily:"HammersmithOne",
     fontSize: 22,
     color: "#373F41",
   },
+
   image: {
     width: 90,
     height: 90,
     borderRadius: 12,
   },
+
   creator: {
     fontFamily: "Sarabun-Regular",
     fontSize: 17,
     color: "gray",
   },
+  
   caption: {
     fontFamily: "Sarabun-Regular",
     fontSize: 15,

@@ -113,12 +113,12 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: "HammersmithOne",
     fontSize: 24,
-    marginTop: 15,
+    marginTop: 23,
   },
 
   segmentedControl: {
     flexDirection: "row",
-    marginTop: 5,
+    marginTop: 7,
     columnGap: 10,
   },
 

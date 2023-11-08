@@ -24,6 +24,7 @@ const AuthorList = () => {
   return (
     <View>
       <FlatList
+        style={styles.authorList}
         data={authorsData}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
@@ -37,3 +38,9 @@ const AuthorList = () => {
 };
 
 export default AuthorList;
+
+const styles = StyleSheet.create({
+  authorList: {
+    overflow: 'visible'
+  }
+})
