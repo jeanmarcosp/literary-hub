@@ -46,8 +46,8 @@ const styles = StyleSheet.create({
   },
 
   container: {
-    paddingHorizontal: 10,
-    paddingVertical: 10,
+    paddingHorizontal: 13,
+    paddingVertical: 15,
     justifyContent: "space-between",
     backgroundColor: "white",
     borderRadius: 12,
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 7,
     flexDirection: "row",
-    marginBottom: 10,
+    marginBottom: 15,
   },
 
   info: {
@@ -98,12 +98,12 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     paddingHorizontal: 10,
     paddingVertical: 3,
-    backgroundColor: '#F9F3FF'
+    backgroundColor: '#F9F3FF',
   },
 
   poemNumberText: {
-    fontFamily: 'Sarabun-Medium',
-    color: '#373F41'
+    fontFamily: 'Sarabun-SemiBold',
+    color: '#774BA3'
   },
 
   likes: {

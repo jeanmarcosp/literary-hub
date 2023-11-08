@@ -36,10 +36,8 @@ const PoemCard = ({ title, author, excerpt }) => {
 };
 
 const styles = StyleSheet.create({
-  card: {
-    padding: 10,
-  },
   container: {
+    marginBottom: 15,
     paddingHorizontal: 18,
     paddingVertical: 18,
     backgroundColor: "white",
@@ -48,34 +46,41 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 7,
   },
+
   info: {
     marginBottom:0,
   },
+
   text: {
     flexDirection: "column",
     justifyContent: "space-between",
   },
+
   title: {
     fontFamily: "Sarabun-Bold",
     fontSize: 22,
     color: "#373F41",
   },
+
   author: {
     fontFamily: "Sarabun-Regular",
     fontSize: 15,
     paddingHorizontal: 25,
     color: "grey",
   },
+
   excerpt: {
     fontFamily: "Sarabun-Regular",
     fontSize: 16,
     color: "#373F41",
     marginTop:10,
   },
+
   viewPoem: {
     flexDirection: "row",
     marginTop:10,
   },
+
   viewPoemText: {
     fontFamily: "HammersmithOne",
     fontSize: 13,

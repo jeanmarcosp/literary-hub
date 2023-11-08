@@ -27,6 +27,7 @@ const TrendingPoems = () => {
   return (
     <View>
       <FlatList
+        style={styles.poemList}
         data={poemData}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
@@ -44,3 +45,10 @@ const TrendingPoems = () => {
 };
 
 export default TrendingPoems;
+
+const styles = StyleSheet.create({
+  poemList: {
+    overflow: 'visible',
+    marginTop: 15,
+  }
+})
