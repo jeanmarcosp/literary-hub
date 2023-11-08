@@ -30,6 +30,7 @@ const AuthorList = () => {
           <AuthorCard coverImage={item.coverImage} title={item.title} />
         )}
         horizontal
+        showsHorizontalScrollIndicator={false}
       />
     </View>
   );

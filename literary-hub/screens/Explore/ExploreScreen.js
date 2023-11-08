@@ -19,7 +19,7 @@ const ExploreScreen = () => {
     useState("Collections");
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
+      <ScrollView style={styles.scrollView}>
         <SearchBar />
         <Text style={styles.text}>Author Collections</Text>
         <AuthorList />
@@ -102,12 +102,18 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     flex: 1,
   },
+
+  scrollView: {
+    paddingTop: 15,
+    paddingHorizontal: 20,
+  },
+
   text: {
     fontFamily: "HammersmithOne",
-    fontSize: 28,
-    marginLeft: 10,
-    paddingVertical: 10
+    fontSize: 24,
+    marginTop: 15,
   },
+
   segmentedControl: {
     flexDirection: "row",
     marginTop: 5,
