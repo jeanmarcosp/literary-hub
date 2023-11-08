@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
 
   segmentedControlSelected: {
     borderRadius: 100,
-    paddingVertical: 10,
+    paddingVertical: 7,
     paddingHorizontal: 20,
     backgroundColor: "#644980",
     alignItems: "center",
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     borderWidth: 1,
     borderColor: "#644980",
-    paddingVertical: 10,
+    paddingVertical: 7,
     paddingHorizontal: 20,
     alignItems: "center",
   },
