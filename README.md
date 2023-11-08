@@ -21,6 +21,7 @@ TODO:  descriptions of code organization and tools and libraries used
 `npx expo install expo-font @expo-google-fonts/inter`\
 `yarn add jwt-decode`\
 `yarn add redux react-redux`
+`yarn add react-native-dialog-input`
 
 
 

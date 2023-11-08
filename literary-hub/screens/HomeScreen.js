@@ -7,24 +7,42 @@ import {
   ScrollView,
   Dimensions,
 } from "react-native";
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useCallback, useMemo, useRef } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import axios from "axios";
 import Like from "../components/Like";
 import getUserId from "../hooks/getUserId";
+import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
+import CollectionBottomSheet from "../components/CollectionBottomSheet";
+import { setUser } from "../state/actions/userActions";
 
 const HomeScreen = () => {
   const [annotationMode, handleAnnotationMode] = useState(false);
   const [randomPoem, setRandomPoem] = useState(null);
   const [poemPages, setPoemPages] = useState([]);
   const [pageCount, setPageCount] = useState(0);
+  const [liked, handleLike] = useState(false);
+  const [userData, setUserData] = useState(null);
+  const userCollections = [];
+
+
+  const bottomSheetRef = useRef(null);
+
+	const handleClosePress = () => {
+    bottomSheetRef.current?.close();
+  }
+	const handleOpenPress = () => {
+    bottomSheetRef.current?.expand();
+  };
+
+  
 
   const pageWidth = Dimensions.get("window").width; // Get the screen width
   const linesPerPage = 15;
 
   const userId = getUserId();
-  console.log("User ID:", userId);
+
 
   useEffect(() => {
     axios
@@ -58,8 +76,21 @@ const HomeScreen = () => {
       });
   }, []);
 
+  useEffect(() => {
+    axios
+      .get("http://localhost:3000/getuser",{ params:{ id: userId } } )
+      .then((response) =>{
+        // Update the userData state with the fetched data
+        setUserData(response.data);
+      })
+      .catch((error) => {
+        console.log("not working");
+      })
+  });
+
   return (
     <SafeAreaView style={styles.container} id="page">
+      
       <View style={styles.poemContainer} id="poem">
         {randomPoem && (
           <ScrollView
@@ -112,10 +143,37 @@ const HomeScreen = () => {
       </View>
       <View>
         <View style={styles.columnView}>
-          <Feather name="plus" size={24} color="black" />
-          <Like />
+          {/* This is the third element in the user interactions flexbox */}
+          <Pressable onPress={handleOpenPress}>
+            <Feather  name="plus" size={30} color="black" />
+          </Pressable>
+          
+          <Like></Like>
+          {/* {liked ? (
+            <Pressable
+              onPress={() => {
+                handleLike(false);
+              }}
+            >
+              <FontAwesome name="heart" size={28} color="black" />
+            </Pressable>
+          ) : (
+            <Pressable
+              onPress={() => {
+                handleLike(true);
+              }}
+            >
+              <FontAwesome name="heart-o" size={28} color="black" />
+            </Pressable>
+          )} */}
         </View>
+        
       </View>
+      
+      {/* <Text>Number of Pages: {pageCount}</Text>  */}
+      {/* saves page count for when we want to do dots on the bottom */}
+        <CollectionBottomSheet ref={bottomSheetRef} title="Add to Collection" poem={randomPoem} userData={userData}/>
+	
     </SafeAreaView>
   );
 };
@@ -130,7 +188,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     flexDirection: "column",
   },
-
+  bottomSheet: {
+    flex: 1,
+		alignItems: 'center',
+		justifyContent: 'center'
+  },
   poemContainer: {
     flex: 1,
     borderColor: "blue",
