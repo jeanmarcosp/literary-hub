@@ -28,9 +28,9 @@ const ProfileScreen = () => {
     const fetchProfile = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/profile/${userId}`
+          `${ROOT_URL}/profile/${userId}`
         );
-        // console.log(response.data.user.email)
+        console.log(response.data.user.email)
         const user = response.data.user;
 
         setUser(user);
