@@ -1,11 +1,33 @@
 import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity, FlatList } from 'react-native'
-import { React, useState }from 'react'
+import { React, useState, useEffect }from 'react'
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from '@react-navigation/native';
-
+import getUserId from '../../hooks/getUserId';
+import axios from 'axios';
 
 
 const ProfileScreen = () => {
+  const userId = getUserId();
+  const [user, setUser] = useState({}); // Initialize with an empty object
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:3000/profile/${userId}`
+        );
+        // console.log(response.data.user.email)
+        const user = response.data.user;
+        
+        setUser(user);
+      } catch (error) {
+        console.log("error", error);
+      }
+    };
+
+    fetchProfile();
+  }, []); 
+
 
   const [segmentedControlView, setSegmentedControlView] = useState('Collections')
 
@@ -213,23 +235,23 @@ const ProfileScreen = () => {
         />
         
         <View style={styles.names}>
-          <Text style={styles.name}>Ava Robinson</Text>
-          <Text style={styles.username}>@dietcokelover89</Text>
+          <Text style={styles.name}>{user?.name}</Text>
+          <Text style={styles.username}>@{user?.username}</Text>
         </View>
 
         <View style={styles.metrics}>
           <View style={styles.metric}>
-            <Text style={styles.metricNumber}>26</Text>
+            <Text style={styles.metricNumber}>{user?.createdCollections?.length}</Text>
             <Text style={styles.metricName}>Collections</Text>
           </View>
 
           <View style={styles.metric}>
-            <Text style={styles.metricNumber}>244</Text>
+            <Text style={styles.metricNumber}>{user?.followers?.length}</Text>
             <Text style={styles.metricName}>Followers</Text>
           </View>
 
           <View style={styles.metric}>
-            <Text style={styles.metricNumber}>57</Text>
+            <Text style={styles.metricNumber}>{user?.following?.length}</Text>
             <Text style={styles.metricName}>Following</Text>
           </View>
         </View>
@@ -309,7 +331,8 @@ const styles = StyleSheet.create({
     username: {
       fontSize: 15,
       fontFamily: 'HammersmithOne',
-      color: '#6C7476'
+      color: '#373F41',
+      marginLeft:15,
     },
 
     metrics: {
