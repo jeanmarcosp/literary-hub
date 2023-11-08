@@ -361,3 +361,41 @@ app.get("/profile/:userId", async (req, res) => {
     res.status(500).json({ message: "Error while getting the profile" });
   }
 });
+
+//endpoint for returning liked poems, takes in array of poems
+app.get('/poems-by-ids', async (req, res) => {
+  try {
+    const poemIds = req.query.poemIds; // Retrieve poem IDs from the query parameters
+
+    // Fetch poems by their IDs
+    const poems = await Poem.find({ _id: { $in: poemIds } });
+
+    if (!poems || poems.length === 0) {
+      return res.status(404).json({ message: "No poems found for the provided IDs" });
+    }
+
+    res.status(200).json(poems);
+  } catch (error) {
+    console.error('Error while getting poems by IDs:', error);
+    res.status(500).json({ message: "Error while getting poems by IDs" });
+  }
+});
+
+//endpoint for returning collections, takes in array of collections
+app.get('/collections-by-ids', async (req, res) => {
+  try {
+    const collectionIds = req.query.collectionIds; // Retrieve collection IDs from the query parameters
+
+    // Fetch collections by their IDs
+    const collections = await Collection.find({ _id: { $in: collectionIds } });
+
+    if (collections.length === 0) {
+      return res.status(404).json({ message: "No collections found for the provided IDs" });
+    }
+
+    res.status(200).json(collections);
+  } catch (error) {
+    console.error('Error while getting collections by IDs:', error);
+    res.status(500).json({ message: "Error while getting collections by IDs" });
+  }
+});
