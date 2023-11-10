@@ -9,37 +9,36 @@ const PoemCard = ({ title, author, excerpt }) => {
   return (
     <TouchableOpacity style={styles.card}>
       <View style={styles.container}>
-        <View style={styles.info}>
-          <View style={styles.text}>
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <Text style={styles.title}>{title}</Text>
-              <Text style={styles.author}>{author}</Text>
-              <Like />
-            </View>
-            <Text style={styles.excerpt}>{excerpt.split('\n').slice(0, 2).join('\n')}</Text>
+
+        <View style={styles.leftInfo}>
+          <View style={styles.mainInfo}>
+            <Text style={styles.title}>{title}</Text>
+            <Text style={styles.author}>by {author}</Text>
           </View>
-          <TouchableOpacity>
-            <View style={styles.viewPoem}>
-              <Text style={styles.viewPoemText}>View poem</Text>
-              <Ionicons name="chevron-forward" size={17} color="black" />
-            </View>
-          </TouchableOpacity>
+          <Text style={styles.excerpt} numberOfLines={2} ellipsizeMode='tail'>{excerpt.split('\n').slice(0, 2).join('\n')}</Text>
         </View>
+
+        <View style={styles.rightInfo}>
+          <View style={styles.poemLengthTag}>
+            <Text style={styles.poemLengthText}>5 min</Text>
+          </View>
+
+          <View style={styles.likes}>
+            <Like />
+            <Text style={styles.likeNumber}>10k</Text>
+          </View>
+        </View>
+
       </View>
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
-  card: {
-    padding: 10,
-  },
   container: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 15,
     paddingHorizontal: 18,
     paddingVertical: 18,
     backgroundColor: "white",
@@ -48,39 +47,63 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 7,
   },
-  info: {
-    marginBottom: 0,
-  },
-  text: {
+
+  leftInfo: {
     flexDirection: "column",
-    justifyContent: "space-between",
+    width: '80%',
   },
+
+  mainInfo: {
+    rowGap: 2,
+  },
+
   title: {
     fontFamily: "Sarabun-Bold",
-    fontSize: 22,
+    fontSize: 18,
     color: "#373F41",
   },
+
   author: {
     fontFamily: "Sarabun-Regular",
     fontSize: 15,
-    paddingHorizontal: 25,
     color: "grey",
   },
+
   excerpt: {
     fontFamily: "Sarabun-Regular",
-    fontSize: 16,
+    fontSize: 14,
     color: "#373F41",
     marginTop: 10,
   },
-  viewPoem: {
-    flexDirection: "row",
-    marginTop: 10,
+
+  rightInfo: {
+    justifyContent: 'space-between',
+    alignItems: 'flex-end'
   },
-  viewPoemText: {
-    fontFamily: "HammersmithOne",
-    fontSize: 13,
-    color: "#373F41",
+
+  poemLengthTag: {
+    borderWidth: 1,
+    borderColor: '#D6CEDF',
+    borderRadius: 100,
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    backgroundColor: '#F9F3FF',
   },
+
+  poemLengthText: {
+    fontFamily: 'Sarabun-SemiBold',
+    color: '#774BA3'
+  },
+
+  likes: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    columnGap: 3,
+  },
+
+  likeNumber: {
+
+  }
 });
 
 export default PoemCard;

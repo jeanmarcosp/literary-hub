@@ -30,6 +30,7 @@ const TrendingCollections = () => {
   return (
     <View>
       <FlatList
+      style={styles.collectionList}
         data={collectionData}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
@@ -48,3 +49,10 @@ const TrendingCollections = () => {
 };
 
 export default TrendingCollections;
+
+const styles = StyleSheet.create({
+  collectionList: {
+    overflow: 'visible',
+    marginTop: 15,
+  }
+})

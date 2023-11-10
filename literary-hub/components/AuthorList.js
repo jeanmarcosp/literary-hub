@@ -24,15 +24,23 @@ const AuthorList = () => {
   return (
     <View>
       <FlatList
+        style={styles.authorList}
         data={authorsData}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <AuthorCard coverImage={item.coverImage} title={item.title} />
         )}
         horizontal
+        showsHorizontalScrollIndicator={false}
       />
     </View>
   );
 };
 
 export default AuthorList;
+
+const styles = StyleSheet.create({
+  authorList: {
+    overflow: 'visible'
+  }
+})

@@ -26,6 +26,7 @@ const quotesData = [
 const Quote = () => {
   return (
     <FlatList
+      style={styles.quoteList}
       data={quotesData}
       renderItem={({ item }) => (
         <QuoteCard poemId={item.poemId} quote={item.quote} />
@@ -37,3 +38,10 @@ const Quote = () => {
 };
 
 export default Quote;
+
+const styles = StyleSheet.create({
+  quoteList: {
+    overflow: 'visible',
+    marginTop: 15,
+  }
+})

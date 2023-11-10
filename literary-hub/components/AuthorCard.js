@@ -14,21 +14,15 @@ const AuthorCard = ({ coverImage, title }) => {
       <View style={styles.container}>
         <View style={styles.topRow}>
           <Image source={coverImage} style={styles.image} />
-          <Like />
+          <View style={styles.likes}>
+            <Like />
+            <Text>10k</Text>
+          </View>
         </View>
-        <View>
-          <Text
-            style={{
-              fontFamily: "Sarabun-Regular",
-              textAlign: "left",
-              textAlignVertical: "center",
-              fontSize: 18,
-              lineHeight: 28,
-              marginTop: 17,
-            }}
-          >
-            {title}
-          </Text>
+
+        <View style={styles.authorInfo}>
+          <Text style={styles.authorName}>{title}</Text>
+          <Text style={styles.authorDates}>1974-1963</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -37,8 +31,8 @@ const AuthorCard = ({ coverImage, title }) => {
 
 const styles = StyleSheet.create({
   card: {
-    padding: 10,
-    
+    marginRight: 20,
+    marginVertical: 10,
   },
   container: {
     width: 150,
@@ -51,27 +45,55 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 7,
   },
+
+  topRow: {
+    flexDirection: "row",
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+  },
+
   image: {
     width: 45,
     height: 45,
     borderRadius: 100,
     padding: 5,
   },
-  title: {
-    fontFamily: "HammersmithOne",
-    display: "flex",
-    fontSize: 10,
-    color: "#373F41",
-    padding: 0,
-    lineHeight: 30,
-    marginTop: 15,
+
+  likes: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    columnGap: 5,
+  },
+
+  authorInfo: {
+    rowGap: 3,
+  },
+
+  authorName: {
+    fontFamily: "Sarabun-SemiBold",
     textAlign: "left",
+    textAlignVertical: "center",
+    fontSize: 18,
+    lineHeight: 23,
+    marginTop: 17,
   },
-  topRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
+
+  authorDates: {
+    fontFamily: 'Sarabun-Light',
+    color: '#6C7476'
+  }
+
+  // title: {
+  //   fontFamily: "HammersmithOne",
+  //   display: "flex",
+  //   fontSize: 10,
+  //   color: "#373F41",
+  //   padding: 0,
+  //   lineHeight: 30,
+  //   marginTop: 15,
+  //   textAlign: "left",
+  // },
+
 });
 
 export default AuthorCard;

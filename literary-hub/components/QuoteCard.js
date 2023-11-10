@@ -32,11 +32,8 @@ export default QuoteCard;
 
 const styles = StyleSheet.create({
   savedQuote: {
-    width:370,
+    marginBottom: 15,
     rowGap: 10,
-    marginTop:10,
-    marginBottom: 10,
-    marginLeft:10,
     paddingHorizontal: 12,
     paddingVertical: 12,
     backgroundColor: "white",
@@ -60,6 +57,7 @@ const styles = StyleSheet.create({
 
   viewPoem: {
     flexDirection: "row",
+    alignItems: 'center'
   },
 
   viewPoemText: {
