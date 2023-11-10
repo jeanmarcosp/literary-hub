@@ -6,20 +6,20 @@ const poemData = [
   {
     id: 1,
     title: "October",
-    excerpt: "O hushed October morning mild,",
+    excerpt: "O hushed October morning mild, Thy leaves have ripened to the fall",
     author: "Robert Frost",
   },
   {
     id: 2,
-    title: "October",
-    excerpt: "O hushed October morning mild, Thy leaves have ripened to the fall;",
-    author: "Robert Frost",
+    title: "The Weary Blues",
+    excerpt: "Droning a drowsy syncopated tune, Rocking back and forth to a mellow croon,",
+    author: "Langston Hughes",
   },
   {
     id: 3,
-    title: "October",
-    excerpt: "O hushed October morning mild,",
-    author: "Robert Frost",
+    title: "Morning in the Burned House",
+    excerpt: "In the burned house I am eating breakfast. You understand: there is no house, there is no breakfast,",
+    author: "Margaret Atwood",
   },
 ];
 
