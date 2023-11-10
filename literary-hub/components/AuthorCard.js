@@ -5,8 +5,7 @@ import Like from "./Like";
 import { useNavigation } from "@react-navigation/native";
 
 const AuthorCard = ({ coverImage, title }) => {
-  // Load the "Prompt" fonts for Regular (400), Medium (500), and Semi-Bold (600) weights
-  // hi
+  
   const navigation = useNavigation();
 
   return (
