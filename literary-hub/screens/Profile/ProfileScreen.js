@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   FlatList,
 } from "react-native";
-import { React, useState, useEffect } from "react";
+import { React, useState, useEffect, memo } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import getUserId from "../../hooks/getUserId";
@@ -20,8 +20,7 @@ const ProfileScreen = () => {
   const [user, setUser] = useState({});
   const [poems, setPoems] = useState([]);
   const [collections, setCollections] = useState([]);
-  const [segmentedControlView, setSegmentedControlView] =
-    useState("Collections");
+  const [segmentedControlView, setSegmentedControlView] = useState("Collections");
 
   // this gets the users information stored in user?.
   useEffect(() => {
@@ -40,43 +39,48 @@ const ProfileScreen = () => {
     fetchProfile();
   }, []);
 
+  // console.log(user?.likedPoems)
+
   // this gets all the poems liked by a user
   useEffect(() => {
-    const poemIdsToFetch = user?.likedPoems;
-
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/poems-by-ids", {
-          params: {
-            poemIds: poemIdsToFetch,
-          },
-        });
-        const fetchedPoems = response.data;
-
-        setPoems(fetchedPoems);
+        const poemIdsToFetch = user?.likedPoems;
+  
+        // Check if poemIdsToFetch is truthy before making the API call
+        if (poemIdsToFetch) {
+          const response = await axios.get(`${ROOT_URL}/poems-by-ids`, {
+            params: {
+              poemIds: poemIdsToFetch,
+            },
+          });
+          
+          const fetchedPoems = response.data;
+  
+          setPoems(fetchedPoems);
+        }
       } catch (error) {
         console.error("Error fetching poems:", error);
       }
     };
-
+  
     fetchData();
-  }, []);
+  }, [user]); // Include user in the dependency array to react to changes in the user object
+  
 
   // console.log(poems)
 
   useEffect(() => {
-    const collectionIdsToFetch = user?.likedCollections;
+    const collectionIdsToFetch = user?.createdCollections;
 
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:3000/collections-by-ids",
-          {
-            params: {
-              collectionIds: collectionIdsToFetch,
-            },
-          }
-        );
+        const response = await axios.get(`${ROOT_URL}/collections-by-ids`, {
+          params: {
+            collectionIds: collectionIdsToFetch,
+          },
+        });
+        
         const fetchedCollections = response.data;
 
         setCollections(fetchedCollections);
@@ -86,29 +90,11 @@ const ProfileScreen = () => {
     };
 
     fetchData();
-  }, []);
+  }, [user]);
 
-  console.log(collections);
+  console.log("hi", collections);
 
   const username = "dietcokelover89";
-
-  // const collectionData = [
-  //   {
-  //     id: "1",
-  //     title: "Zen zone",
-  //     poemNumber: 26,
-  //     author: "dietcokelover89",
-  //     image:
-  //       "https://media.istockphoto.com/id/1391404962/photo/pyramid-stones-balance-on-old-mossy-fallen-tree.webp?b=1&s=170667a&w=0&k=20&c=k-eIZWcTHtTvcBCUlckZ4Q6wo5iPJKphu-iPfs_xgjA=",
-  //   },
-  //   {
-  //     id: "2",
-  //     title: "Haiku-palooza",
-  //     poemNumber: 255,
-  //     author: "someone",
-  //     image: "https://davidbruceblog.files.wordpress.com/2014/05/img_9760.jpg",
-  //   },
-  // ];
 
   const savedQuotesData = [
     {
@@ -132,7 +118,7 @@ const ProfileScreen = () => {
 
   const CollectionsView = ({ collections }) => {
     const navigation = useNavigation();
-
+    // console.log("here",collections)
     return (
       <View>
         <TouchableOpacity
@@ -161,6 +147,8 @@ const ProfileScreen = () => {
       </View>
     );
   };
+
+  // console.log(poems)
 
   const LikedPoemsView = ({ poems }) => {
     return (
@@ -344,7 +332,7 @@ const ProfileScreen = () => {
   );
 };
 
-export default ProfileScreen;
+export default memo(ProfileScreen);
 
 const styles = StyleSheet.create({
   container: {

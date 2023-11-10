@@ -1,5 +1,5 @@
 import "react-native-gesture-handler";
-import React from "react";
+import {React, memo} from "react";
 import { View, TouchableOpacity, Image, Text, StyleSheet } from "react-native";
 import Like from "./Like";
 import { Ionicons } from "@expo/vector-icons";
@@ -83,4 +83,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PoemCard;
+export default memo(PoemCard);

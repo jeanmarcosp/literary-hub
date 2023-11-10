@@ -1,14 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import StackNavigator from "./StackNavigator";
-// import { useFonts, Inter_900Black } from "@expo-google-fonts/inter";
-// import {
-//   Prompt_400Regular,
-//   Prompt_500Medium,
-//   Prompt_600SemiBold,
-// } from "@expo-google-fonts/prompt";
 import { useFonts } from 'expo-font'
-//import { UserContext } from './UserContext';
 import { Provider } from "react-redux";
 import store from "./state/store";
 import { useSelector, useDispatch } from 'react-redux';

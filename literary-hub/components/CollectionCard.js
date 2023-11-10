@@ -1,5 +1,5 @@
 import "react-native-gesture-handler";
-import { React, useState } from "react";
+import { React, useState, memo } from "react";
 import { View, TouchableOpacity, Image, Text, StyleSheet } from "react-native";
 import Like from "./Like";
 import { useNavigation } from "@react-navigation/native";
@@ -79,4 +79,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CollectionCard;
+export default memo(CollectionCard);
