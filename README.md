@@ -20,8 +20,9 @@ TODO:  descriptions of code organization and tools and libraries used
 `npm install axios`\
 `npx expo install expo-font @expo-google-fonts/inter`\
 `yarn add jwt-decode`\
-`yarn add redux react-redux`
-`yarn add react-native-dialog-input`
+`yarn add redux react-redux`\
+`yarn add react-native-dialog-input`\
+`yarn add @gorhom/bottom-sheet`
 
 
 
