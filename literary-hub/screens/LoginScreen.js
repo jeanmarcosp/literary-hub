@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   loginHeader: {
-    fontFamily: "PromptSemiBold",
+    fontFamily: "HammersmithOne",
     fontSize: 30,
     marginTop: 75,
     marginBottom: 30,
