@@ -11,6 +11,7 @@ const CollectionCard = ({ coverImage, title, caption, creator }) => {
   return (
     <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('CollectionScreen')}>
       <View style={styles.container}>
+
         <View style={styles.info}>
           <Image source={{
             uri: coverImage,
@@ -23,8 +24,16 @@ const CollectionCard = ({ coverImage, title, caption, creator }) => {
             <Text style={styles.caption}>{caption}</Text>
           </View>
         </View>
-        <View style={{marginTop:22}}>
-          <Like />
+
+        <View style={styles.rightInfo}>
+          <View style={styles.poemNumberTag}>
+            <Text style={styles.poemNumberText}>200 poems</Text>
+          </View>
+
+          <View style={styles.likes}>
+            <Like />
+            <Text style={styles.likeNumber}>10k</Text>
+          </View>
         </View>
       </View>
     </TouchableOpacity>
@@ -32,10 +41,15 @@ const CollectionCard = ({ coverImage, title, caption, creator }) => {
 };
 
 const styles = StyleSheet.create({
-  card: {
-    padding: 10,
+  image: {
+    width: 70,
+    height: 70,
+    borderRadius: 12,
   },
+
   container: {
+    paddingHorizontal: 13,
+    paddingVertical: 15,
     justifyContent: "space-between",
     backgroundColor: "white",
     borderRadius: 12,
@@ -43,40 +57,66 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 7,
     flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "flex-start",
+    marginBottom: 15,
   },
+
   info: {
     flexDirection: "row",
-    justifyContent: "space-around",
+    columnGap: 15,
     alignItems: "center",
   },
+
   text: {
     flexDirection: "column",
     justifyContent: "space-between",
-    padding: 20,
   },
+
   title: {
     fontFamily:"HammersmithOne",
-    fontSize: 22,
+    fontSize: 18,
     color: "#373F41",
   },
-  image: {
-    width: 90,
-    height: 90,
-    borderRadius: 12,
-  },
+
   creator: {
     fontFamily: "Sarabun-Regular",
-    fontSize: 17,
+    fontSize: 16,
     color: "gray",
   },
+  
   caption: {
     fontFamily: "Sarabun-Regular",
     fontSize: 15,
     color: "#373F41",
-    paddingTop: 10,
   },
+
+  rightInfo: {
+    justifyContent: 'space-between',
+    alignItems: 'flex-end'
+  },
+
+  poemNumberTag: {
+    borderWidth: 1,
+    borderColor: '#D6CEDF',
+    borderRadius: 100,
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    backgroundColor: '#F9F3FF',
+  },
+
+  poemNumberText: {
+    fontFamily: 'Sarabun-SemiBold',
+    color: '#774BA3'
+  },
+
+  likes: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    columnGap: 3,
+  },
+
+  likeNumber: {
+
+  }
 });
 
 export default memo(CollectionCard);

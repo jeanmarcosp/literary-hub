@@ -19,10 +19,12 @@ const ExploreScreen = () => {
     useState("Collections");
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
+      <ScrollView style={styles.scrollView}>
         <SearchBar />
+
         <Text style={styles.text}>Author Collections</Text>
         <AuthorList />
+
         <Text style={styles.text}>Trending</Text>
         <View style={styles.segmentedControl}>
           <TouchableOpacity
@@ -102,26 +104,28 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     flex: 1,
   },
+
+  scrollView: {
+    paddingTop: 15,
+    paddingHorizontal: 20,
+  },
+
   text: {
     fontFamily: "HammersmithOne",
-    fontSize: 28,
-    marginLeft: 10,
-    paddingVertical: 10
+    fontSize: 24,
+    marginTop: 23,
   },
+
   segmentedControl: {
     flexDirection: "row",
-    marginTop: 5,
-    marginLeft: 10,
-    width: 370,
-    paddingHorizontal: 2,
-    paddingVertical: 2,
-    backgroundColor: "white",
-    justifyContent: "space-between",
+    marginTop: 7,
+    columnGap: 10,
   },
+
   segmentedControlSelected: {
     borderRadius: 100,
-    width: 118,
-    paddingVertical: 10,
+    paddingVertical: 7,
+    paddingHorizontal: 20,
     backgroundColor: "#644980",
     alignItems: "center",
     borderWidth: 1,
@@ -137,9 +141,9 @@ const styles = StyleSheet.create({
   segmentedControlUnselected: {
     borderRadius: 100,
     borderWidth: 1,
-    width: 118,
-    paddingVertical: 10,
-    paddingHorizontal: 10,
+    borderColor: "#644980",
+    paddingVertical: 7,
+    paddingHorizontal: 20,
     alignItems: "center",
   },
 
