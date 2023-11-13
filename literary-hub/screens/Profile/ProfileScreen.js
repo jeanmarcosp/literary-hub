@@ -22,7 +22,7 @@ const ProfileScreen = () => {
   const [collections, setCollections] = useState([]);
   const [segmentedControlView, setSegmentedControlView] = useState("Collections");
 
-  console.log(user._id)
+  // console.log(user._id)
 
   // this gets the users information stored in user?.
   useEffect(() => {
@@ -143,7 +143,7 @@ const ProfileScreen = () => {
       </View>
     );
   };
-
+  console.log(poems)
   const LikedPoemsView = ({ poems }) => {
     return (
       <View>
@@ -157,8 +157,9 @@ const ProfileScreen = () => {
                 title={item.title}
                 author={item.author}
                 excerpt={item.content}
-                likes={0} // not dynamic!!
-                // likes={item.likes.length} dynamic, change when we reload poems into DB
+                // likes={0} // not dynamic!!
+                // dynamic, change when we reload poems into DB
+                likes={item.likes.length} 
               />
             );
           }}
