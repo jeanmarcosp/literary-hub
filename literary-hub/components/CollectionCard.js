@@ -4,9 +4,11 @@ import { View, TouchableOpacity, Image, Text, StyleSheet } from "react-native";
 import Like from "./Like";
 import { useNavigation } from "@react-navigation/native";
 
-const CollectionCard = ({ coverImage, title, caption, creator }) => {
+const CollectionCard = ({ coverImage, title, caption, creator, size, likes }) => {
 
   const navigation = useNavigation();
+  const poemText = size === 1 ? "poem" : "poems";
+  const likeText = likes === 1 ? "like" : "likes";
 
   return (
     <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('CollectionScreen')}>
@@ -27,12 +29,12 @@ const CollectionCard = ({ coverImage, title, caption, creator }) => {
 
         <View style={styles.rightInfo}>
           <View style={styles.poemNumberTag}>
-            <Text style={styles.poemNumberText}>200 poems</Text>
+            <Text style={styles.poemNumberText}>{size} {poemText}</Text>
           </View>
 
           <View style={styles.likes}>
             <Like />
-            <Text style={styles.likeNumber}>10k</Text>
+            <Text style={styles.likeNumber}>{likes} {likeText}</Text>
           </View>
         </View>
       </View>
@@ -119,4 +121,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default memo(CollectionCard);
+export default CollectionCard;

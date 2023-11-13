@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   FlatList,
 } from "react-native";
-import { React, useState, useEffect, memo } from "react";
+import { React, useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import getUserId from "../../hooks/getUserId";
@@ -39,14 +39,12 @@ const ProfileScreen = () => {
     fetchProfile();
   }, []);
 
-  // console.log(user?.likedPoems)
-
   // this gets all the poems liked by a user
   useEffect(() => {
     const fetchData = async () => {
       try {
         const poemIdsToFetch = user?.likedPoems;
-  
+
         // Check if poemIdsToFetch is truthy before making the API call
         if (poemIdsToFetch) {
           const response = await axios.get(`${ROOT_URL}/poems-by-ids`, {
@@ -54,22 +52,20 @@ const ProfileScreen = () => {
               poemIds: poemIdsToFetch,
             },
           });
-          
+
           const fetchedPoems = response.data;
-  
+
           setPoems(fetchedPoems);
         }
       } catch (error) {
         console.error("Error fetching poems:", error);
       }
     };
-  
+
     fetchData();
-  }, [user]); // Include user in the dependency array to react to changes in the user object
-  
+  }, []);
 
-  // console.log(poems)
-
+  // gets the users created collections
   useEffect(() => {
     const collectionIdsToFetch = user?.createdCollections;
 
@@ -80,7 +76,7 @@ const ProfileScreen = () => {
             collectionIds: collectionIdsToFetch,
           },
         });
-        
+
         const fetchedCollections = response.data;
 
         setCollections(fetchedCollections);
@@ -90,11 +86,7 @@ const ProfileScreen = () => {
     };
 
     fetchData();
-  }, [user]);
-
-  console.log("hi", collections);
-
-  const username = "dietcokelover89";
+  }, []);
 
   const savedQuotesData = [
     {
@@ -135,10 +127,13 @@ const ProfileScreen = () => {
           data={collections}
           renderItem={({ item }) => (
             <CollectionCard
+              key={item.id}
               coverImage={item.coverArt}
               title={item.title}
               creator={item.author}
               caption={item.caption}
+              size={item.poemsInCollection.length}
+              likes={item.likes.length}
             />
           )}
           keyExtractor={(item) => item.id}
@@ -148,7 +143,7 @@ const ProfileScreen = () => {
     );
   };
 
-  // console.log(poems)
+  console.log(poems);
 
   const LikedPoemsView = ({ poems }) => {
     return (
@@ -159,9 +154,12 @@ const ProfileScreen = () => {
           renderItem={({ item }) => {
             return (
               <PoemCard
+                key={item.id}
                 title={item.title}
                 author={item.author}
                 excerpt={item.content}
+                likes={0} // not dynamic!!
+                // likes={item.likes.length} dynamic, change when we reload poems into DB
               />
             );
           }}
@@ -214,7 +212,7 @@ const ProfileScreen = () => {
       <View style={styles.centerAligned}>
         <Image
           source={{
-            uri: "https://davidbruceblog.files.wordpress.com/2014/05/img_9760.jpg",
+            uri: "https://i.pinimg.com/originals/22/8f/c5/228fc5d11fdb37c06bbbed785b9637a7.jpg",
           }}
           style={styles.profilePic}
         />
@@ -332,7 +330,7 @@ const ProfileScreen = () => {
   );
 };
 
-export default memo(ProfileScreen);
+export default ProfileScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -409,6 +407,7 @@ const styles = StyleSheet.create({
   segmentedControl: {
     flexDirection: "row",
     marginTop: 20,
+    marginBottom: 10,
     borderWidth: 1,
     borderRadius: 100,
     borderColor: "#E2E5E6",
