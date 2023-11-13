@@ -14,6 +14,7 @@ import getUserId from "../../hooks/getUserId";
 import axios from "axios";
 import PoemCard from "../../components/PoemCard";
 import CollectionCard from "../../components/CollectionCard";
+import Quote from "../../components/Quote";
 
 const ProfileScreen = () => {
   const userId = getUserId();
@@ -89,26 +90,7 @@ const ProfileScreen = () => {
     fetchData();
   }, []);
 
-  const savedQuotesData = [
-    {
-      id: "1",
-      poemId: "1",
-      quote:
-        "Tis better to have loved and lost than never to have loved at all",
-    },
-    {
-      id: "2",
-      poemId: "2",
-      quote:
-        "A light from the shadows shall spring; Renewed shall be blade that was broken, The crownless again shall be king",
-    },
-    {
-      id: "3",
-      poemId: "3",
-      quote: "Tread softly because you tread on my dreams",
-    },
-  ];
-
+  // console.log(poems)
   const CollectionsView = ({ collections }) => {
     const navigation = useNavigation();
    
@@ -131,7 +113,7 @@ const ProfileScreen = () => {
               key={item._id}
               coverImage={item.coverArt}
               title={item.title}
-              creator={item.author}
+              creator={user.username}
               caption={item.caption}
               size={item.poemsInCollection.length}
               likes={item.likes.length}
@@ -143,7 +125,7 @@ const ProfileScreen = () => {
       </View>
     );
   };
-  console.log(poems)
+  // console.log(poems)
   const LikedPoemsView = ({ poems }) => {
     return (
       <View>
@@ -157,52 +139,11 @@ const ProfileScreen = () => {
                 title={item.title}
                 author={item.author}
                 excerpt={item.content}
-                // likes={0} // not dynamic!!
-                // dynamic, change when we reload poems into DB
                 likes={item.likes.length} 
               />
             );
           }}
         />
-      </View>
-    );
-  };
-
-  const SavedQuotesView = () => {
-    return (
-      <FlatList
-        data={savedQuotesData}
-        renderItem={({ item }) => (
-          <SavedQuote poemId={item.poemId} quote={item.quote} />
-        )}
-        keyExtractor={(item) => item.id}
-        style={styles.collections}
-      />
-    );
-  };
-
-  const SavedQuote = ({ poemId, quote }) => {
-    const [saved, setSaved] = useState(true);
-
-    return (
-      <View style={styles.savedQuote}>
-        <Text style={styles.savedQuoteText}>"{quote}"</Text>
-        <View style={styles.savedQuoteCTAs}>
-          <TouchableOpacity>
-            <View style={styles.viewPoem}>
-              <Text style={styles.viewPoemText}>View poem</Text>
-              <Ionicons name="chevron-forward" size={17} color="black" />
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => setSaved(!saved)}>
-            {saved ? (
-              <Ionicons name="bookmark" size={25} color="black" />
-            ) : (
-              <Ionicons name="bookmark-outline" size={25} color="black" />
-            )}
-          </TouchableOpacity>
-        </View>
       </View>
     );
   };
@@ -249,6 +190,7 @@ const ProfileScreen = () => {
         </TouchableOpacity> */}
 
         <View style={styles.segmentedControl}>
+
           <TouchableOpacity
             onPress={() => setSegmentedControlView("Collections")}
           >
@@ -314,6 +256,7 @@ const ProfileScreen = () => {
               </Text>
             </View>
           </TouchableOpacity>
+          
         </View>
       </View>
 
@@ -324,7 +267,7 @@ const ProfileScreen = () => {
         {segmentedControlView === "Liked poems" && (
           <LikedPoemsView poems={poems} />
         )}
-        {segmentedControlView === "Saved quotes" && <SavedQuotesView />}
+        {segmentedControlView === "Saved quotes" && <Quote />}
       </View>
     </SafeAreaView>
   );

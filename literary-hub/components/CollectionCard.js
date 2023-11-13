@@ -21,7 +21,7 @@ const CollectionCard = ({ coverImage, title, caption, creator, size, likes }) =>
           <View style={styles.text}>
             <View>
               <Text style={styles.title}>{title}</Text>
-              <Text style={styles.creator}>{creator}</Text>
+              <Text style={styles.creator}>@{creator}</Text>
             </View>
             <Text style={styles.caption}>{caption}</Text>
           </View>
@@ -89,6 +89,7 @@ const styles = StyleSheet.create({
     fontFamily: "Sarabun-Regular",
     fontSize: 15,
     color: "#373F41",
+    width: 150,
   },
 
   rightInfo: {
