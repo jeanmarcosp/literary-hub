@@ -9,6 +9,12 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.0.0-0",
+    "@babel/plugin-proposal-optional-chaining": "^7.0.0-0",
+    "@babel/plugin-transform-arrow-functions": "^7.0.0-0",
+    "@babel/plugin-transform-shorthand-properties": "^7.0.0-0",
+    "@babel/plugin-transform-template-literals": "^7.0.0-0",
+    "@babel/preset-env": "^7.1.6",
     "@expo-google-fonts/inter": "^0.2.3",
     "@expo-google-fonts/prompt": "^0.2.3",
     "@gorhom/bottom-sheet": "^4.5.1",

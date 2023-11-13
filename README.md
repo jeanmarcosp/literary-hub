@@ -13,12 +13,12 @@ TODO:  descriptions of code organization and tools and libraries used
 
 `yarn add expo`\
 `yarn add @react-navigation/native`\
-`npx expo install react-native-screens react-native-safe-area-context`\
+`yarn add react-native-screens react-native-safe-area-context`\
 `yarn add @react-navigation/native-stack`\
 `yarn add @react-navigation/bottom-tabs`\
-`npm install @react-navigation/stack`\
-`npm install axios`\
-`npx expo install expo-font @expo-google-fonts/inter`\
+`yarn add @react-navigation/stack`\
+`yarn add axios`\
+`yarn add expo-font @expo-google-fonts/inter`\
 `yarn add jwt-decode`\
 `yarn add redux react-redux`\
 `yarn add react-native-dialog-input`\
