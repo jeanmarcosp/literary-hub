@@ -1,11 +1,13 @@
 import "react-native-gesture-handler";
-import {React, memo} from "react";
-import { View, TouchableOpacity, Image, Text, StyleSheet } from "react-native";
+import {React} from "react";
+import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
 import Like from "./Like";
-import { Ionicons } from "@expo/vector-icons";
 
-const PoemCard = ({ title, author, excerpt }) => {
-  console.log(excerpt.split('\n').slice(0, 2).join('\n'))
+const PoemCard = ({ title, author, excerpt, likes }) => {
+
+  const likeText = likes === 1 ? "like" : "likes";
+  timeEstimate = Math.ceil(excerpt.length / 200)
+
   return (
     <TouchableOpacity style={styles.card}>
       <View style={styles.container}>
@@ -20,12 +22,12 @@ const PoemCard = ({ title, author, excerpt }) => {
 
         <View style={styles.rightInfo}>
           <View style={styles.poemLengthTag}>
-            <Text style={styles.poemLengthText}>5 min</Text>
+            <Text style={styles.poemLengthText}>{timeEstimate} min</Text>
           </View>
 
           <View style={styles.likes}>
             <Like />
-            <Text style={styles.likeNumber}>10k</Text>
+            <Text style={styles.likeNumber}>{likes} {likeText}</Text>
           </View>
         </View>
 
@@ -106,4 +108,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default memo(PoemCard);
+export default PoemCard;
