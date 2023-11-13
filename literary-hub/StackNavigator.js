@@ -14,19 +14,25 @@ const StackNavigator = () => {
   const Tab = createBottomTabNavigator();
   function BottomTabs() {
     return (
-      <Tab.Navigator>
+      <Tab.Navigator
+        screenOptions={{
+          tabBarStyle: {
+            backgroundColor: '#F4F2F6'
+          },
+        }}
+      >
         <Tab.Screen
           name="Home"
           component={HomeScreen}
           options={{
             tabBarLabel: "Home",
-            tabBarLabelStyle: { color: "black" },
+            tabBarLabelStyle: { color: "#644980", fontFamily: 'HammersmithOne', fontSize: 13 },
             headerShown: false,
             tabBarIcon: ({ focused }) =>
               focused ? (
-                <Ionicons name="ios-home" size={24} color="black" />
+                <Ionicons name="ios-home" size={24} color="#644980" />
               ) : (
-                <Ionicons name="ios-home-outline" size={24} color="black" />
+                <Ionicons name="ios-home-outline" size={24} color="#644980" />
               ),
           }}
         ></Tab.Screen>
@@ -36,13 +42,13 @@ const StackNavigator = () => {
           component={ExploreNavigator}
           options={{
             tabBarLabel: "Explore",
-            tabBarLabelStyle: { color: "black" },
+            tabBarLabelStyle: { color: "#644980", fontFamily: 'HammersmithOne', fontSize: 13 },
             headerShown: false,
             tabBarIcon: ({ focused }) =>
               focused ? (
-                <Ionicons name="ios-search-sharp" size={24} color="black" />
+                <Ionicons name="ios-search-sharp" size={24} color="#644980" />
               ) : (
-                <Ionicons name="ios-search-outline" size={24} color="black" />
+                <Ionicons name="ios-search-outline" size={24} color="#644980" />
               ),
           }}
         ></Tab.Screen>
@@ -52,13 +58,13 @@ const StackNavigator = () => {
           component={ProfileNavigator}
           options={{
             tabBarLabel: "Profile",
-            tabBarLabelStyle: { color: "black" },
+            tabBarLabelStyle: { color: "#644980", fontFamily: 'HammersmithOne', fontSize: 13 },
             headerShown: false,
             tabBarIcon: ({ focused }) =>
               focused ? (
-                <Ionicons name="ios-person" size={24} color="black" />
+                <Ionicons name="ios-person" size={24} color="#644980" />
               ) : (
-                <Ionicons name="ios-person-outline" size={24} color="black" />
+                <Ionicons name="ios-person-outline" size={24} color="#644980" />
               ),
           }}
         ></Tab.Screen>
@@ -78,4 +84,8 @@ const StackNavigator = () => {
 
 export default StackNavigator;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  navBar: {
+    backgroundColor: '#000'
+  }
+});
