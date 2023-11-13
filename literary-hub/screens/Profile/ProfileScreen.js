@@ -22,12 +22,13 @@ const ProfileScreen = () => {
   const [collections, setCollections] = useState([]);
   const [segmentedControlView, setSegmentedControlView] = useState("Collections");
 
+  console.log(user._id)
+
   // this gets the users information stored in user?.
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         const response = await axios.get(`${ROOT_URL}/profile/${userId}`);
-        console.log(response.data.user.email);
         const user = response.data.user;
 
         setUser(user);
@@ -110,7 +111,7 @@ const ProfileScreen = () => {
 
   const CollectionsView = ({ collections }) => {
     const navigation = useNavigation();
-    // console.log("here",collections)
+   
     return (
       <View>
         <TouchableOpacity
@@ -127,7 +128,7 @@ const ProfileScreen = () => {
           data={collections}
           renderItem={({ item }) => (
             <CollectionCard
-              key={item.id}
+              key={item._id}
               coverImage={item.coverArt}
               title={item.title}
               creator={item.author}
@@ -136,14 +137,12 @@ const ProfileScreen = () => {
               likes={item.likes.length}
             />
           )}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item._id}
           style={styles.collections}
         />
       </View>
     );
   };
-
-  console.log(poems);
 
   const LikedPoemsView = ({ poems }) => {
     return (
@@ -154,7 +153,7 @@ const ProfileScreen = () => {
           renderItem={({ item }) => {
             return (
               <PoemCard
-                key={item.id}
+                key={item._id}
                 title={item.title}
                 author={item.author}
                 excerpt={item.content}
