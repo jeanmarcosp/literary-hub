@@ -36,9 +36,7 @@ const HomeScreen = () => {
     bottomSheetRef.current?.expand();
   };
 
-  
 
-  const pageWidth = Dimensions.get("window").width; // Get the screen width
   const linesPerPage = 15;
 
   const userId = getUserId();
@@ -142,13 +140,13 @@ const HomeScreen = () => {
         )}
       </View>
       <View>
-        <View style={styles.columnView}>
-          {/* This is the third element in the user interactions flexbox */}
-          <Pressable onPress={handleOpenPress}>
-            <Feather  name="plus" size={30} color="black" />
-          </Pressable>
-          
-          <Like></Like>
+      <View style={styles.columnView}>
+        {/* This is the third element in the user interactions flexbox */}
+        <Pressable onPress={handleOpenPress} style={styles.icon}>
+          <Feather name="plus" size={30} color="black" />
+        </Pressable>
+        
+        <Like style={styles.icon} />
           {/* {liked ? (
             <Pressable
               onPress={() => {
@@ -180,6 +178,8 @@ const HomeScreen = () => {
 
 export default HomeScreen;
 
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -202,19 +202,18 @@ const styles = StyleSheet.create({
   },
 
   columnView: {
-    gap: 15,
-    left: 175,
-    flex: 1,
     flexDirection: "column",
-    bottom: 40,
-    position: "absolute",
+    justifyContent: "space-between",
+    alignItems: "center",
+    left: screenWidth * 0.43, // 5% of screen width
+    bottom: screenHeight * 0.03, // 3% of screen height
+    
   },
 
   toggle: {
-    flex: 1,
-    left: 20,
     position: "absolute",
-    bottom: 30,
+    left: screenWidth * 0.05, 
+    bottom: screenHeight * 0.02, 
   },
 
   page: {
@@ -238,5 +237,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontStyle: "italic",
     marginBottom: 10,
+  },
+  icon: {
+    marginBottom: screenHeight * 0.008, 
   },
 });
