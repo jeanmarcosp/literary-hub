@@ -18,227 +18,149 @@ import CollectionBottomSheet from "../components/CollectionBottomSheet";
 import { setUser } from "../state/actions/userActions";
 
 const HomeScreen = () => {
-  const [annotationMode, handleAnnotationMode] = useState(false);
-  const [randomPoem, setRandomPoem] = useState(null);
-  const [poemPages, setPoemPages] = useState([]);
-  const [pageCount, setPageCount] = useState(0);
-  const [liked, handleLike] = useState(false);
-  const [userData, setUserData] = useState(null);
-  const userCollections = [];
+  const [poems, setPoems] = useState([]);
+  const [currentPoemIndex, setCurrentPoemIndex] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [currentLine, setCurrentLine] = useState(0);
 
+  const linesPerPage = 20;
 
-  const bottomSheetRef = useRef(null);
-
-	const handleClosePress = () => {
-    bottomSheetRef.current?.close();
-  }
-	const handleOpenPress = () => {
-    bottomSheetRef.current?.expand();
+  const loadMorePoems = async () => {
+    if (loading) return;
+  
+    setLoading(true);
+  
+    try {
+      const response = await axios.get('http://localhost:3000/get-poems', {
+        params: {
+          skip: poems.length, // Update the skip parameter
+          limit: 1,
+        },
+      });
+  
+      if (response.data.length === 0) {
+        // No more poems available
+        setLoading(false);
+        return;
+      }
+  
+      // Split the poem into pages
+      const lines = response.data[0].content.split("\n");
+      const pages = [];
+      let currentPage = "";
+      let linesAdded = 0;
+  
+      for (const line of lines) {
+        if (linesAdded >= linesPerPage) {
+          pages.push(currentPage);
+          currentPage = "";
+          linesAdded = 0;
+        }
+        currentPage += line + "\n";
+        linesAdded++;
+      }
+  
+      if (currentPage.length > 0) {
+        pages.push(currentPage);
+      }
+  
+      // Update the state with the poem and its pages
+      setPoems((prevPoems) => [...prevPoems, { ...response.data[0], pages }]);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error loading poems:', error);
+      setLoading(false);
+    }
   };
 
-
-  const linesPerPage = 15;
-
-  const userId = getUserId();
-
+  
+  
 
   useEffect(() => {
-    axios
-      .get(`${ROOT_URL}/random-poem`)
-      .then((response) => {
-        setRandomPoem(response.data[0]);
-        const lines = response.data[0].content.split("\n"); // split the poem into lines
-        const pages = [];
-        let currentPage = "";
-        let linesAdded = 0;
-
-        for (const line of lines) {
-          if (linesAdded >= linesPerPage) {
-            pages.push(currentPage);
-            currentPage = "";
-            linesAdded = 0;
-          }
-          currentPage += line + "\n";
-          linesAdded++;
-        }
-
-        if (currentPage.length > 0) {
-          pages.push(currentPage);
-        }
-
-        setPoemPages(pages);
-        setPageCount(pages.length);
-      })
-      .catch((error) => {
-        console.error("Error fetching random poem:", error);
-      });
-  }, []);
-
-  useEffect(() => {
-    axios
-      .get("http://localhost:3000/getuser",{ params:{ id: userId } } )
-      .then((response) =>{
-        // Update the userData state with the fetched data
-        setUserData(response.data);
-      })
-      .catch((error) => {
-        console.log("not working");
-      })
-  });
+    loadMorePoems(); // Initial load
+  }, [poems]);
 
   return (
-    <SafeAreaView style={styles.container} id="page">
-      
-      <View style={styles.poemContainer} id="poem">
-        {randomPoem && (
-          <ScrollView
-            horizontal
-            pagingEnabled
-            showsHorizontalScrollIndicator={false} // hide horizontal scrollbar
-          >
-            {poemPages.map((page, index) => (
-              <View key={index} style={styles.page}>
-                {index === 0 && (
-                  <React.Fragment>
-                    <Text style={styles.title}>{randomPoem.title}</Text>
-                    <Text style={styles.author}>
-                      Author: {randomPoem.author}
-                    </Text>
-                  </React.Fragment>
-                )}
-                <Text style={styles.pageContent}>{page}</Text>
-              </View>
-            ))}
-          </ScrollView>
-        )}
-      </View>
-      <View style={styles.toggle}>
-        {annotationMode ? (
-          <Pressable
-            onPress={() => {
-              handleAnnotationMode(false);
-            }}
-          >
-            <MaterialCommunityIcons
-              name="toggle-switch"
-              size={35}
-              color="black"
-            />
-          </Pressable>
-        ) : (
-          <Pressable
-            onPress={() => {
-              handleAnnotationMode(true);
-            }}
-          >
-            <MaterialCommunityIcons
-              name="toggle-switch-off-outline"
-              size={35}
-              color="black"
-            />
-          </Pressable>
-        )}
-      </View>
-      <View>
-      <View style={styles.columnView}>
-        {/* This is the third element in the user interactions flexbox */}
-        <Pressable onPress={handleOpenPress} style={styles.icon}>
-          <Feather name="plus" size={30} color="black" />
-        </Pressable>
-        
-        <Like style={styles.icon} />
-          {/* {liked ? (
-            <Pressable
-              onPress={() => {
-                handleLike(false);
-              }}
+    <View style={styles.container}>
+      <ScrollView
+        vertical
+        pagingEnabled
+        showsVerticalScrollIndicator={false}
+        snapToInterval={Dimensions.get('window').height}
+        decelerationRate="fast"
+        onScroll={(event) => {
+          const offsetY = event.nativeEvent.contentOffset.y;
+          const contentHeight = event.nativeEvent.contentSize.height;
+
+          if (offsetY <= 0) {
+            // Load the next poem
+            loadMorePoems();
+          }
+        }}
+        scrollEventThrottle={400} // Adjust the value as needed
+      >
+
+        {poems.map((poem, poemIndex) => (
+          <View key={poemIndex} style={styles.poemContainer}>
+            <ScrollView
+              horizontal
+              pagingEnabled
+              showsHorizontalScrollIndicator={false}
+              snapToInterval={Dimensions.get('window').width} // Snap to the width of the screen
+              decelerationRate="fast" // Use fast deceleration for smoother page snapping
             >
-              <FontAwesome name="heart" size={28} color="black" />
-            </Pressable>
-          ) : (
-            <Pressable
-              onPress={() => {
-                handleLike(true);
-              }}
-            >
-              <FontAwesome name="heart-o" size={28} color="black" />
-            </Pressable>
-          )} */}
-        </View>
-        
-      </View>
-      
-      {/* <Text>Number of Pages: {pageCount}</Text>  */}
-      {/* saves page count for when we want to do dots on the bottom */}
-        <CollectionBottomSheet ref={bottomSheetRef} title="Add to Collection" poem={randomPoem} userData={userData}/>
-	
-    </SafeAreaView>
+              {poem.pages.map((page, index) => (
+                <View key={index} style={styles.page}>
+                  {index === 0 && (
+                    <React.Fragment>
+                      <Text style={styles.title}>{poem.title}</Text>
+                      <Text style={styles.author}>
+                        Author: {poem.author}
+                      </Text>
+                    </React.Fragment>
+                  )}
+                  <Text style={styles.pageContent}>{page}</Text>
+                </View>
+              ))}
+            </ScrollView>
+          </View>
+        ))}
+      </ScrollView>
+    </View>
   );
 };
 
-export default HomeScreen;
-
-const screenWidth = Dimensions.get('window').width;
-const screenHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-    flexDirection: "column",
-  },
-  bottomSheet: {
-    flex: 1,
-		alignItems: 'center',
-		justifyContent: 'center'
+    backgroundColor: '#fff',
   },
   poemContainer: {
     flex: 1,
-    borderColor: "blue",
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 16,
+    marginTop: 50,
     position: "relative",
   },
-
-  columnView: {
-    flexDirection: "column",
-    justifyContent: "space-between",
-    alignItems: "center",
-    left: screenWidth * 0.43, // 5% of screen width
-    bottom: screenHeight * 0.03, // 3% of screen height
-    
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 10,
   },
-
-  toggle: {
-    position: "absolute",
-    left: screenWidth * 0.05, 
-    bottom: screenHeight * 0.02, 
+  author: {
+    fontSize: 16,
+    fontStyle: 'italic',
+    marginBottom: 10,
   },
-
   page: {
-    width: Dimensions.get("window").width,
+    width: Dimensions.get('window').width,
     paddingTop: 50,
-    paddingHorizontal: 16,
   },
-
   pageContent: {
     fontSize: 18,
     lineHeight: 24,
   },
-
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 10,
-  },
-
-  author: {
-    fontSize: 16,
-    fontStyle: "italic",
-    marginBottom: 10,
-  },
-  icon: {
-    marginBottom: screenHeight * 0.008, 
-  },
 });
+
+export default HomeScreen;

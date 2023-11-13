@@ -163,15 +163,17 @@ app.get('/random-poem', async (req, res) => {
 });
 
 
-//endpoint to get all the poems in database, use this endpoint to populate homepage
-app.get("/get-poems", async (req, res) => {
+app.get('/get-poems', async (req, res) => {
   try {
+    const { skip, limit } = req.query;
+    // Query your database for random poems
+    // Example using Mongoose:
     const poems = await Poem.aggregate([
-      { $sample: { size: Poem.countDocuments() } },
+      { $sample: { size: parseInt(limit) } }
     ]);
     res.status(200).json(poems);
   } catch (error) {
-    res.status(500).json({ message: "error getting the poems" });
+    res.status(500).json({ message: 'Error getting the poems' });
   }
 });
 
