@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   FlatList,
 } from "react-native";
-import { React, useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useContext } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import getUserId from "../../hooks/getUserId";
@@ -15,6 +15,8 @@ import axios from "axios";
 import PoemCard from "../../components/PoemCard";
 import CollectionCard from "../../components/CollectionCard";
 import Quote from "../../components/Quote";
+import { useFocusEffect } from "@react-navigation/native";
+import { collection } from "../../mongo-api/models/user";
 
 const ProfileScreen = () => {
   const userId = getUserId();
@@ -27,7 +29,8 @@ const ProfileScreen = () => {
   // console.log(poems.title)
 
   // this gets the users information stored in user?.
-  useEffect(() => {
+  useFocusEffect(
+    React.useCallback(() => {
     const fetchProfile = async () => {
       try {
         const response = await axios.get(`${ROOT_URL}/profile/${userId}`);
@@ -40,56 +43,166 @@ const ProfileScreen = () => {
     };
 
     fetchProfile();
-  }, []);
+  }, [])  
+  );
 
   // this gets all the poems liked by a user
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const poemIdsToFetch = user?.likedPoems;
+  // useEffect(() => {
+  //   const fetchLikedPoems = async () => {
+  //     try {
+  //       const poemIdsToFetch = user?.likedPoems;
 
-        // Check if poemIdsToFetch is truthy before making the API call
-        if (poemIdsToFetch) {
-          const response = await axios.get(`${ROOT_URL}/poems-by-ids`, {
-            params: {
-              poemIds: poemIdsToFetch,
-            },
-          });
+  //       // Check if poemIdsToFetch is truthy before making the API call
+  //       if (poemIdsToFetch) {
+  //         const response = await axios.get(`${ROOT_URL}/poems-by-ids`, {
+  //           params: {
+  //             poemIds: poemIdsToFetch,
+  //           },
+  //         });
 
-          const fetchedPoems = response.data;
+  //         const fetchedPoems = response.data;
 
-          setPoems(fetchedPoems);
+  //         setPoems(fetchedPoems);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching poems:", error);
+  //     }
+  //   };
+
+  //   fetchLikedPoems();
+  // }, []);
+
+  // const fetchLikedPoems = useCallback(async () => {
+  //   try {
+  //     const poemIdsToFetch = user?.likedPoems;
+
+  //     // Check if poemIdsToFetch is truthy before making the API call
+  //     if (poemIdsToFetch) {
+  //       const response = await axios.get(`${ROOT_URL}/poems-by-ids`, {
+  //         params: {
+  //           poemIds: poemIdsToFetch,
+  //         },
+  //       });
+
+  //       const fetchedPoems = response.data;
+
+  //       setPoems(fetchedPoems);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching poems:", error);
+  //   }
+  // }, [user]);
+
+  // useFocusEffect(() => {
+  //   fetchLikedPoems();
+  // }, [poems]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchLikedPoems = async () => {
+        try {
+          const poemIdsToFetch = user?.likedPoems;
+  
+          // Check if poemIdsToFetch is truthy before making the API call
+          if (poemIdsToFetch) {
+            const response = await axios.get(`${ROOT_URL}/poems-by-ids`, {
+              params: {
+                poemIds: poemIdsToFetch,
+              },
+            });
+  
+            const fetchedPoems = response.data;
+            console.log("rerendering poems")
+  
+            setPoems(fetchedPoems);
+          }
+        } catch (error) {
+          console.error("Error fetching poems:", error);
         }
-      } catch (error) {
-        console.error("Error fetching poems:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
+      };
+  
+      fetchLikedPoems();
+    }, [user])  // Added user to the dependency array
+  );
+  
 
   // gets the users created collections
-  useEffect(() => {
-    const collectionIdsToFetch = user?.createdCollections;
+  // useEffect(() => {
+  //   const collectionIdsToFetch = user?.createdCollections;
 
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`${ROOT_URL}/collections-by-ids`, {
-          params: {
-            collectionIds: collectionIdsToFetch,
-          },
-        });
+  //   const fetchLikedCollections = async () => {
+  //     try {
+  //       const response = await axios.get(`${ROOT_URL}/collections-by-ids`, {
+  //         params: {
+  //           collectionIds: collectionIdsToFetch,
+  //         },
+  //       });
 
-        const fetchedCollections = response.data;
+  //       const fetchedCollections = response.data;
 
-        setCollections(fetchedCollections);
-      } catch (error) {
-        console.error("Error fetching collections:", error);
-      }
-    };
+  //       setCollections(fetchedCollections);
+  //     } catch (error) {
+  //       console.error("Error fetching collections:", error);
+  //     }
+  //   };
 
-    fetchData();
-  }, []);
+  //   fetchLikedCollections();
+  // }, []);
+
+  // const fetchLikedCollections = useCallback(async () => {
+  //   try {
+  //     const collectionIdsToFetch = user?.createdCollections;
+
+  //     // Check if collectionIdsToFetch is truthy before making the API call
+  //     if (collectionIdsToFetch) {
+  //       const response = await axios.get(`${ROOT_URL}/collections-by-ids`, {
+  //         params: {
+  //           collectionIds: collectionIdsToFetch,
+  //         },
+  //       });
+
+  //       const fetchedCollections = response.data;
+  //       console.log("rerender collections")
+
+  //       setCollections(fetchedCollections);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching collections:", error);
+  //   }
+  // }, [user]);  // Added user to the dependency array
+
+  // useFocusEffect(() => {
+  //   fetchLikedCollections();
+  // }, [collections]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchCreatedCollections = async () => {
+        try {
+          const collectionIdsToFetch = user?.createdCollections;
+  
+          // Check if collectionIdsToFetch is truthy before making the API call
+          if (collectionIdsToFetch) {
+            const response = await axios.get(`${ROOT_URL}/collections-by-ids`, {
+              params: {
+                collectionIds: collectionIdsToFetch,
+              },
+            });
+  
+            const fetchedCollections = response.data;
+            console.log("rerendering collections")
+  
+            setCollections(fetchedCollections);
+          }
+        } catch (error) {
+          console.error("Error fetching collections:", error);
+        }
+      };
+  
+      fetchCreatedCollections();
+    }, [user])  // Added user to the dependency array
+  );
+  
 
   // console.log(poems)
   const CollectionsView = ({ collections }) => {
@@ -130,7 +243,7 @@ const ProfileScreen = () => {
     );
   };
 
-  console.log(collections);
+  // console.log(collections);
   const LikedPoemsView = ({ poems }) => {
     return (
       <View>
