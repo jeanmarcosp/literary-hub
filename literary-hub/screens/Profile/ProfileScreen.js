@@ -21,9 +21,10 @@ const ProfileScreen = () => {
   const [user, setUser] = useState({});
   const [poems, setPoems] = useState([]);
   const [collections, setCollections] = useState([]);
-  const [segmentedControlView, setSegmentedControlView] = useState("Collections");
+  const [segmentedControlView, setSegmentedControlView] =
+    useState("Collections");
 
-  // console.log(user._id)
+  // console.log(poems.title)
 
   // this gets the users information stored in user?.
   useEffect(() => {
@@ -93,7 +94,7 @@ const ProfileScreen = () => {
   // console.log(poems)
   const CollectionsView = ({ collections }) => {
     const navigation = useNavigation();
-   
+
     return (
       <View>
         <TouchableOpacity
@@ -111,12 +112,15 @@ const ProfileScreen = () => {
           renderItem={({ item }) => (
             <CollectionCard
               key={item._id}
+              collectionId={item._id}
+              userId={user._id}
               coverImage={item.coverArt}
               title={item.title}
               creator={user.username}
               caption={item.caption}
               size={item.poemsInCollection.length}
               likes={item.likes.length}
+              inLikes={item.likes.includes(user._id)}
             />
           )}
           keyExtractor={(item) => item._id}
@@ -125,7 +129,8 @@ const ProfileScreen = () => {
       </View>
     );
   };
-  // console.log(poems)
+
+  console.log(collections);
   const LikedPoemsView = ({ poems }) => {
     return (
       <View>
@@ -136,10 +141,13 @@ const ProfileScreen = () => {
             return (
               <PoemCard
                 key={item._id}
+                poemId={item._id}
+                userId={user._id}
                 title={item.title}
                 author={item.author}
                 excerpt={item.content}
-                likes={item.likes.length} 
+                likes={item.likes.length}
+                inLikes={item.likes.includes(user._id)}
               />
             );
           }}
@@ -190,7 +198,6 @@ const ProfileScreen = () => {
         </TouchableOpacity> */}
 
         <View style={styles.segmentedControl}>
-
           <TouchableOpacity
             onPress={() => setSegmentedControlView("Collections")}
           >
@@ -256,7 +263,6 @@ const ProfileScreen = () => {
               </Text>
             </View>
           </TouchableOpacity>
-          
         </View>
       </View>
 
