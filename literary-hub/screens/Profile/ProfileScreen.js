@@ -25,25 +25,24 @@ const ProfileScreen = () => {
   const [collections, setCollections] = useState([]);
   const [segmentedControlView, setSegmentedControlView] =
     useState("Collections");
-
-  // console.log(poems.title)
+  const navigation = useNavigation();
 
   // this gets the users information stored in user?.
   useFocusEffect(
     React.useCallback(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await axios.get(`${ROOT_URL}/profile/${userId}`);
-        const user = response.data.user;
+      const fetchProfile = async () => {
+        try {
+          const response = await axios.get(`${ROOT_URL}/profile/${userId}`);
+          const user = response.data.user;
 
-        setUser(user);
-      } catch (error) {
-        console.log("error", error);
-      }
-    };
+          setUser(user);
+        } catch (error) {
+          console.log("error", error);
+        }
+      };
 
-    fetchProfile();
-  }, [])  
+      fetchProfile();
+    }, [])
   );
 
   // this gets all the poems liked by a user
@@ -102,7 +101,7 @@ const ProfileScreen = () => {
       const fetchLikedPoems = async () => {
         try {
           const poemIdsToFetch = user?.likedPoems;
-  
+
           // Check if poemIdsToFetch is truthy before making the API call
           if (poemIdsToFetch) {
             const response = await axios.get(`${ROOT_URL}/poems-by-ids`, {
@@ -110,21 +109,28 @@ const ProfileScreen = () => {
                 poemIds: poemIdsToFetch,
               },
             });
-  
+
             const fetchedPoems = response.data;
-            console.log("rerendering poems")
-  
+            console.log("rerendering poems");
+
             setPoems(fetchedPoems);
           }
         } catch (error) {
-          console.error("Error fetching poems:", error);
+          // Check if the error is a 404 (Not Found) status
+          if (error.response && error.response.status === 404) {
+            // Handle the case where there are no liked poems
+            console.log("No liked poems found");
+            setPoems([]); // Set poems to an empty array or handle it as needed
+          } else {
+            // Handle other errors
+            console.error("Error fetching poems:", error);
+          }
         }
       };
-  
+
       fetchLikedPoems();
-    }, [user])  // Added user to the dependency array
+    }, [user]) // Added user to the dependency array
   );
-  
 
   // gets the users created collections
   // useEffect(() => {
@@ -180,7 +186,7 @@ const ProfileScreen = () => {
       const fetchCreatedCollections = async () => {
         try {
           const collectionIdsToFetch = user?.createdCollections;
-  
+
           // Check if collectionIdsToFetch is truthy before making the API call
           if (collectionIdsToFetch) {
             const response = await axios.get(`${ROOT_URL}/collections-by-ids`, {
@@ -188,26 +194,31 @@ const ProfileScreen = () => {
                 collectionIds: collectionIdsToFetch,
               },
             });
-  
+
             const fetchedCollections = response.data;
-            console.log("rerendering collections")
-  
+            console.log("rerendering collections");
+
             setCollections(fetchedCollections);
           }
         } catch (error) {
-          console.error("Error fetching collections:", error);
+          // Check if the error is a 404 (Not Found) status
+          if (error.response && error.response.status === 404) {
+            // Handle the case where there are no liked poems
+            console.log("No liked collections found");
+            setCollections([]); // Set poems to an empty array or handle it as needed
+          } else {
+            // Handle other errors
+            console.error("Error fetching collections:", error);
+          }
         }
       };
-  
+
       fetchCreatedCollections();
-    }, [user])  // Added user to the dependency array
+    }, [user]) // Added user to the dependency array
   );
-  
 
   // console.log(poems)
   const CollectionsView = ({ collections }) => {
-    const navigation = useNavigation();
-
     return (
       <View>
         <TouchableOpacity
@@ -271,6 +282,11 @@ const ProfileScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <TouchableOpacity onPress={() => navigation.navigate("SettingsScreen")}>
+        <View style={styles.settingsButton}>
+          <Ionicons name="settings-outline" size={26} color="#373F41" />
+        </View>
+      </TouchableOpacity>
       <View style={styles.centerAligned}>
         <Image
           source={{
@@ -397,58 +413,48 @@ export default ProfileScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "white",
   },
-
   centerAligned: {
     alignItems: "center",
   },
-
   profilePic: {
     width: 100,
     height: 100,
     borderRadius: 100 / 2,
     marginTop: 20,
   },
-
   names: {
     marginTop: 10,
   },
-
   name: {
     fontSize: 20,
     fontFamily: "HammersmithOne",
     color: "#373F41",
   },
-
   username: {
     fontSize: 15,
     fontFamily: "HammersmithOne",
     color: "#373F41",
     marginLeft: 15,
   },
-
   metrics: {
     flexDirection: "row",
     columnGap: 20,
     marginTop: 10,
   },
-
   metric: {
     alignItems: "center",
   },
-
   metricNumber: {
     fontSize: 20,
     fontFamily: "HammersmithOne",
     color: "#373F41",
   },
-
   metricName: {
     fontFamily: "Sarabun-Regular",
     color: "#6C7476",
   },
-
   followButton: {
     flexDirection: "row",
     columnGap: 10,
@@ -459,13 +465,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#644980",
     marginTop: 15,
   },
-
   followText: {
     fontSize: 17,
     fontFamily: "HammersmithOne",
     color: "#fff",
   },
-
   segmentedControl: {
     flexDirection: "row",
     marginTop: 20,
@@ -477,7 +481,6 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
     backgroundColor: "#E1DBE6",
   },
-
   segmentedControlSelected: {
     borderRadius: 100,
     width: 118,
@@ -485,82 +488,69 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
   },
-
   segmentedControlSelectedText: {
     color: "#373F41",
     fontSize: 15,
     fontFamily: "HammersmithOne",
   },
-
   segmentedControlUnselected: {
     borderRadius: 5,
     width: 118,
     paddingVertical: 10,
     alignItems: "center",
   },
-
   segmentedControlUnselectedText: {
     fontSize: 15,
     fontFamily: "HammersmithOne",
     color: "#373F41",
   },
-
   leftAligned: {
     paddingHorizontal: 17,
   },
-
   createCollectionCTA: {
     flexDirection: "row",
     alignItems: "center",
     columnGap: 7,
     marginTop: 15,
   },
-
   createCollectionText: {
     fontSize: 17,
     color: "#373F41",
     fontFamily: "HammersmithOne",
   },
-
   collections: {
     marginTop: 20,
+    overflow: "visible",
   },
-
   collection: {
     marginBottom: 10,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
   },
-
   collectionMain: {
     flexDirection: "row",
     alignItems: "center",
     columnGap: 20,
   },
-
   collectionPic: {
     width: 70,
     height: 70,
     borderRadius: 10,
   },
-
   collectionText: {
     rowGap: 5,
   },
-
   collectionName: {
     fontSize: 18,
     fontFamily: "HammersmithOne",
     color: "#373F41",
   },
-
   collectionStat: {
     fontSize: 15,
     fontFamily: "Sarabun-Regular",
     color: "#6C7476",
   },
-
   ownershipTag: {
     borderWidth: 1,
     borderRadius: 100,
@@ -569,11 +559,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-
   ownershipText: {
     fontSize: 15,
   },
-
   savedQuote: {
     rowGap: 10,
     borderWidth: 1,
@@ -584,26 +572,28 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     backgroundColor: "#F4F5F4",
   },
-
   savedQuoteText: {
     fontSize: 18,
     fontFamily: "Sarabun-Regular",
     color: "#373F41",
   },
-
   savedQuoteCTAs: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
   },
-
   viewPoem: {
     flexDirection: "row",
+    overflow: "visible",
   },
-
   viewPoemText: {
     fontSize: 17,
     fontFamily: "Sarabun-SemiBold",
     color: "#6C7476",
+  },
+  settingsButton: {
+    alignItems: "flex-end",
+    marginRight: 24,
+    marginTop: 16,
   },
 });
