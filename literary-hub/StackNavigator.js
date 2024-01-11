@@ -18,7 +18,7 @@ const StackNavigator = () => {
       <Tab.Navigator
         screenOptions={{
           tabBarStyle: {
-            backgroundColor: '#F4F2F6'
+            backgroundColor: 'white'
           },
         }}
       >
@@ -88,6 +88,6 @@ export default StackNavigator;
 
 const styles = StyleSheet.create({
   navBar: {
-    backgroundColor: '#000'
-  }
+    backgroundColor: 'white',
+  },
 });
