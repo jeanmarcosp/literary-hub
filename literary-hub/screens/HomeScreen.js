@@ -85,22 +85,23 @@ const HomeScreen = () => {
   return (
     <View style={styles.container}>
       <ScrollView
-        vertical
         pagingEnabled
         showsVerticalScrollIndicator={false}
+        style={styles.scrollView}
         snapToInterval={Dimensions.get('window').height}
         decelerationRate="fast"
         snapToAlignment="start"
         onScroll={(event) => {
           const offsetY = event.nativeEvent.contentOffset.y;
-          //const contentHeight = event.nativeEvent.contentSize.height;
-
-          if (offsetY <= 0) {
-            // if scroll is detected the next poem
+          const viewportHeight = Dimensions.get('window').height;
+          const contentHeight = event.nativeEvent.contentSize.height;
+        
+          // Check if the user has scrolled to the bottom
+          if (offsetY + viewportHeight >= contentHeight) {
             loadMorePoems();
           }
         }}
-        scrollEventThrottle={400} // Adjust the value as needed
+        scrollEventThrottle={30} // Adjust the value as needed
       >
 
         {poems.map((poem, poemIndex) => (
@@ -110,7 +111,7 @@ const HomeScreen = () => {
               pagingEnabled
               showsHorizontalScrollIndicator={false}
               snapToInterval={Dimensions.get('window').width} // Snap to the width of the screen
-              decelerationRate="fast" // Use fast deceleration for smoother page snapping
+              //decelerationRate="fast" // Use fast deceleration for smoother page snapping
             >
               {poem.pages.map((page, index) => (
                 <View key={index} style={styles.page}>
