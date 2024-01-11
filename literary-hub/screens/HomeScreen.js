@@ -31,7 +31,9 @@ const HomeScreen = () => {
     setLoading(true);
   
     try {
+      // `${ROOT_URL}/poems-by-ids`
       const response = await axios.get('http://localhost:3000/get-poems', {
+        
         params: {
           skip: poems.length, // Update the skip parameter
           limit: 1,
@@ -77,7 +79,7 @@ const HomeScreen = () => {
   
 
   useEffect(() => {
-    loadMorePoems(); // Initial load
+    loadMorePoems(); 
   }, [poems]);
 
   return (
@@ -88,12 +90,13 @@ const HomeScreen = () => {
         showsVerticalScrollIndicator={false}
         snapToInterval={Dimensions.get('window').height}
         decelerationRate="fast"
+        snapToAlignment="start"
         onScroll={(event) => {
           const offsetY = event.nativeEvent.contentOffset.y;
-          const contentHeight = event.nativeEvent.contentSize.height;
+          //const contentHeight = event.nativeEvent.contentSize.height;
 
           if (offsetY <= 0) {
-            // Load the next poem
+            // if scroll is detected the next poem
             loadMorePoems();
           }
         }}
