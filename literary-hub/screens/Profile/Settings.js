@@ -5,22 +5,52 @@ import {
   StyleSheet,
   TouchableOpacity,
   SafeAreaView,
+  Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
 import { resetUser } from "../../state/actions/userActions";
+import getUserId from "../../hooks/getUserId";
+import axios from "axios";
 
 const Settings = ({ navigation }) => {
-
+  const userId = getUserId();
   const dispatch = useDispatch();
 
   const handleLogout = () => {
     dispatch(resetUser());
-    navigation.navigate('Login'); 
+    navigation.navigate("Login");
   };
 
+  const handleDeleteAccount = async () => {
+    try {
+      // const response = await axios.delete(`${ROOT_URL}/delete-account/${userId}`);
+      const response = await axios.delete(
+        `http://localhost:3000/delete-account/${userId}`
+      );
+
+      if (response.data.success) {
+        Alert.alert(
+          "Deletion Successful",
+          "Your account has been deleted successfully"
+        );
+
+        dispatch(resetUser());
+        navigation.navigate("Login");
+      }
+    } catch (error) {
+      console.error("Error during deletion:", error);
+      Alert.alert(
+        "Deletion Failed",
+        "An error occurred during account deletion"
+      );
+    }
+  };
+
+  console.log(userId);
+
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.mainContainer}>
       <View style={styles.container}>
         <View style={styles.main}>
           <Text style={styles.title}>Settings</Text>
@@ -35,14 +65,14 @@ const Settings = ({ navigation }) => {
           </TouchableOpacity>
         </View>
         <View style={styles.settingBox}>
-            <TouchableOpacity onPress={handleLogout}>
+          <TouchableOpacity onPress={handleLogout}>
             <Text style={styles.settingText}>Logout</Text>
-            </TouchableOpacity>
+          </TouchableOpacity>
         </View>
         <View style={styles.settingBox}>
-            <TouchableOpacity>
+          <TouchableOpacity onPress={handleDeleteAccount}>
             <Text style={styles.settingText}>Delete Account</Text>
-            </TouchableOpacity>
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>

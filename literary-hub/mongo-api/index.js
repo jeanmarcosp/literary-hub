@@ -424,3 +424,19 @@ app.post("/register", async (req, res) => {
   }
 });
 
+// endpoint for deleting a user 
+app.delete("/delete-account/:userId", async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    // Delete the user account from the database
+    await User.findByIdAndDelete(userId);
+
+    res.status(200).json({ success: true, message: "Account deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting account:", error);
+    res.status(500).json({ success: false, message: "Error deleting account" });
+  }
+});
+
+

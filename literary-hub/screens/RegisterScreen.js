@@ -12,7 +12,7 @@ import React, { useState } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setUser } from "../state/actions/userActions";
 
 const RegisterScreen = () => {
@@ -39,14 +39,12 @@ const RegisterScreen = () => {
       // const response = await axios.post(`${ROOT_URL}/register`, newUser);
       const response = await axios.post("http://localhost:3000/register", user);
 
-      // Check if the response indicates success
       if (response.data.success) {
         Alert.alert(
           "Registration Successful",
           "You have been registered successfully"
         );
 
-        // Dispatch the action to store user information
         dispatch(setUser({ id: response.data.userId }));
         navigation.navigate("Main");
       } else {
