@@ -30,7 +30,7 @@ const LoginScreen = () => {
     const checkLoginStatus = async () => {
       try {
         const token = await AsyncStorage.getItem("authToken");
-      } catch { }
+      } catch {}
     };
   });
 
@@ -41,7 +41,7 @@ const LoginScreen = () => {
     };
     axios
       .post(`${ROOT_URL}/login`, {
-        ... user
+        ...user,
       })
       .then((response) => {
         console.log(response);
@@ -114,9 +114,12 @@ const LoginScreen = () => {
             <Text style={styles.loginText}>Login</Text>
           </Pressable>
 
-          <Pressable>
-            <Text style={styles.signUpText}>
-              Don't have an account? Sign up
+          <Pressable
+            onPress={() => navigation.navigate("Register")}
+            style={{ marginTop: 10 }}
+          >
+            <Text style={{ textAlign: "center", fontSize: 16, color: "#007FFF" }}>
+              Dont have an account? Sign Up
             </Text>
           </Pressable>
         </View>
