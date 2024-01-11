@@ -585,6 +585,7 @@ const styles = StyleSheet.create({
   viewPoem: {
     flexDirection: "row",
     overflow: "visible",
+    color: "red",
   },
   viewPoemText: {
     fontSize: 17,

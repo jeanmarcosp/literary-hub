@@ -7,8 +7,18 @@ import {
   SafeAreaView,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useDispatch } from "react-redux";
+import { resetUser } from "../../state/actions/userActions";
 
 const Settings = ({ navigation }) => {
+
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    dispatch(resetUser());
+    navigation.navigate('Login'); 
+  };
+
   return (
     <SafeAreaView>
       <View style={styles.container}>
@@ -25,7 +35,7 @@ const Settings = ({ navigation }) => {
           </TouchableOpacity>
         </View>
         <View style={styles.settingBox}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={handleLogout}>
             <Text style={styles.settingText}>Logout</Text>
             </TouchableOpacity>
         </View>
