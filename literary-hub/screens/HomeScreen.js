@@ -144,6 +144,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 16,
+    paddingTop: 30,
     position: "relative",
   },
   title: {
