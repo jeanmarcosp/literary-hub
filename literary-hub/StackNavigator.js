@@ -8,6 +8,7 @@ import ExploreNavigator from "./screens/Explore/ExploreNavigator";
 import ProfileNavigator from "./screens/Profile/ProfileNavigator";
 import HomeScreen from "./screens/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
+import RegisterScreen from "./screens/RegisterScreen";
 
 const StackNavigator = () => {
   const Stack = createNativeStackNavigator();
@@ -17,7 +18,7 @@ const StackNavigator = () => {
       <Tab.Navigator
         screenOptions={{
           tabBarStyle: {
-            backgroundColor: '#F4F2F6'
+            backgroundColor: 'white'
           },
         }}
       >
@@ -77,6 +78,7 @@ const StackNavigator = () => {
       <Stack.Navigator>
         <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }}/>
         <Stack.Screen name="Main" component={BottomTabs} options={{ headerShown: false }}/>
+        <Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: false }}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -86,6 +88,6 @@ export default StackNavigator;
 
 const styles = StyleSheet.create({
   navBar: {
-    backgroundColor: '#000'
-  }
+    backgroundColor: 'white',
+  },
 });

@@ -6,7 +6,7 @@ const nodemailer = require("nodemailer");
 const axios = require("axios");
 
 const app = express();
-const port = process.env.port || 3000;
+const port = process.env.PORT || 3000;
 const cors = require("cors");
 app.use(cors());
 
@@ -401,3 +401,44 @@ app.get('/collections-by-ids', async (req, res) => {
     res.status(500).json({ message: "Error while getting collections by IDs" });
   }
 });
+
+//endpoint for registering user in the backend
+app.post("/register", async (req, res) => {
+  try {
+    const { name, email, username, password } = req.body;
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ success: false, message: "Email already registered" });
+    }
+
+    // Create a new user
+    const newUser = new User({ name, email, username, password });
+
+    // Save the user to the database
+    await newUser.save();
+
+    // Include the user ID in the response
+    res.status(200).json({ success: true, message: "Registration successful", userId: newUser._id });
+  } catch (error) {
+    console.error("Error registering user:", error);
+    res.status(500).json({ success: false, message: "Error registering user" });
+  }
+});
+
+// endpoint for deleting a user 
+app.delete("/delete-account/:userId", async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    // Delete the user account from the database
+    await User.findByIdAndDelete(userId);
+
+    res.status(200).json({ success: true, message: "Account deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting account:", error);
+    res.status(500).json({ success: false, message: "Error deleting account" });
+  }
+});
+
+

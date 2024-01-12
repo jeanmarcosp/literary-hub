@@ -3,7 +3,6 @@ import {
   Text,
   View,
   SafeAreaView,
-  Image,
   KeyboardAvoidingView,
   TextInput,
   Pressable,
@@ -16,6 +15,7 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSelector, useDispatch } from "react-redux";
 import { setUser } from "../state/actions/userActions";
+// import { set } from "mongoose";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -30,7 +30,7 @@ const LoginScreen = () => {
     const checkLoginStatus = async () => {
       try {
         const token = await AsyncStorage.getItem("authToken");
-      } catch { }
+      } catch {}
     };
   });
 
@@ -41,7 +41,7 @@ const LoginScreen = () => {
     };
     axios
       .post(`${ROOT_URL}/login`, {
-        ... user
+        ...user,
       })
       .then((response) => {
         console.log(response);
@@ -51,6 +51,8 @@ const LoginScreen = () => {
         // Dispatch the action to store user information
         dispatch(setUser({ id: response.data.userId, username: null }));
         navigation.navigate("Main");
+        setEmail("");
+        setPassword("");
       })
       .catch((error) => {
         if (error.response && error.response.data) {
@@ -114,9 +116,12 @@ const LoginScreen = () => {
             <Text style={styles.loginText}>Login</Text>
           </Pressable>
 
-          <Pressable>
-            <Text style={styles.signUpText}>
-              Don't have an account? Sign up
+          <Pressable
+            onPress={() => navigation.navigate("Register")}
+            style={{ marginTop: 10 }}
+          >
+            <Text style={{ textAlign: "center", fontSize: 16, color: "#007FFF" }}>
+              Dont have an account? Sign Up
             </Text>
           </Pressable>
         </View>

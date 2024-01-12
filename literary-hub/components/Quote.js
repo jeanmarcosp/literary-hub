@@ -32,7 +32,6 @@ const Quote = () => {
         <QuoteCard poemId={item.poemId} quote={item.quote} />
       )}
       keyExtractor={(item) => item.id}
-    //   style={styles.collections}
     />
   );
 };

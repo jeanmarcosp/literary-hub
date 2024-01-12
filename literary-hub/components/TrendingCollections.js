@@ -6,21 +6,21 @@ const collectionData = [
   {
     id: 1,
     title: "Collection 1",
-    coverImage: require("../assets/collection-images/sky.jpg"),
+    coverArt: "https://i.pinimg.com/originals/08/90/e2/0890e2a78f1e10a25fbe1e796caf5425.jpg",
     creator: "user 1",
     caption: "this is a collection!",
   },
   {
     id: 2,
     title: "Collection 2",
-    coverImage: require("../assets/collection-images/sky.jpg"),
+    coverArt: "https://i.pinimg.com/originals/08/90/e2/0890e2a78f1e10a25fbe1e796caf5425.jpg",
     creator: "user 2",
     caption: "this is a collection!",
   },
   {
     id: 3,
     title: "Collection 3",
-    coverImage: require("../assets/collection-images/sky.jpg"),
+    coverArt: "https://i.pinimg.com/originals/08/90/e2/0890e2a78f1e10a25fbe1e796caf5425.jpg",
     creator: "user 3",
     caption: "this is a collection!",
   },
@@ -36,7 +36,7 @@ const TrendingCollections = () => {
         renderItem={({ item }) => (
           <>
             <CollectionCard
-              coverImage={item.coverImage}
+              coverImage={item.coverArt}
               title={item.title}
               creator={item.creator}
               caption={item.caption}

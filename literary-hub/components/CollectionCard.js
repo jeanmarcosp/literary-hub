@@ -3,25 +3,77 @@ import { React, useState, memo } from "react";
 import { View, TouchableOpacity, Image, Text, StyleSheet } from "react-native";
 import Like from "./Like";
 import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
 
-const CollectionCard = ({ coverImage, title, caption, creator, size, likes }) => {
-
+const CollectionCard = ({
+  collectionId,
+  userId,
+  coverImage,
+  title,
+  caption,
+  creator,
+  size,
+  likes,
+  inLikes,
+}) => {
   const navigation = useNavigation();
   const poemText = size === 1 ? "poem" : "poems";
   const likeText = likes === 1 ? "like" : "likes";
 
-  return (
-    <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('CollectionScreen')}>
-      <View style={styles.container}>
+  const [liked, setLiked] = useState(false);
+  const handleLikeCollection = async () => {
+    try {
+      // Send a PUT request to like the collection
+      const response = await axios.put(
+        `${ROOT_URL}/collections/${collectionId}/${userId}/like`
+      );
 
+      // If the request is successful, update the state or perform any other action
+      const updatedCollection = response.data;
+
+      // Set the liked state to true (or perform any other state update)
+      setLiked(true);
+    } catch (error) {
+      console.error("Error liking collection:", error);
+      // Handle errors or perform any other action
+    }
+  };
+
+  const handleUnlikeCollection = async () => {
+    try {
+      // Send a PUT request to unlike the collection
+      const response = await axios.put(
+        `${ROOT_URL}/collections/${collectionId}/${userId}/unlike`
+      );
+
+      // If the request is successful, update the state or perform any other action
+      const updatedCollection = response.data;
+
+      // Set the liked state to false (or perform any other state update)
+      setLiked(false);
+    } catch (error) {
+      console.error("Error unliking collection:", error);
+      // Handle errors or perform any other action
+    }
+  };
+
+  return (
+    <TouchableOpacity
+      style={styles.card}
+      onPress={() => navigation.navigate("CollectionScreen")}
+    >
+      <View style={styles.container}>
         <View style={styles.info}>
-          <Image source={{
-            uri: coverImage,
-          }} style={styles.image} />
+          <Image
+            source={{
+              uri: coverImage,
+            }}
+            style={styles.image}
+          />
           <View style={styles.text}>
             <View>
               <Text style={styles.title}>{title}</Text>
-              <Text style={styles.creator}>{creator}</Text>
+              <Text style={styles.creator}>@{creator}</Text>
             </View>
             <Text style={styles.caption}>{caption}</Text>
           </View>
@@ -29,12 +81,20 @@ const CollectionCard = ({ coverImage, title, caption, creator, size, likes }) =>
 
         <View style={styles.rightInfo}>
           <View style={styles.poemNumberTag}>
-            <Text style={styles.poemNumberText}>{size} {poemText}</Text>
+            <Text style={styles.poemNumberText}>
+              {size} {poemText}
+            </Text>
           </View>
 
           <View style={styles.likes}>
-            <Like />
-            <Text style={styles.likeNumber}>{likes} {likeText}</Text>
+            <Like
+              inLikes={inLikes}
+              handleLike={handleLikeCollection}
+              handleDislike={handleUnlikeCollection}
+            />
+            <Text style={styles.likeNumber}>
+              {likes} {likeText}
+            </Text>
           </View>
         </View>
       </View>
@@ -74,7 +134,7 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontFamily:"HammersmithOne",
+    fontFamily: "HammersmithOne",
     fontSize: 18,
     color: "#373F41",
   },
@@ -84,41 +144,43 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "gray",
   },
-  
+
   caption: {
     fontFamily: "Sarabun-Regular",
     fontSize: 15,
     color: "#373F41",
+    width: 150,
   },
 
   rightInfo: {
-    justifyContent: 'space-between',
-    alignItems: 'flex-end'
+    justifyContent: "space-between",
+    alignItems: "flex-end",
   },
 
   poemNumberTag: {
     borderWidth: 1,
-    borderColor: '#D6CEDF',
+    borderColor: "#D6CEDF",
     borderRadius: 100,
     paddingHorizontal: 10,
     paddingVertical: 3,
-    backgroundColor: '#F9F3FF',
+    backgroundColor: "#F9F3FF",
   },
 
   poemNumberText: {
-    fontFamily: 'Sarabun-SemiBold',
-    color: '#774BA3'
+    fontFamily: "Sarabun-SemiBold",
+    color: "#774BA3",
   },
 
   likes: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     columnGap: 3,
   },
 
   likeNumber: {
-
-  }
+    fontFamily: "Sarabun-SemiBold",
+    color: "#774BA3",
+  },
 });
 
 export default CollectionCard;
