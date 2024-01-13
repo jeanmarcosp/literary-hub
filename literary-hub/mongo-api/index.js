@@ -440,3 +440,24 @@ app.delete("/delete-account/:userId", async (req, res) => {
 });
 
 
+app.get('/author-collection', async (req, res) => {
+  const author = req.query.author;
+  console.log(author);
+
+  try{
+    let query = {};
+    if (author) {
+      query.author = author;
+    }
+
+    const poems = await Poem.find(query).sort('author');
+    console.log(poems);
+    res.json(poems);
+
+    
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error populating author collections' });
+  }
+});
+
