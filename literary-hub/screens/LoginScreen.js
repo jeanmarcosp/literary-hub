@@ -18,8 +18,8 @@ import { setUser } from "../state/actions/userActions";
 // import { set } from "mongoose";
 
 const LoginScreen = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
   const navigation = useNavigation();
 
   const user = useSelector((state) => state.user); // Use the useSelector hook to access the user data
