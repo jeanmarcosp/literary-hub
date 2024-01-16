@@ -1,12 +1,23 @@
 import { Ionicons } from "@expo/vector-icons";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
-import { React } from 'react'
+import { React, useState } from 'react'
 
 const Like = ({ inLikes, handleLike, handleDislike }) => {
+  const [liked, setLiked] = useState(inLikes);
+
+  const handlePress = () => {
+    if (liked) {
+      handleDislike();
+    } else {
+      handleLike();
+    }
+    setLiked(!liked);
+  };
+  
   return (
     <View style={styles.like}>
-      <TouchableOpacity onPress={inLikes ? handleDislike : handleLike}>
-        {inLikes ? (
+      <TouchableOpacity onPress={handlePress}>
+        {liked ? (
           <Ionicons name="heart" size={24} color="#644980" />
         ) : (
           <Ionicons name="heart-outline" size={24} color="#644980" />

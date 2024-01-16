@@ -29,11 +29,11 @@ const CreateCollection = () => {
         caption: caption,
       };
 
-      // const response = await axios.post(`${ROOT_URL}/create-collection`, newCollection);
-      const response = await axios.post(
-        "http://localhost:3000/create-collection",
-        newCollection
-      );
+      const response = await axios.post(`${ROOT_URL}/create-collection`, newCollection);
+    //   const response = await axios.post(
+    //     "http://localhost:3000/create-collection",
+    //     newCollection
+    //   );
 
       const createdCollection = response.data;
       console.log("Created Collection:", createdCollection);
