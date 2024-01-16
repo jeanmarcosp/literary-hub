@@ -18,7 +18,7 @@ const AuthorCollectionScreen = () => {
         console.error(error);
       }
     };
-    fetchPoemsByAuthor('Emily Dickinson');
+    fetchPoemsByAuthor('Isaac Watts');
   }, [])
 
   excerpt = "hi"

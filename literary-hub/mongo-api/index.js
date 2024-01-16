@@ -444,7 +444,6 @@ app.delete("/delete-account/:userId", async (req, res) => {
 
 app.get('/author-collection', async (req, res) => {
   const author = req.query.author;
-  console.log(author);
 
   try{
     let query = {};
@@ -460,6 +459,34 @@ app.get('/author-collection', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error populating author collections' });
+  }
+});
+
+app.get('/trending-authors', async (req, res) => {
+
+  try{
+    const authors = await Poem.aggregate([
+      {
+        $group: {
+          _id: '$author',
+          poemCount: { $sum: 1 }
+        }
+      },
+      {
+        $match: {
+          poemCount: { $gte: 10 }
+        }
+      },
+      {
+        $sample: { size: 6 }
+      }
+    ]);
+    res.json(authors);
+    console.log(authors);
+    
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error fetching trending authors' });
   }
 });
 

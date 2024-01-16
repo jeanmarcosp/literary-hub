@@ -1,34 +1,36 @@
 import React from "react";
 import { View, FlatList, Text, StyleSheet } from "react-native";
 import AuthorCard from "./AuthorCard"; 
+import axios from "axios";
+import { useEffect, useState } from 'react';
 
-const authorsData = [
-  {
-    id: 1,
-    title: "Robert Frost",
-    coverImage: require("../assets/author-images/robert-frost.jpg.webp"),
-  },
-  {
-    id: 2,
-    title: "Margaret Atwood",
-    coverImage: require("../assets/author-images/margaret-atwood.jpg"),
-  },
-  {
-    id: 3,
-    title: "Emily Dickinson",
-    coverImage: require("../assets/author-images/emily-dick.webp"),
-  },
-];
 
 const AuthorList = () => {
+
+  const [authors, setAuthors] = useState(null);
+
+  useEffect(() => {
+    const fetchAuthors = async() => {
+      try {
+        const response = await axios.get("http://localhost:3000/trending-authors");
+        setAuthors(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchAuthors();
+  }, [])
+
+  
+
   return (
     <View>
       <FlatList
         style={styles.authorList}
-        data={authorsData}
-        keyExtractor={(item) => item.id.toString()}
+        data={authors}
+        keyExtractor={(item) => item._id}
         renderItem={({ item }) => (
-          <AuthorCard coverImage={item.coverImage} title={item.title} />
+          <AuthorCard title={item._id} poemCount={item.poemCount}/>
         )}
         horizontal
         showsHorizontalScrollIndicator={false}
