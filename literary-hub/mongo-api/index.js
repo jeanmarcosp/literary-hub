@@ -322,22 +322,36 @@ app.put("/collections/:collectionId/:userId/unlike", async (req, res) => {
 //endpoint for creating a collection
 app.post('/create-collection', async (req, res) => {
   try {
-    const { userId, title, coverArt, likes = 0, poemsInCollection = [] } = req.body;
+    const { userId, title, caption } = req.body;
 
-    // Validate user input (you can add more validation as needed)
-    if (!userId || !title) {
-      return res.status(400).json({ error: 'User and title are required fields' });
+    if (!userId) {
+      return res.status(400).json({ error: 'User is a required field' });
     }
+
+    const defaultCaption = 'Check out my new collection!';
+    const collectionCaption = caption || defaultCaption;
+
+    defaultTitle = 'New Collection';
+    const collectionTitle = title || defaultTitle;
 
     const newCollection = new Collection({
       user: userId,
-      title: title,
-      coverArt: "",
-      likes: 0,
+      title: collectionTitle,
+      coverArt: "https://i.pinimg.com/originals/08/90/e2/0890e2a78f1e10a25fbe1e796caf5425.jpg",
+      likes: [],
       poemsInCollection: [],
+      caption: collectionCaption,
     });
 
     const savedCollection = await newCollection.save();
+
+    // Update the user's 'createdCollections' field
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $addToSet: { createdCollections: savedCollection._id } },
+      { new: true } // To return the updated user document
+    );
+
     res.status(201).json(savedCollection); // 201 status code indicates a resource was created
 
   } catch (error) {
@@ -462,4 +476,3 @@ app.get('/author-collection', async (req, res) => {
     res.status(500).json({ error: 'Error populating author collections' });
   }
 });
-
