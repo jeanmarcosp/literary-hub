@@ -1,5 +1,5 @@
 import "react-native-gesture-handler";
-import { React, useState, memo } from "react";
+import { React, useState } from "react";
 import { View, TouchableOpacity, Image, Text, StyleSheet } from "react-native";
 import Like from "./Like";
 import { useNavigation } from "@react-navigation/native";
@@ -21,9 +21,9 @@ const CollectionCard = ({
   const likeText = likes === 1 ? "like" : "likes";
 
   const [liked, setLiked] = useState(false);
+
   const handleLikeCollection = async () => {
     try {
-      // Send a PUT request to like the collection
       const response = await axios.put(
         `${ROOT_URL}/collections/${collectionId}/${userId}/like`
       );
@@ -41,7 +41,6 @@ const CollectionCard = ({
 
   const handleUnlikeCollection = async () => {
     try {
-      // Send a PUT request to unlike the collection
       const response = await axios.put(
         `${ROOT_URL}/collections/${collectionId}/${userId}/unlike`
       );
