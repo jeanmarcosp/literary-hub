@@ -1,11 +1,44 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { SafeAreaView, Text, StyleSheet } from 'react-native';
+import axios from "axios";
+import { useEffect, useState } from 'react';
+import { FlatList } from 'react-native-gesture-handler';
+import PoemCard from '../../components/PoemCard';
 
 const AuthorCollectionScreen = () => {
+
+  const [poems, setPoems] = useState(null);
+
+  useEffect(() => {
+    const fetchPoemsByAuthor = async(authorName) => {
+      try {
+        const response = await axios.get(`${ROOT_URL}/author-collection?author=${authorName}`)
+        setPoems(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchPoemsByAuthor('Emily Dickinson');
+  }, [])
+
+  excerpt = "hi"
+
+  
+  
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Hello</Text>
-    </View>
+    <SafeAreaView style={styles.container}>
+      <Text>Titles of Poems:</Text>
+      <FlatList
+        data={poems}
+        keyExtractor={(item) => item._id} 
+        renderItem={({ item }) => (
+          <PoemCard
+              title={item.title}
+              excerpt={excerpt}
+          />
+        )}
+      />
+    </SafeAreaView>
   );
 };
 
@@ -19,6 +52,12 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 24,
     fontWeight: 'bold',
+  },
+  header: {
+    flex: 1,
+    aspectRatio: 2, // Adjust aspect ratio to control the height
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
