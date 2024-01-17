@@ -13,13 +13,14 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import getUserId from "../../hooks/getUserId";
 import axios from "axios";
-
+import * as ImagePicker from 'expo-image-picker';
 
 const CreateCollection = () => {
   const userId = getUserId();
   const navigation = useNavigation();
   const [title, setTitle] = useState("");
   const [caption, setCaption] = useState("");
+  const [coverArt, setCoverArt] = useState("");
 
   const handleCreateCollection = async () => {
     try {
@@ -29,15 +30,14 @@ const CreateCollection = () => {
         caption: caption,
       };
 
-      const response = await axios.post(`${ROOT_URL}/create-collection`, newCollection);
-    //   const response = await axios.post(
-    //     "http://localhost:3000/create-collection",
-    //     newCollection
-    //   );
+      const response = await axios.post(
+        `${ROOT_URL}/create-collection`,
+        newCollection
+      );
 
       const createdCollection = response.data;
       console.log("Created Collection:", createdCollection);
-        
+
       navigation.navigate("ProfileScreen");
       setTitle("");
       setCaption("");
@@ -45,6 +45,25 @@ const CreateCollection = () => {
       console.error("Error creating collection:", error);
     }
   };
+
+  const handlePickImage = async () => {
+    try {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 4],
+        quality: 1,
+      });
+
+      if (!result.canceled) {
+        setCoverArt(result.assets[0].uri)
+      }
+    } catch (error) {
+      console.error("Error picking image:", error);
+    }
+  };
+
+  console.log(coverArt)
 
   return (
     <SafeAreaView style={styles.mainContainer}>
@@ -66,7 +85,7 @@ const CreateCollection = () => {
           <Text style={styles.header}>Cover photo</Text>
           <View style={styles.emptyCoverPhoto}>
             <View style={styles.addCoverPhotoCTA}>
-              <Ionicons name="add" size={30} color="#6C7476" />
+              <Ionicons onPress={handlePickImage} name="add" size={30} color="#6C7476" />
             </View>
           </View>
           <TouchableOpacity>
