@@ -9,7 +9,7 @@ const AuthorCard = ({ title, poemCount }) => {
   const navigation = useNavigation();
 
   return (
-    <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('AuthorCollectionScreen')}>
+    <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('AuthorCollectionScreen', { author: title })}>
       <View style={styles.container}>
         <View style={styles.topRow}>
           {/* <Image source={coverImage} style={styles.image} /> */}
