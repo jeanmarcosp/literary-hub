@@ -8,7 +8,7 @@ import {
   Dimensions,
 } from "react-native";
 import React, { useState, useEffect, useContext, useCallback, useMemo, useRef } from "react";
-import Poem from "./Poem.js"
+import Poem from "../../components/Poem.js"
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import axios from "axios";
@@ -20,9 +20,7 @@ import { setUser } from "../../state/actions/userActions";
 
 const HomeScreen = () => {
   const [poems, setPoems] = useState([]);
-  const [currentPoemIndex, setCurrentPoemIndex] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [currentLine, setCurrentLine] = useState(0);
 
   const linesPerPage = 20;
 
