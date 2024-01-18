@@ -4,15 +4,15 @@ import { View, TouchableOpacity, Image, Text, StyleSheet } from "react-native";
 import Like from "./Like";
 import { useNavigation } from "@react-navigation/native";
 
-const AuthorCard = ({ coverImage, title }) => {
+const AuthorCard = ({ title, poemCount }) => {
   
   const navigation = useNavigation();
 
   return (
-    <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('AuthorCollectionScreen')}>
+    <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('AuthorCollectionScreen', { author: title })}>
       <View style={styles.container}>
         <View style={styles.topRow}>
-          <Image source={coverImage} style={styles.image} />
+          {/* <Image source={coverImage} style={styles.image} /> */}
           <View style={styles.likes}>
             <Like />
             <Text>10k</Text>
@@ -21,7 +21,7 @@ const AuthorCard = ({ coverImage, title }) => {
 
         <View style={styles.authorInfo}>
           <Text style={styles.authorName}>{title}</Text>
-          <Text style={styles.authorDates}>1974-1963</Text>
+          <Text style={styles.authorDates}>{poemCount} poems</Text>
         </View>
       </View>
     </TouchableOpacity>

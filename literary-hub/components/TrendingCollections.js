@@ -8,21 +8,21 @@ const collectionData = [
     title: "Collection 1",
     coverArt: "https://i.pinimg.com/originals/08/90/e2/0890e2a78f1e10a25fbe1e796caf5425.jpg",
     creator: "user 1",
-    caption: "this is a collection!",
+    caption: "collection 1",
   },
   {
     id: 2,
     title: "Collection 2",
     coverArt: "https://i.pinimg.com/originals/08/90/e2/0890e2a78f1e10a25fbe1e796caf5425.jpg",
     creator: "user 2",
-    caption: "this is a collection!",
+    caption: "collection 2",
   },
   {
     id: 3,
     title: "Collection 3",
     coverArt: "https://i.pinimg.com/originals/08/90/e2/0890e2a78f1e10a25fbe1e796caf5425.jpg",
     creator: "user 3",
-    caption: "this is a collection!",
+    caption: "collection 3",
   },
 ];
 
