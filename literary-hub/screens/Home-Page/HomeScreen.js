@@ -8,14 +8,15 @@ import {
   Dimensions,
 } from "react-native";
 import React, { useState, useEffect, useContext, useCallback, useMemo, useRef } from "react";
+import Poem from "./Poem.js"
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import axios from "axios";
-import Like from "../components/Like";
-import getUserId from "../hooks/getUserId";
+import Like from "../../components/Like";
+import getUserId from "../../hooks/getUserId";
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
-import CollectionBottomSheet from "../components/CollectionBottomSheet";
-import { setUser } from "../state/actions/userActions";
+import CollectionBottomSheet from "../../components/CollectionBottomSheet";
+import { setUser } from "../../state/actions/userActions";
 
 const HomeScreen = () => {
   const [poems, setPoems] = useState([]);
@@ -31,8 +32,7 @@ const HomeScreen = () => {
     setLoading(true);
   
     try {
-      // `${ROOT_URL}/poems-by-ids`
-      const response = await axios.get('http://localhost:3000/get-poems', {
+      const response = await axios.get(`${ROOT_URL}/get-poems`, {
         
         params: {
           skip: poems.length, // Update the skip parameter
@@ -103,32 +103,10 @@ const HomeScreen = () => {
         scrollEventThrottle={30} 
       >
 
-        {poems.map((poem, poemIndex) => (
-          <View key={poemIndex} style={styles.poemContainer}>
-            <ScrollView
-              horizontal
-              pagingEnabled
-              showsHorizontalScrollIndicator={false}
-              decelerationRate="fast"
-              snapToInterval={Dimensions.get('window').width} // snap to the width of the screen
-              //decelerationRate="fast" // Use fast deceleration for smoother page snapping
-            >
-              {poem.pages.map((page, index) => (
-                <View key={index} style={styles.page}>
-                  {index === 0 && (
-                    <React.Fragment>
-                      <Text style={styles.title}>{poem.title}</Text>
-                      <Text style={styles.author}>
-                        Author: {poem.author}
-                      </Text>
-                    </React.Fragment>
-                  )}
-                  <Text style={styles.pageContent}>{page}</Text>
-                </View>
-              ))}
-            </ScrollView>
-          </View>
+        {poems.map((poem, index) => (
+          <Poem key={index} poem={poem} /> // Use the Poem component
         ))}
+
       </ScrollView>
     </View>
   );
