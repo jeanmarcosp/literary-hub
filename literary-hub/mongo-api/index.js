@@ -322,22 +322,36 @@ app.put("/collections/:collectionId/:userId/unlike", async (req, res) => {
 //endpoint for creating a collection
 app.post('/create-collection', async (req, res) => {
   try {
-    const { userId, title, coverArt, likes = 0, poemsInCollection = [] } = req.body;
+    const { userId, title, caption } = req.body;
 
-    // Validate user input (you can add more validation as needed)
-    if (!userId || !title) {
-      return res.status(400).json({ error: 'User and title are required fields' });
+    if (!userId) {
+      return res.status(400).json({ error: 'User is a required field' });
     }
+
+    const defaultCaption = 'Check out my new collection!';
+    const collectionCaption = caption || defaultCaption;
+
+    defaultTitle = 'New Collection';
+    const collectionTitle = title || defaultTitle;
 
     const newCollection = new Collection({
       user: userId,
-      title: title,
-      coverArt: "",
-      likes: 0,
+      title: collectionTitle,
+      coverArt: "https://i.pinimg.com/originals/08/90/e2/0890e2a78f1e10a25fbe1e796caf5425.jpg",
+      likes: [],
       poemsInCollection: [],
+      caption: collectionCaption,
     });
 
     const savedCollection = await newCollection.save();
+
+    // Update the user's 'createdCollections' field
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $addToSet: { createdCollections: savedCollection._id } },
+      { new: true } // To return the updated user document
+    );
+
     res.status(201).json(savedCollection); // 201 status code indicates a resource was created
 
   } catch (error) {
@@ -444,7 +458,6 @@ app.delete("/delete-account/:userId", async (req, res) => {
 
 app.get('/author-collection', async (req, res) => {
   const author = req.query.author;
-  console.log(author);
 
   try{
     let query = {};
@@ -463,35 +476,54 @@ app.get('/author-collection', async (req, res) => {
   }
 });
 
+app.get('/trending-authors', async (req, res) => {
+
+  try{
+    const authors = await Poem.aggregate([
+      {
+        $group: {
+          _id: '$author',
+          poemCount: { $sum: 1 }
+        }
+      },
+      {
+        $match: {
+          poemCount: { $gte: 10 }
+        }
+      },
+      {
+        $sample: { size: 6 }
+      }
+    ]);
+    res.json(authors);
+    console.log(authors);
+    
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error fetching trending authors' });
+  }
+});
+
 //endpoint for searching 
 app.get('/search', async(req, res) => {
+  console.log("in search");
   try{
     const { query } = req.query;
     console.log('Query is ', query);
+    try{
+      const poemResults = await Poem.find({ title: query }).sort('author');
+      console.log(poemResults);
+      res.json(poemResults);
+
+    }catch (error) {
+      console.error('Error while getting poem query results ', error);
+      res.status(500).json({ message: "Error while getting user query results" });
+    }
   }catch (error) {
     console.error('Error getting search query ', error);
     res.status(500).json({ message: "Error gettign search query" });
-
+  
   }
   
-
-  try{
-    const userResults = User.find({ username: query });
-  }catch (error) {
-    console.error('Error while getting user query results ', error);
-    res.status(500).json({ message: "Error while getting user query results" });
-  }
-  try{
-    const userResults = Collection.find({ title: query });
-  }catch (error) {
-    console.error('Error while getting collection query results ', error);
-    res.status(500).json({ message: "Error while getting collection query results" });
-  }
-  try{
-    const poemResults = Poem.find({ title: query });
-  }catch (error) {
-    console.error('Error while getting poem query results ', error);
-    res.status(500).json({ message: "Error while getting user query results" });
-  }
 })
 

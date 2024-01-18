@@ -6,7 +6,8 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import { React, useState } from "react";
+import PoemCard from "../../components/PoemCard.js";
+import { React, useState} from "react";
 import AuthorList from "../../components/AuthorList";
 import SearchBar from "../../components/SearchBar.js";
 import { Ionicons } from "@expo/vector-icons";
@@ -17,11 +18,19 @@ import Quote from "../../components/Quote";
 const ExploreScreen = () => {
   const [segmentedControlView, setSegmentedControlView] =
     useState("Collections");
+  const [searchResults, setSearchResults] = useState([]);
+  const handleSearch = (results) =>{
+    setSearchResults(results);
+  }
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
-        <SearchBar />
-
+        <SearchBar onSearch={handleSearch}/>
+        <div>
+        {searchResults.map((poem) => (
+        <PoemCard poemId={poem._id} />
+      ))}
+        </div>
         <Text style={styles.text}>Author Collections</Text>
         <AuthorList />
 

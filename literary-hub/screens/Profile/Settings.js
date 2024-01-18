@@ -24,10 +24,7 @@ const Settings = ({ navigation }) => {
 
   const handleDeleteAccount = async () => {
     try {
-      // const response = await axios.delete(`${ROOT_URL}/delete-account/${userId}`);
-      const response = await axios.delete(
-        `http://localhost:3000/delete-account/${userId}`
-      );
+      const response = await axios.delete(`${ROOT_URL}/delete-account/${userId}`);
 
       if (response.data.success) {
         Alert.alert(

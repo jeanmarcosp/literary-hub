@@ -254,7 +254,6 @@ const ProfileScreen = () => {
     );
   };
 
-  // console.log(collections);
   const LikedPoemsView = ({ poems }) => {
     return (
       <View>
