@@ -31,8 +31,7 @@ const HomeScreen = () => {
     setLoading(true);
   
     try {
-      // `${ROOT_URL}/poems-by-ids`
-      const response = await axios.get('http://localhost:3000/get-poems', {
+      const response = await axios.get(`${ROOT_URL}/get-poems`, {
         
         params: {
           skip: poems.length, // Update the skip parameter
