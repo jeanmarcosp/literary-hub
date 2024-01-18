@@ -6,12 +6,27 @@ const SearchBar = () => {
   const [searchText, setSearchText] = useState("");
   const [searchResults, setSearchResults] = useState([]);
 
+
   const handleSearch = (text) => {
+
     const results = Array.from({ length: 10 }, (_, i) => ({
       id: i,
       name: `Result ${i}`,
     }));
     setSearchResults(results);
+  };
+
+  const getResults = () => {
+    axios
+      .get("http://localhost:3000/search", {
+        params: { query: searchText },
+      })
+      .then((response) => {
+        setCollections(response.data);
+      })
+      .catch((error) => {
+        console.log("Error fetching collections");
+      });
   };
 
   return (

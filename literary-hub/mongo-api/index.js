@@ -463,3 +463,35 @@ app.get('/author-collection', async (req, res) => {
   }
 });
 
+//endpoint for searching 
+app.get('/search', async(req, res) => {
+  try{
+    const { query } = req.query;
+    console.log('Query is ', query);
+  }catch (error) {
+    console.error('Error getting search query ', error);
+    res.status(500).json({ message: "Error gettign search query" });
+
+  }
+  
+
+  try{
+    const userResults = User.find({ username: query });
+  }catch (error) {
+    console.error('Error while getting user query results ', error);
+    res.status(500).json({ message: "Error while getting user query results" });
+  }
+  try{
+    const userResults = Collection.find({ title: query });
+  }catch (error) {
+    console.error('Error while getting collection query results ', error);
+    res.status(500).json({ message: "Error while getting collection query results" });
+  }
+  try{
+    const poemResults = Poem.find({ title: query });
+  }catch (error) {
+    console.error('Error while getting poem query results ', error);
+    res.status(500).json({ message: "Error while getting user query results" });
+  }
+})
+
