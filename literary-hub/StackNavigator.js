@@ -6,7 +6,7 @@ import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import ExploreNavigator from "./screens/Explore/ExploreNavigator";
 import ProfileNavigator from "./screens/Profile/ProfileNavigator";
-import HomeScreen from "./screens/HomeScreen";
+import HomeScreen from "./screens/Home-Page/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 
