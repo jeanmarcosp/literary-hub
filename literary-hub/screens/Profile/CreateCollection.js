@@ -37,13 +37,8 @@ const CreateCollection = () => {
 
       console.log(newCollection);
 
-      // const response = await axios.post(
-      //   `${ROOT_URL}/create-collection`,
-      //   newCollection
-      // );
-
       const response = await axios.post(
-        `http://localhost:3000/create-collection`,
+        `${ROOT_URL}/create-collection`,
         newCollection
       );
       
@@ -68,7 +63,6 @@ const CreateCollection = () => {
     });
 
     const source = { uri: result.assets[0].uri };
-    // console.log(source)
     setCoverArt(source);
   };
 
@@ -83,7 +77,6 @@ const CreateCollection = () => {
       await ref.put(blob);
       const downloadURL = await ref.getDownloadURL();
       setCoverArt(downloadURL);
-      // console.log("Download URL:", coverArt.uri);
     } catch (e) {
       console.log(e);
     }
