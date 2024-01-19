@@ -322,12 +322,12 @@ app.put("/collections/:collectionId/:userId/unlike", async (req, res) => {
 //endpoint for creating a collection
 app.post('/create-collection', async (req, res) => {
   try {
-    const { userId, title, caption } = req.body;
+    const { userId, title, caption, coverArt } = req.body;
 
     if (!userId) {
       return res.status(400).json({ error: 'User is a required field' });
     }
-
+    
     const defaultCaption = 'Check out my new collection!';
     const collectionCaption = caption || defaultCaption;
 
@@ -337,7 +337,7 @@ app.post('/create-collection', async (req, res) => {
     const newCollection = new Collection({
       user: userId,
       title: collectionTitle,
-      coverArt: "https://i.pinimg.com/originals/08/90/e2/0890e2a78f1e10a25fbe1e796caf5425.jpg",
+      coverArt: coverArt,
       likes: [],
       poemsInCollection: [],
       caption: collectionCaption,
