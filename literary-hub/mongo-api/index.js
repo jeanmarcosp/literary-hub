@@ -327,20 +327,17 @@ app.post('/create-collection', async (req, res) => {
     if (!userId) {
       return res.status(400).json({ error: 'User is a required field' });
     }
-
+    
     const defaultCaption = 'Check out my new collection!';
     const collectionCaption = caption || defaultCaption;
 
     defaultTitle = 'New Collection';
     const collectionTitle = title || defaultTitle;
 
-    defaultCoverArt = "https://i.pinimg.com/originals/08/90/e2/0890e2a78f1e10a25fbe1e796caf5425.jpg";
-    const collectionCoverArt = coverArt || defaultCoverArt;
-
     const newCollection = new Collection({
       user: userId,
       title: collectionTitle,
-      coverArt: collectionCoverArt,
+      coverArt: coverArt,
       likes: [],
       poemsInCollection: [],
       caption: collectionCaption,
