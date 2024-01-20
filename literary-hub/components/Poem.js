@@ -5,8 +5,11 @@ import { View, ScrollView, Text, Dimensions, StyleSheet, Pressable } from 'react
 import React, { useState, useEffect, useContext, useCallback, useMemo, useRef } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
+import Like from "../components/Like";
+
 const Poem = ({ poem }) => {
   const [annotationMode, handleAnnotationMode] = useState(false);
+  const [liked, handleLike] = useState(false);
 
   const bottomSheetRef = useRef(null);
 
@@ -49,7 +52,7 @@ const Poem = ({ poem }) => {
             <MaterialCommunityIcons
               name="toggle-switch"
               size={35}
-              color="black"
+              color="#644980"
             />
           </Pressable>
         ) : (
@@ -61,16 +64,21 @@ const Poem = ({ poem }) => {
             <MaterialCommunityIcons
               name="toggle-switch-off-outline"
               size={35}
-              color="black"
+              color="#644980"
             />
           </Pressable>
         )}
       </View>
       <View style={styles.plus}>
         <Pressable onPress={handleOpenPress} style={styles.icon}>
-          <Feather name="plus" size={30} color="black" />
+          <Feather name="plus" size={30} color="#644980" />
         </Pressable>
       </View>
+      <View style={styles.heart}>
+        <Like />
+      </View>
+
+      
       <CollectionBottomSheet ref={bottomSheetRef} title="Add to Collection" poem={poem} />
     </View>
     
