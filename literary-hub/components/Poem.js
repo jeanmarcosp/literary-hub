@@ -7,11 +7,27 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import Like from "../components/Like";
 
-const Poem = ({ poem }) => {
+const Poem = ({ poem, poemId, onRead }) => {
   const [annotationMode, handleAnnotationMode] = useState(false);
   const [liked, handleLike] = useState(false);
-
   const bottomSheetRef = useRef(null);
+  const READ_TIMER_DURATION = 30000;
+  const [isRead, setIsRead] = useState(false);
+
+  // if poem is already marked as read, do nothing
+  // if it isn't, mark it as read
+  useEffect(() => {
+    if (isRead) return; 
+
+    const timer = setTimeout(() => {
+      if (onRead) {
+        onRead(poemId);  
+        setIsRead(true); 
+      }
+    }, READ_TIMER_DURATION);
+
+    return () => clearTimeout(timer); 
+  }, [poemId, onRead, isRead]);
 
 	const handleClosePress = () => {
     bottomSheetRef.current?.close();
@@ -19,6 +35,8 @@ const Poem = ({ poem }) => {
 	const handleOpenPress = () => {
     bottomSheetRef.current?.expand();
   };
+
+  
   return (
     <View style={styles.poemContainer}>
       <ScrollView
@@ -121,7 +139,7 @@ const styles = StyleSheet.create({
   },
   heart: {
     position: "absolute",
-    right: screenWidth * 0.05, 
+    right: screenWidth * 0.045, 
     bottom: screenHeight * 0.1, 
   },
   plus: {

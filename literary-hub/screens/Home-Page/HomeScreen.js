@@ -21,8 +21,17 @@ import { setUser } from "../../state/actions/userActions";
 const HomeScreen = () => {
   const [poems, setPoems] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const userId = getUserId();
   const linesPerPage = 20;
+
+  const markPoemAsRead = async (poemId) => {
+    try {
+      await axios.put(`http://localhost:3000/mark-poem-as-read/${userId}/${poemId}`);
+      console.log(`Poem ${poemId} marked as read.`);
+    } catch (error) {
+      console.error('Error marking poem as read:', error);
+    }
+  };
 
   const loadMorePoems = async () => {
     if (loading) return;
@@ -33,18 +42,17 @@ const HomeScreen = () => {
       const response = await axios.get(`${ROOT_URL}/get-poems`, {
         
         params: {
-          skip: poems.length, // Update the skip parameter
+          skip: poems.length, 
           limit: 1,
         },
       });
   
       if (response.data.length === 0) {
-        // No more poems available
         setLoading(false);
         return;
       }
   
-      // Split the poem into pages
+      // split the poem into pages
       const lines = response.data[0].content.split("\n");
       const pages = [];
       let currentPage = "";
@@ -64,7 +72,7 @@ const HomeScreen = () => {
         pages.push(currentPage);
       }
   
-      // Update the state with the poem and its pages
+      // update the state with the poem and its pages
       setPoems((prevPoems) => [...prevPoems, { ...response.data[0], pages }]);
       setLoading(false);
     } catch (error) {
@@ -102,7 +110,11 @@ const HomeScreen = () => {
       >
 
         {poems.map((poem, index) => (
-          <Poem key={index} poem={poem} /> // Use the Poem component
+          <Poem 
+          key={poem._id || index} 
+          poem={poem} 
+          poemId={poem._id} // pass the _id as poemId
+          onRead={markPoemAsRead}/>
         ))}
 
       </ScrollView>

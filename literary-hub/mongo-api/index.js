@@ -504,3 +504,22 @@ app.get('/trending-authors', async (req, res) => {
   }
 });
 
+
+// mark a poem as read
+app.put('/mark-poem-as-read/:userId/:poemId', async (req, res) => {
+  const { userId, poemId } = req.params;
+
+  try {
+    // update the user's readPoems list
+    await User.findByIdAndUpdate(
+      userId,
+      { $addToSet: { readPoems: poemId } }, // add poem, avoid duplicates
+      { new: true }
+    );
+
+    res.status(200).json({ message: 'Poem marked as read' });
+  } catch (error) {
+    console.error('Error marking poem as read:', error);
+    res.status(500).json({ message: 'Error marking poem as read' });
+  }
+});
