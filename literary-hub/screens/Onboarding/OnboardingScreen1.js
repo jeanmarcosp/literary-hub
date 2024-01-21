@@ -11,10 +11,17 @@ const OnboardingScreen1 = () => {
     return (
         <SafeAreaView>
             <View style={styles.container}>
+                <View style={styles.progressBar}>
+                    <View style={styles.progressBarItemFilled}></View>
+                    <View style={styles.progressBarItemUnfilled}></View>
+                    <View style={styles.progressBarItemUnfilled}></View>
+                    <View style={styles.progressBarItemUnfilled}></View>
+                </View>
                 <Image style={styles.image} source={require('./../../assets/onboarding-images/onboarding-mockup.jpg')}/>
-                <Text style={styles.title}>Welcome to Literary Hub!</Text>
-                <Text style={styles.description}>A place for you to find your love for poetry and incorporate reading poetry into your everyday life!</Text>
-                
+                <View style={styles.text}>
+                    <Text style={styles.title}>Welcome to Literary Hub!</Text>
+                    <Text style={styles.description}>A place for you to find your love for poetry and incorporate reading poetry into your everyday life!</Text>
+                </View>
                 <View style={styles.buttons}>
                     <TouchableOpacity onPress={() => navigation.goBack()}>
                         <View style={styles.backButton}>
@@ -43,9 +50,36 @@ const styles = StyleSheet.create({
         height: '100%',
     },
 
+    progressBar: {
+        flexDirection: 'row',
+        width: '100%',
+        columnGap: 10,
+        marginTop: 20,
+    },
+
+    progressBarItemFilled: {
+        flex: 1,
+        height: 4,
+        backgroundColor: '#393939',
+    },
+
+    progressBarItemUnfilled: {
+        flex: 1,
+        height: 4,
+        backgroundColor: '#D9D9D9',
+    },
+
     image: {
         width: 200,
         height: 300,
+        position: 'absolute',
+        top: 100,
+    },
+
+    text: {
+        alignItems: 'center',
+        position: 'absolute',
+        top: 450,
     },
 
     title: {
