@@ -23,11 +23,7 @@ const OnboardingScreen1 = () => {
                     <Text style={styles.description}>A place for you to find your love for poetry and incorporate reading poetry into your everyday life!</Text>
                 </View>
                 <View style={styles.buttons}>
-                    <TouchableOpacity onPress={() => navigation.goBack()}>
-                        <View style={styles.backButton}>
-                            <Ionicons name="arrow-back-outline" size={24} color="#9B59D1" />
-                        </View>
-                    </TouchableOpacity>
+                    <TouchableOpacity></TouchableOpacity>
 
                     <TouchableOpacity onPress={() => navigation.navigate('OnboardingScreen2')}>
                         <View style={styles.nextButton}>
