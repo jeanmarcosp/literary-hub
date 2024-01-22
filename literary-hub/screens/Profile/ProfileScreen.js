@@ -44,57 +44,8 @@ const ProfileScreen = () => {
       fetchProfile();
     }, [])
   );
-
-  // this gets all the poems liked by a user
-  // useEffect(() => {
-  //   const fetchLikedPoems = async () => {
-  //     try {
-  //       const poemIdsToFetch = user?.likedPoems;
-
-  //       // Check if poemIdsToFetch is truthy before making the API call
-  //       if (poemIdsToFetch) {
-  //         const response = await axios.get(`${ROOT_URL}/poems-by-ids`, {
-  //           params: {
-  //             poemIds: poemIdsToFetch,
-  //           },
-  //         });
-
-  //         const fetchedPoems = response.data;
-
-  //         setPoems(fetchedPoems);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching poems:", error);
-  //     }
-  //   };
-
-  //   fetchLikedPoems();
-  // }, []);
-
-  // const fetchLikedPoems = useCallback(async () => {
-  //   try {
-  //     const poemIdsToFetch = user?.likedPoems;
-
-  //     // Check if poemIdsToFetch is truthy before making the API call
-  //     if (poemIdsToFetch) {
-  //       const response = await axios.get(`${ROOT_URL}/poems-by-ids`, {
-  //         params: {
-  //           poemIds: poemIdsToFetch,
-  //         },
-  //       });
-
-  //       const fetchedPoems = response.data;
-
-  //       setPoems(fetchedPoems);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching poems:", error);
-  //   }
-  // }, [user]);
-
-  // useFocusEffect(() => {
-  //   fetchLikedPoems();
-  // }, [poems]);
+  
+  console.log(user.email)
 
   useFocusEffect(
     React.useCallback(() => {
@@ -111,18 +62,15 @@ const ProfileScreen = () => {
             });
 
             const fetchedPoems = response.data;
-            console.log("rerendering poems");
+            // console.log("rerendering poems");
 
             setPoems(fetchedPoems);
           }
         } catch (error) {
-          // Check if the error is a 404 (Not Found) status
           if (error.response && error.response.status === 404) {
-            // Handle the case where there are no liked poems
             console.log("No liked poems found");
-            setPoems([]); // Set poems to an empty array or handle it as needed
+            setPoems([]); 
           } else {
-            // Handle other errors
             console.error("Error fetching poems:", error);
           }
         }
@@ -131,55 +79,6 @@ const ProfileScreen = () => {
       fetchLikedPoems();
     }, [user]) // Added user to the dependency array
   );
-
-  // gets the users created collections
-  // useEffect(() => {
-  //   const collectionIdsToFetch = user?.createdCollections;
-
-  //   const fetchLikedCollections = async () => {
-  //     try {
-  //       const response = await axios.get(`${ROOT_URL}/collections-by-ids`, {
-  //         params: {
-  //           collectionIds: collectionIdsToFetch,
-  //         },
-  //       });
-
-  //       const fetchedCollections = response.data;
-
-  //       setCollections(fetchedCollections);
-  //     } catch (error) {
-  //       console.error("Error fetching collections:", error);
-  //     }
-  //   };
-
-  //   fetchLikedCollections();
-  // }, []);
-
-  // const fetchLikedCollections = useCallback(async () => {
-  //   try {
-  //     const collectionIdsToFetch = user?.createdCollections;
-
-  //     // Check if collectionIdsToFetch is truthy before making the API call
-  //     if (collectionIdsToFetch) {
-  //       const response = await axios.get(`${ROOT_URL}/collections-by-ids`, {
-  //         params: {
-  //           collectionIds: collectionIdsToFetch,
-  //         },
-  //       });
-
-  //       const fetchedCollections = response.data;
-  //       console.log("rerender collections")
-
-  //       setCollections(fetchedCollections);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching collections:", error);
-  //   }
-  // }, [user]);  // Added user to the dependency array
-
-  // useFocusEffect(() => {
-  //   fetchLikedCollections();
-  // }, [collections]);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -196,28 +95,24 @@ const ProfileScreen = () => {
             });
 
             const fetchedCollections = response.data;
-            console.log("rerendering collections");
+            // console.log("rerendering collections");
 
             setCollections(fetchedCollections);
           }
         } catch (error) {
-          // Check if the error is a 404 (Not Found) status
           if (error.response && error.response.status === 404) {
-            // Handle the case where there are no liked poems
             console.log("No liked collections found");
-            setCollections([]); // Set poems to an empty array or handle it as needed
+            setCollections([]); 
           } else {
-            // Handle other errors
             console.error("Error fetching collections:", error);
           }
         }
       };
 
       fetchCreatedCollections();
-    }, [user]) // Added user to the dependency array
+    }, [user]) 
   );
 
-  // console.log(poems)
   const CollectionsView = ({ collections }) => {
     return (
       <View>
