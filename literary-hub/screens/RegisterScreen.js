@@ -45,7 +45,7 @@ const RegisterScreen = () => {
         );
 
         dispatch(setUser({ id: response.data.userId }));
-        navigation.navigate("Main");
+        navigation.navigate("Onboarding");
       } else {
         Alert.alert("Registration Failed", response.data.message);
       }
