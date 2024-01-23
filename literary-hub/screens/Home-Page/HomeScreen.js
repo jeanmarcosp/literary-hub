@@ -27,7 +27,7 @@ const HomeScreen = () => {
 
   const markPoemAsRead = async (poemId) => {
     try {
-      await axios.put(`http://localhost:3000/mark-poem-as-read/${userId}/${poemId}`);
+      await axios.put(`${ROOT_URL}/mark-poem-as-read/${userId}/${poemId}`);
       console.log(`Poem ${poemId} marked as read.`);
     } catch (error) {
       console.error('Error marking poem as read:', error);
@@ -103,7 +103,7 @@ const HomeScreen = () => {
   
   useEffect(() => {
     const fetchLikedPoems = async () => {
-      try { //(`http://localhost:3000/poems/${poemId}/${userId}/unlike`);
+      try { 
         const response = await axios.get(`http://localhost:3000/users/${userId}/likedPoems`);
         console.log("fetched liked poems")
         setUserLikedPoems(response.data); 
