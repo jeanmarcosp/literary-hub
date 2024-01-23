@@ -314,7 +314,7 @@ const ProfileScreen = () => {
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => navigation.navigate("FollowersScreen")}>
+          <TouchableOpacity onPress={() => navigation.navigate("FollowingScreen")}>
             <View style={styles.metric}>
               <Text style={styles.metricNumber}>{user?.following?.length}</Text>
               <Text style={styles.metricName}>Following</Text>
