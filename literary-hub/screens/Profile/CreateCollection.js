@@ -3,17 +3,19 @@ import {
   Text,
   View,
   SafeAreaView,
-  Image,
   TouchableOpacity,
-  FlatList,
   TextInput,
+  Alert,
+  Image,
 } from "react-native";
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import getUserId from "../../hooks/getUserId";
 import axios from "axios";
-
+import * as ImagePicker from "expo-image-picker";
+import { firebase } from "../../firebaseConfig";
+import * as FileSystem from "expo-file-system";
 
 const CreateCollection = () => {
   const userId = getUserId();
@@ -21,29 +23,72 @@ const CreateCollection = () => {
   const [title, setTitle] = useState("");
   const [caption, setCaption] = useState("");
 
+  const [coverArt, setCoverArt] = useState(null);
+  const [uploading, setUploading] = useState("");
+
   const handleCreateCollection = async () => {
     try {
       const newCollection = {
         userId: userId,
         title: title,
         caption: caption,
+        coverArt: coverArt,
       };
 
-      const response = await axios.post(`${ROOT_URL}/create-collection`, newCollection);
-    //   const response = await axios.post(
-    //     "http://localhost:3000/create-collection",
-    //     newCollection
-    //   );
+      console.log(newCollection);
+
+      const response = await axios.post(
+        `${ROOT_URL}/create-collection`,
+        newCollection
+      );
 
       const createdCollection = response.data;
       console.log("Created Collection:", createdCollection);
-        
+
       navigation.navigate("ProfileScreen");
       setTitle("");
       setCaption("");
+      setCoverArt(null);
     } catch (error) {
       console.error("Error creating collection:", error);
     }
+  };
+
+  const handlePickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 4],
+      quality: 1,
+    });
+
+    const source = { uri: result.assets[0].uri };
+    setCoverArt(source);
+  };
+
+  useEffect(() => {
+    if (coverArt && coverArt.uri) {
+      handleUploadImage();
+    }
+  }, [coverArt]);
+
+  const handleUploadImage = async () => {
+    setUploading(true);
+    const response = await fetch(coverArt.uri);
+    const blob = await response.blob();
+    const filename = coverArt.uri.substring(coverArt.uri.lastIndexOf("/") + 1);
+    var ref = firebase.storage().ref().child(filename);
+
+    try {
+      await ref.put(blob);
+      const downloadURL = await ref.getDownloadURL();
+      setCoverArt(downloadURL);
+      console.log("url", coverArt);
+    } catch (e) {
+      console.log(e);
+    }
+    setUploading(false);
+    Alert.alert("Photo uploaded!");
   };
 
   return (
@@ -65,13 +110,21 @@ const CreateCollection = () => {
         <View style={styles.coverPhotoSection}>
           <Text style={styles.header}>Cover photo</Text>
           <View style={styles.emptyCoverPhoto}>
-            <View style={styles.addCoverPhotoCTA}>
-              <Ionicons name="add" size={30} color="#6C7476" />
-            </View>
+            {coverArt && (
+              <Image source={{ uri: coverArt.uri }} style={styles.coverImage} />
+            )}
+            {/* <View style={styles.addCoverPhotoCTA}>
+              <Ionicons
+                onPress={handlePickImage}
+                name="add"
+                size={30}
+                color="#6C7476"
+              />
+            </View> */}
           </View>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={handlePickImage}>
             <View style={styles.editPhotoCTA}>
-              <Text style={styles.editPhotoText}>Edit photo</Text>
+              <Text style={styles.editPhotoText}>Choose Photo</Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -81,7 +134,6 @@ const CreateCollection = () => {
             <Text style={styles.header}>Name</Text>
             <Text style={styles.headerDescription}>50 characters max</Text>
           </View>
-
           <TextInput
             style={styles.textInput}
             onChangeText={setTitle}
@@ -224,5 +276,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: "HammersmithOne",
     color: "white",
+  },
+  coverImage: {
+    width: 200,
+    height: 200,
+    borderRadius: 10,
   },
 });
