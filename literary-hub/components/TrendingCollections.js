@@ -22,10 +22,7 @@ const TrendingCollections = () => {
   const renderItem = ({ item }) => (
     <View>
       <CollectionCard
-              coverImage={item.coverArt}
-              title={item.title}
-              creator={item.user}
-              caption={item.caption}
+              collection={item}
             />
     </View>
   );

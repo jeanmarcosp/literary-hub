@@ -4,9 +4,10 @@ import Like from '../../components/Like';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from '@react-navigation/native';
 
-const CollectionScreen = ({poems, title, showAuthor = false, showCreator}) => {
+const CollectionScreen = ({poems, title, showAuthor = true, showCreator = true}) => {
 
   const navigation = useNavigation();
+  console.log("POOP", poems);
 
   const Poem = ({ title, author, showAuthor }) => {
     return (
@@ -48,7 +49,7 @@ const CollectionScreen = ({poems, title, showAuthor = false, showCreator}) => {
 
         <View style={styles.collectionInfo}>
           <Text style={styles.collectionName}>{title}</Text>
-          {showCreator && <Text style={styles.collectionName}>Emily</Text>}
+          {showCreator && <Text style={styles.collectionAuthor}>@Emily</Text>}
           <View style={styles.likes}>
             <Like />
             <Text style={styles.collectionLikeNumber}>2.5k</Text>

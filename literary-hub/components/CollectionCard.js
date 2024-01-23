@@ -1,37 +1,24 @@
 import "react-native-gesture-handler";
-import { React, useState } from "react";
+import { React, useState, useEffect, useCallback, useContext } from "react";
 import { View, TouchableOpacity, Image, Text, StyleSheet } from "react-native";
 import Like from "./Like";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
+import getUserId from "../hooks/getUserId";
 
-const CollectionCard = ({
-  collectionId,
-  userId,
-  coverImage,
-  title,
-  caption,
-  creator,
-  size,
-  likes,
-  inLikes,
-}) => {
+const CollectionCard = ( { collection } ) => {
   const navigation = useNavigation();
-  const poemText = size === 1 ? "poem" : "poems";
-  const likeText = likes === 1 ? "like" : "likes";
+
+  const userId = getUserId();
+  const collectionId = collection.collectionId;
+  const poems = collection.poemsInCollection;
+  const title = collection.title;
+  
+  const poemText = collection.poemsInCollection.length === 1 ? "poem" : "poems";
+  const likeText = collection.likes.length === 1 ? "like" : "likes";
+
 
   const [liked, setLiked] = useState(false);
-
-
-  const fetchUsername = async(userId) => {
-    try {
-      const userResponse = await axios.get(`http://your-server-url/api/users/${userId}`);
-      return userResponse.data.name;
-    } catch (error) {
-      console.error(error);
-      return 'Unknown User';
-    }
-  };
 
   const handleLikeCollection = async () => {
     try {
@@ -70,40 +57,40 @@ const CollectionCard = ({
   return (
     <TouchableOpacity
       style={styles.card}
-      onPress={() => navigation.navigate("CollectionScreen")}
+      onPress={() => navigation.navigate("CollectionScreen", {poem:{poems}, title:{title}, showAuthor:false, showCreator:true})}
     >
       <View style={styles.container}>
         <View style={styles.info}>
           <Image
             source={{
-              uri: coverImage,
+              uri: collection.coverArt,
             }}
             style={styles.image}
           />
           <View style={styles.text}>
             <View>
-              <Text style={styles.title}>{title}</Text>
-              <Text style={styles.creator}>@{creator}</Text>
+              <Text style={styles.title}>{collection.title}</Text>
+              <Text style={styles.creator}>@{collection.username}</Text>
             </View>
-            <Text style={styles.caption}>{caption}</Text>
+            <Text style={styles.caption}>{collection.caption}</Text>
           </View>
         </View>
 
         <View style={styles.rightInfo}>
           <View style={styles.poemNumberTag}>
             <Text style={styles.poemNumberText}>
-              {size} {poemText}
+              {collection.poemsInCollection.length} {poemText}
             </Text>
           </View>
 
           <View style={styles.likes}>
             <Like
-              inLikes={inLikes}
+              inLikes={collection.likes.includes(userId)}
               handleLike={handleLikeCollection}
               handleDislike={handleUnlikeCollection}
             />
             <Text style={styles.likeNumber}>
-              {likes} {likeText}
+              {collection.likes.length}
             </Text>
           </View>
         </View>

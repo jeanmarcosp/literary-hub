@@ -16,7 +16,6 @@ import PoemCard from "../../components/PoemCard";
 import CollectionCard from "../../components/CollectionCard";
 import Quote from "../../components/Quote";
 import { useFocusEffect } from "@react-navigation/native";
-import { collection } from "../../mongo-api/models/user";
 
 const ProfileScreen = () => {
   const userId = getUserId();
@@ -235,16 +234,7 @@ const ProfileScreen = () => {
           data={collections}
           renderItem={({ item }) => (
             <CollectionCard
-              key={item._id}
-              collectionId={item._id}
-              userId={user._id}
-              coverImage={item.coverArt}
-              title={item.title}
-              creator={user.username}
-              caption={item.caption}
-              size={item.poemsInCollection.length}
-              likes={item.likes.length}
-              inLikes={item.likes.includes(user._id)}
+              collection={item}
             />
           )}
           keyExtractor={(item) => item._id}

@@ -28,7 +28,7 @@ const AuthorCollectionScreen = ({route}) => {
   }, [])
 
   return (
-    <CollectionScreen poems={poems} title={author} showAuthor={false} showCreator={false}/>);
+    <CollectionScreen poems={poems} title={author} showAuthor={false} showCreator={true}/>);
   
   }
 
