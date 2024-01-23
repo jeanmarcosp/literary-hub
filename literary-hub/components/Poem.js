@@ -5,7 +5,7 @@ import { View, ScrollView, Text, Dimensions, StyleSheet, Pressable } from 'react
 import React, { useState, useEffect, useContext, useCallback, useMemo, useRef } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
-import Like from "../components/Like";
+import HomePageLike from "./HomePageLike";
 
 const Poem = ({ poem, poemId, onRead, onLike, onUnlike, userLikedPoems }) => {
   const [annotationMode, handleAnnotationMode] = useState(false);
@@ -62,7 +62,7 @@ const Poem = ({ poem, poemId, onRead, onLike, onUnlike, userLikedPoems }) => {
         ))}
       </ScrollView>
 
-      <Like 
+      <HomePageLike 
         inLikes={isInitiallyLiked} 
         handleLike={() => onLike(poemId)} 
         handleDislike={() => onUnlike(poemId)}
