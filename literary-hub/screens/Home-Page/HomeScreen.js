@@ -12,7 +12,8 @@ import Poem from "../../components/Poem.js"
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import axios from "axios";
-import Like from "../../components/Like";
+import HomePageLike from "../../components/HomePageLike.js";
+import Like from "../../components/Like.js";
 import getUserId from "../../hooks/getUserId";
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import CollectionBottomSheet from "../../components/CollectionBottomSheet";
