@@ -100,9 +100,9 @@ const Poem = ({ poem, poemId, onRead, onLike, onUnlike, userLikedPoems }) => {
           <Feather name="plus" size={30} color="#644980" />
         </Pressable>
       </View>
-      <View style={styles.heart}>
+      {/* <View style={styles.heart}>
         <Like />
-      </View>
+      </View> */}
 
       
       <CollectionBottomSheet ref={bottomSheetRef} title="Add to Collection" poem={poem} />
