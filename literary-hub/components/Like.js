@@ -18,9 +18,9 @@ const Like = ({ inLikes, handleLike, handleDislike }) => {
     <View style={styles.like}>
       <TouchableOpacity onPress={handlePress}>
         {liked ? (
-          <Ionicons name="heart" size={24} color="#644980" />
+          <Ionicons name="heart" size={28} color="#644980" />
         ) : (
-          <Ionicons name="heart-outline" size={24} color="#644980" />
+          <Ionicons name="heart-outline" size={28} color="#644980" />
         )}
       </TouchableOpacity>
     </View>
