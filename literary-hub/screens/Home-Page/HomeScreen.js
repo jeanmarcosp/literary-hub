@@ -21,15 +21,34 @@ import { setUser } from "../../state/actions/userActions";
 const HomeScreen = () => {
   const [poems, setPoems] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [userLikedPoems, setUserLikedPoems] = useState([]);
   const userId = getUserId();
   const linesPerPage = 20;
 
   const markPoemAsRead = async (poemId) => {
     try {
-      await axios.put(`http://localhost:3000/mark-poem-as-read/${userId}/${poemId}`);
-      console.log(`Poem ${poemId} marked as read.`);
+      await axios.put(`${ROOT_URL}/mark-poem-as-read/${userId}/${poemId}`);
+      //console.log(`Poem ${poemId} marked as read.`);
     } catch (error) {
       console.error('Error marking poem as read:', error);
+    }
+  };
+
+  const handleLike = async (poemId) => {
+    try {
+      await axios.put(`http://localhost:3000/poems/${poemId}/${userId}/like`);
+
+    } catch (error) {
+      console.error('Error liking poem:', error);
+    }
+  };
+  
+  const handleDislike = async (poemId) => {
+    try {
+      await axios.put(`http://localhost:3000/poems/${poemId}/${userId}/unlike`);
+      
+    } catch (error) {
+      console.error('Error unliking poem:', error);
     }
   };
 
@@ -82,7 +101,19 @@ const HomeScreen = () => {
   };
 
   
-  
+  useEffect(() => {
+    const fetchLikedPoems = async () => {
+      try { 
+        const response = await axios.get(`http://localhost:3000/users/${userId}/likedPoems`);
+        console.log("fetched liked poems")
+        setUserLikedPoems(response.data); 
+      } catch (error) {
+        console.error('Error fetching liked poems:', error);
+      }
+    };
+
+    fetchLikedPoems();
+  }, [userId]);
 
   useEffect(() => {
     loadMorePoems(); 
@@ -114,7 +145,11 @@ const HomeScreen = () => {
           key={poem._id || index} 
           poem={poem} 
           poemId={poem._id} // pass the _id as poemId
-          onRead={markPoemAsRead}/>
+          onRead={markPoemAsRead}
+          onLike={handleLike}
+          onUnlike={handleDislike}
+          userLikedPoems={userLikedPoems}
+          />
         ))}
 
       </ScrollView>
