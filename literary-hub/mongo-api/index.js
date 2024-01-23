@@ -517,6 +517,25 @@ app.get("/trending-authors", async (req, res) => {
   }
 });
 
+// mark a poem as read
+app.put("/mark-poem-as-read/:userId/:poemId", async (req, res) => {
+  const { userId, poemId } = req.params;
+
+  try {
+    // update the user's readPoems list
+    await User.findByIdAndUpdate(
+      userId,
+      { $addToSet: { readPoems: poemId } }, // add poem, avoid duplicates
+      { new: true }
+    );
+
+    res.status(200).json({ message: "Poem marked as read" });
+  } catch (error) {
+    console.error("Error marking poem as read:", error);
+    res.status(500).json({ message: "Error marking poem as read" });
+  }
+});
+
 //endpoint to delete a collection
 app.delete("/delete-collection", async (req, res) => {
   try {
@@ -536,10 +555,9 @@ app.delete("/delete-collection", async (req, res) => {
     );
 
     // Remove the collection from the createdCollections field of the user
-    await User.findByIdAndUpdate(
-      userId,
-      { $pull: { createdCollections: collectionId } },
-    );
+    await User.findByIdAndUpdate(userId, {
+      $pull: { createdCollections: collectionId },
+    });
 
     // Delete the collection from the database
     await Collection.findByIdAndDelete(collectionId);
@@ -558,21 +576,21 @@ app.delete("/delete-collection", async (req, res) => {
 });
 
 //endpoint to return user that created collection of given ID
-app.get('/get-creator/:collectionId', async (req, res) => {
+app.get("/get-creator/:collectionId", async (req, res) => {
   try {
     const collectionId = req.params.collectionId;
 
     const collection = await Collection.findById(collectionId);
 
     if (!collection) {
-      return res.status(404).json({ error: 'Collection not found' });
+      return res.status(404).json({ error: "Collection not found" });
     }
 
     const creatorId = collection.user;
 
     res.status(200).json({ creatorId });
   } catch (error) {
-    console.error('Error getting creator:', error);
-    res.status(500).json({ error: 'Error getting creator' });
+    console.error("Error getting creator:", error);
+    res.status(500).json({ error: "Error getting creator" });
   }
 });
