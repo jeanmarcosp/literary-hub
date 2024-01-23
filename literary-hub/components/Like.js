@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
-import { View, StyleSheet, TouchableOpacity } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Dimensions } from "react-native";
 import { React, useState } from 'react'
+
 
 const Like = ({ inLikes, handleLike, handleDislike }) => {
   const [liked, setLiked] = useState(inLikes);
@@ -27,12 +28,13 @@ const Like = ({ inLikes, handleLike, handleDislike }) => {
   );
 };
 
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
   like: {
-    flexDirection: "row",
-    alignItems: "center",
-    columnGap: 2,
-    padding: 3,
+    position: "absolute",
+    right: screenWidth * 0.045, 
+    bottom: screenHeight * 0.1, 
   },
   count: {
     fontFamily: "PromptRegular",

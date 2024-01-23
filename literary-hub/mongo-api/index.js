@@ -225,7 +225,7 @@ app.put("/poems/:poemId/:userId/unlike", async (req, res) => {
 
     const updatedPoem = await Poem.findByIdAndUpdate(
       poemId,
-      { $pull: { likes: userId } }, // Add user's ID to the likes array
+      { $pull: { likes: userId } }, // remove user's ID to the likes array
       { new: true } // To return the updated poem
     );
 
@@ -592,5 +592,26 @@ app.get("/get-creator/:collectionId", async (req, res) => {
   } catch (error) {
     console.error("Error getting creator:", error);
     res.status(500).json({ error: "Error getting creator" });
+  }
+});
+
+//endpoint for getting list of liked poems
+app.get('/users/:userId/likedPoems', async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const likedPoems = user.likedPoems;
+
+
+    res.json(likedPoems); 
+  } catch (error) {
+    console.error('Error fetching liked poems:', error);
+    res.status(500).send('Internal Server Error');
   }
 });
