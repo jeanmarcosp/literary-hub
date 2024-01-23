@@ -121,7 +121,7 @@ const LoginScreen = () => {
             style={{ marginTop: 10 }}
           >
             <Text style={{ textAlign: "center", fontSize: 16, color: "#007FFF" }}>
-              Dont have an account? Sign Up
+              Don't have an account? Sign Up
             </Text>
           </Pressable>
         </View>
