@@ -9,7 +9,10 @@ const Stack = createStackNavigator();
 export default function OnboardingNavigator() {
   return (
     <Stack.Navigator
-        screenOptions={{headerShown: false}}
+        screenOptions={{
+            headerShown: false,
+            cardStyle: {backgroundColor: '#fff'}
+        }}
     >
       <Stack.Screen name="OnboardingScreen1" component={OnboardingScreen1} />
       <Stack.Screen name="OnboardingScreen2" component={OnboardingScreen2} />

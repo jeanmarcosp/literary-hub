@@ -17,7 +17,7 @@ const OnboardingScreen4 = () => {
                     <View style={styles.progressBarItemUnfilled}></View>
                     <View style={styles.progressBarItemFilled}></View>
                 </View>
-                <Image style={styles.image} source={require('./../../assets/onboarding-images/onboarding-mockup.jpg')}/>
+                <Image style={styles.image} source={require('./../../assets/onboarding-images/connect-icon.png')}/>
                 <View style={styles.text}>
                     <Text style={styles.title}>Connect with others</Text>
                     <Text style={styles.description}>Connect with fellow poetry lovers by discussing your interpretations of poems</Text>
@@ -70,10 +70,8 @@ const styles = StyleSheet.create({
     },
 
     image: {
-        width: 200,
-        height: 300,
         position: 'absolute',
-        top: 100,
+        top: 150,
     },
 
     text: {

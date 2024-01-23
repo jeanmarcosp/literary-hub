@@ -17,7 +17,7 @@ const OnboardingScreen2 = () => {
                     <View style={styles.progressBarItemUnfilled}></View>
                     <View style={styles.progressBarItemUnfilled}></View>
                 </View>
-                <Image style={styles.image} source={require('./../../assets/onboarding-images/personalization-icon.jpg')}/>
+                <Image style={styles.image} source={require('./../../assets/onboarding-images/personalization-icon.png')} width={200} height={200}/>
                 <View style={styles.text}>
                     <Text style={styles.title}>Personalized poems</Text>
                     <Text style={styles.description}>View poetry personalized to your taste on your home feed</Text>
@@ -70,10 +70,8 @@ const styles = StyleSheet.create({
     },
 
     image: {
-        width: 200,
-        height: 300,
         position: 'absolute',
-        top: 100,
+        top: 150,
     },
 
     text: {

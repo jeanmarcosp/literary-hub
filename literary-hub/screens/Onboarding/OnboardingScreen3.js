@@ -17,7 +17,7 @@ const OnboardingScreen3 = () => {
                     <View style={styles.progressBarItemFilled}></View>
                     <View style={styles.progressBarItemUnfilled}></View>
                 </View>
-                <Image style={styles.image} source={require('./../../assets/onboarding-images/onboarding-mockup.jpg')}/>
+                <Image style={styles.image} source={require('./../../assets/onboarding-images/categories-icon.png')}/>
                 <View style={styles.text}>
                     <Text style={styles.title}>Explore by categories</Text>
                     <Text style={styles.description}>Explore poetry categorized by themes and authors for a more intentional reading experience</Text>
@@ -70,10 +70,8 @@ const styles = StyleSheet.create({
     },
 
     image: {
-        width: 200,
-        height: 300,
         position: 'absolute',
-        top: 100,
+        top: 150,
     },
 
     text: {
