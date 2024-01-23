@@ -64,7 +64,7 @@ app.post("/login", async (req, res) => {
   }
 });
 //endpoint to get list of user collections
-app.get('/getcollections', async (req, res) => {
+app.get("/getcollections", async (req, res) => {
   try {
     const { id } = req.query;
 
@@ -72,7 +72,9 @@ app.get('/getcollections', async (req, res) => {
     const collections = await Collection.find({ user: id });
 
     // Store the collections in an array
-    const collectionsArray = collections.map((collection) => collection.toObject());
+    const collectionsArray = collections.map((collection) =>
+      collection.toObject()
+    );
 
     res.status(200).json(collectionsArray);
   } catch (error) {
@@ -81,7 +83,7 @@ app.get('/getcollections', async (req, res) => {
   }
 });
 //endpoint to add poem to colection
-app.post('/addpoemtocollection', async (req, res) => {
+app.post("/addpoemtocollection", async (req, res) => {
   try {
     const { poemId, collectionId } = req.body;
 
@@ -89,25 +91,26 @@ app.post('/addpoemtocollection', async (req, res) => {
     const collection = await Collection.findById(collectionId);
 
     if (!collection) {
-      return res.status(404).json({ message: 'Collection not found' });
+      return res.status(404).json({ message: "Collection not found" });
     }
 
     // Check if the poemId is already in the poemsInCollection array
     if (collection.poemsInCollection.includes(poemId)) {
-      return res.status(400).json({ message: 'Poem already in the collection' });
+      return res
+        .status(400)
+        .json({ message: "Poem already in the collection" });
     }
 
     // If the poem is not in the collection, add it
     collection.poemsInCollection.push(poemId);
     await collection.save();
 
-    res.status(200).json({ message: 'Poem added to collection', collection });
+    res.status(200).json({ message: "Poem added to collection", collection });
   } catch (error) {
-    console.error('Error adding poem to collection:', error);
-    res.status(500).json({ message: 'Could not add poem to collection' });
+    console.error("Error adding poem to collection:", error);
+    res.status(500).json({ message: "Could not add poem to collection" });
   }
 });
-
 
 //endpoint to create new collection
 app.post("/collection/new", async (req, res) => {
@@ -118,7 +121,7 @@ app.post("/collection/new", async (req, res) => {
     }
     const existingCollection = await Collection.findOne({ user, title });
     if (existingCollection) {
-      return res.status(400).json({ message: "Collection already exists" })
+      return res.status(400).json({ message: "Collection already exists" });
     }
 
     // create new collection
@@ -126,11 +129,14 @@ app.post("/collection/new", async (req, res) => {
     // Save the new collection to the database
     await newCollection.save();
     await User.updateOne(
-      {_id: user},
-      {$push: {createdCollections: newCollection._id}}
+      { _id: user },
+      { $push: { createdCollections: newCollection._id } }
     );
 
-    res.status(201).json({ message: "Collection created successfully", collection: newCollection });
+    res.status(201).json({
+      message: "Collection created successfully",
+      collection: newCollection,
+    });
   } catch (error) {
     console.log("error", error);
     res.status(500).json({ message: "Error creatng collecton" });
@@ -152,28 +158,27 @@ app.get("/getuser", async (req, res) => {
   }
 });
 
-app.get('/random-poem', async (req, res) => {
+app.get("/random-poem", async (req, res) => {
   try {
     const randomPoem = await Poem.aggregate([{ $sample: { size: 1 } }]); // Retrieves a random poem from the database
     res.json(randomPoem);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error fetching a random poem' });
+    res.status(500).json({ error: "Error fetching a random poem" });
   }
 });
 
-
-app.get('/get-poems', async (req, res) => {
+app.get("/get-poems", async (req, res) => {
   try {
     const { skip, limit } = req.query;
     // Query your database for random poems
     // Example using Mongoose:
     const poems = await Poem.aggregate([
-      { $sample: { size: parseInt(limit) } }
+      { $sample: { size: parseInt(limit) } },
     ]);
     res.status(200).json(poems);
   } catch (error) {
-    res.status(500).json({ message: 'Error getting the poems' });
+    res.status(500).json({ message: "Error getting the poems" });
   }
 });
 
@@ -320,18 +325,18 @@ app.put("/collections/:collectionId/:userId/unlike", async (req, res) => {
 });
 
 //endpoint for creating a collection
-app.post('/create-collection', async (req, res) => {
+app.post("/create-collection", async (req, res) => {
   try {
     const { userId, title, caption, coverArt } = req.body;
 
     if (!userId) {
-      return res.status(400).json({ error: 'User is a required field' });
+      return res.status(400).json({ error: "User is a required field" });
     }
-    
-    const defaultCaption = 'Check out my new collection!';
+
+    const defaultCaption = "Check out my new collection!";
     const collectionCaption = caption || defaultCaption;
 
-    defaultTitle = 'New Collection';
+    defaultTitle = "New Collection";
     const collectionTitle = title || defaultTitle;
 
     const newCollection = new Collection({
@@ -353,10 +358,11 @@ app.post('/create-collection', async (req, res) => {
     );
 
     res.status(201).json(savedCollection); // 201 status code indicates a resource was created
-
   } catch (error) {
-    console.error('Error creating collection:', error);
-    res.status(500).json({ error: 'An error occurred while creating the collection.' });
+    console.error("Error creating collection:", error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while creating the collection." });
   }
 });
 
@@ -373,13 +379,13 @@ app.get("/profile/:userId", async (req, res) => {
 
     res.status(200).json({ user });
   } catch (error) {
-    console.error('Error while getting the profile:', error);
+    console.error("Error while getting the profile:", error);
     res.status(500).json({ message: "Error while getting the profile" });
   }
 });
 
 //endpoint for returning liked poems, takes in array of poems
-app.get('/poems-by-ids', async (req, res) => {
+app.get("/poems-by-ids", async (req, res) => {
   try {
     const poemIds = req.query.poemIds; // Retrieve poem IDs from the query parameters
 
@@ -387,18 +393,20 @@ app.get('/poems-by-ids', async (req, res) => {
     const poems = await Poem.find({ _id: { $in: poemIds } });
 
     if (!poems || poems.length === 0) {
-      return res.status(404).json({ message: "No poems found for the provided IDs" });
+      return res
+        .status(404)
+        .json({ message: "No poems found for the provided IDs" });
     }
 
     res.status(200).json(poems);
   } catch (error) {
-    console.error('Error while getting poems by IDs:', error);
+    console.error("Error while getting poems by IDs:", error);
     res.status(500).json({ message: "Error while getting poems by IDs" });
   }
 });
 
 //endpoint for returning collections, takes in array of collections
-app.get('/collections-by-ids', async (req, res) => {
+app.get("/collections-by-ids", async (req, res) => {
   try {
     const collectionIds = req.query.collectionIds; // Retrieve collection IDs from the query parameters
 
@@ -406,12 +414,14 @@ app.get('/collections-by-ids', async (req, res) => {
     const collections = await Collection.find({ _id: { $in: collectionIds } });
 
     if (collections.length === 0) {
-      return res.status(404).json({ message: "No collections found for the provided IDs" });
+      return res
+        .status(404)
+        .json({ message: "No collections found for the provided IDs" });
     }
 
     res.status(200).json(collections);
   } catch (error) {
-    console.error('Error while getting collections by IDs:', error);
+    console.error("Error while getting collections by IDs:", error);
     res.status(500).json({ message: "Error while getting collections by IDs" });
   }
 });
@@ -423,7 +433,9 @@ app.post("/register", async (req, res) => {
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ success: false, message: "Email already registered" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Email already registered" });
     }
 
     // Create a new user
@@ -433,14 +445,18 @@ app.post("/register", async (req, res) => {
     await newUser.save();
 
     // Include the user ID in the response
-    res.status(200).json({ success: true, message: "Registration successful", userId: newUser._id });
+    res.status(200).json({
+      success: true,
+      message: "Registration successful",
+      userId: newUser._id,
+    });
   } catch (error) {
     console.error("Error registering user:", error);
     res.status(500).json({ success: false, message: "Error registering user" });
   }
 });
 
-// endpoint for deleting a user 
+// endpoint for deleting a user
 app.delete("/delete-account/:userId", async (req, res) => {
   try {
     const userId = req.params.userId;
@@ -448,65 +464,61 @@ app.delete("/delete-account/:userId", async (req, res) => {
     // Delete the user account from the database
     await User.findByIdAndDelete(userId);
 
-    res.status(200).json({ success: true, message: "Account deleted successfully" });
+    res
+      .status(200)
+      .json({ success: true, message: "Account deleted successfully" });
   } catch (error) {
     console.error("Error deleting account:", error);
     res.status(500).json({ success: false, message: "Error deleting account" });
   }
 });
 
-
-app.get('/author-collection', async (req, res) => {
+app.get("/author-collection", async (req, res) => {
   const author = req.query.author;
 
-  try{
+  try {
     let query = {};
     if (author) {
       query.author = author;
     }
 
-    const poems = await Poem.find(query).sort('author');
+    const poems = await Poem.find(query).sort("author");
     console.log(poems);
     res.json(poems);
-
-    
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error populating author collections' });
+    res.status(500).json({ error: "Error populating author collections" });
   }
 });
 
-app.get('/trending-authors', async (req, res) => {
-
-  try{
+app.get("/trending-authors", async (req, res) => {
+  try {
     const authors = await Poem.aggregate([
       {
         $group: {
-          _id: '$author',
-          poemCount: { $sum: 1 }
-        }
+          _id: "$author",
+          poemCount: { $sum: 1 },
+        },
       },
       {
         $match: {
-          poemCount: { $gte: 10 }
-        }
+          poemCount: { $gte: 10 },
+        },
       },
       {
-        $sample: { size: 6 }
-      }
+        $sample: { size: 6 },
+      },
     ]);
     res.json(authors);
     console.log(authors);
-    
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error fetching trending authors' });
+    res.status(500).json({ error: "Error fetching trending authors" });
   }
 });
 
-
 // mark a poem as read
-app.put('/mark-poem-as-read/:userId/:poemId', async (req, res) => {
+app.put("/mark-poem-as-read/:userId/:poemId", async (req, res) => {
   const { userId, poemId } = req.params;
 
   try {
@@ -517,9 +529,68 @@ app.put('/mark-poem-as-read/:userId/:poemId', async (req, res) => {
       { new: true }
     );
 
-    res.status(200).json({ message: 'Poem marked as read' });
+    res.status(200).json({ message: "Poem marked as read" });
   } catch (error) {
-    console.error('Error marking poem as read:', error);
-    res.status(500).json({ message: 'Error marking poem as read' });
+    console.error("Error marking poem as read:", error);
+    res.status(500).json({ message: "Error marking poem as read" });
+  }
+});
+
+//endpoint to delete a collection
+app.delete("/delete-collection", async (req, res) => {
+  try {
+    const { userId, collectionId } = req.query;
+
+    // Find the collection
+    const deletedCollection = await Collection.findById(collectionId);
+
+    if (!deletedCollection) {
+      return res.status(404).json({ error: "Collection not found" });
+    }
+
+    // Remove the collection from the likedCollections field of all users who liked it
+    await User.updateMany(
+      { likedCollections: collectionId },
+      { $pull: { likedCollections: collectionId } }
+    );
+
+    // Remove the collection from the createdCollections field of the user
+    await User.findByIdAndUpdate(userId, {
+      $pull: { createdCollections: collectionId },
+    });
+
+    // Delete the collection from the database
+    await Collection.findByIdAndDelete(collectionId);
+
+    res.status(200).json({
+      success: true,
+      message: "Collection deleted successfully",
+    });
+  } catch (error) {
+    console.error("Error deleting collection:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error deleting collection",
+    });
+  }
+});
+
+//endpoint to return user that created collection of given ID
+app.get("/get-creator/:collectionId", async (req, res) => {
+  try {
+    const collectionId = req.params.collectionId;
+
+    const collection = await Collection.findById(collectionId);
+
+    if (!collection) {
+      return res.status(404).json({ error: "Collection not found" });
+    }
+
+    const creatorId = collection.user;
+
+    res.status(200).json({ creatorId });
+  } catch (error) {
+    console.error("Error getting creator:", error);
+    res.status(500).json({ error: "Error getting creator" });
   }
 });

@@ -1,9 +1,19 @@
 import "react-native-gesture-handler";
-import { React, useState } from "react";
-import { View, TouchableOpacity, Image, Text, StyleSheet } from "react-native";
+import React, { useState, useEffect, useCallback, useContext } from "react";
+import {
+  View,
+  TouchableOpacity,
+  Image,
+  Text,
+  StyleSheet,
+  Modal,
+  Alert,
+} from "react-native";
 import Like from "./Like";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
+import { Ionicons } from "@expo/vector-icons";
+import { useFocusEffect } from "@react-navigation/native";
 
 const CollectionCard = ({
   collectionId,
@@ -21,6 +31,9 @@ const CollectionCard = ({
   const likeText = likes === 1 ? "like" : "likes";
 
   const [liked, setLiked] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [showAppOptions, setShowAppOptions] = useState(false);
+  const [userIsCreator, setUserIsCreated] = useState(false);
 
   const handleLikeCollection = async () => {
     try {
@@ -56,6 +69,67 @@ const CollectionCard = ({
     }
   };
 
+  const handleDeleteCollection = async () => {
+    try {
+      const response = await axios.delete(
+        `${ROOT_URL}/delete-collection?userId=${userId}&collectionId=${collectionId}`
+      );
+
+      const message = response.data;
+      console.log(message);
+      setIsModalVisible(false);
+      if (message.success) {
+        Alert.alert("Success", "Collection deleted successfully");
+      }
+    } catch (error) {
+      console.error("Error deleting collection:", error);
+      Alert.alert("Error", "Error deleting collection");
+    }
+  };
+
+  // useEffect(() => {
+  //   const fetchCreatorUserId = async () => {
+  //     try {
+  //       const response = await axios.get(`http://localhost:3000/get-creator/${collectionId}`);
+  //       const { creatorId } = response.data;
+
+  //       creatorId === userId ? setUserIsCreated(true) : setUserIsCreated(false);
+
+  //     } catch (error) {
+  //       console.error('Error fetching creator userId:', error);
+  //     }
+  //   };
+
+  //   fetchCreatorUserId();
+
+  // }, []); // Empty dependency array for one-time effect
+
+  // console.log(userIsCreator)
+
+  const ShareMenu = ({ isVisible, children, onClose }) => {
+    return (
+      <Modal animationType="slide" transparent={true} visible={isVisible}>
+        <View style={styles.modalContent}>
+          <View style={styles.modalTitleContainer}>
+            <Text style={styles.modalTitle}>Collection Actions</Text>
+            <TouchableOpacity onPress={onClose}>
+              <Ionicons name="close" size={24} color="black" />
+            </TouchableOpacity>
+          </View>
+          {children}
+        </View>
+      </Modal>
+    );
+  };
+
+  const onShare = () => {
+    setIsModalVisible(true);
+  };
+
+  const onModalClose = () => {
+    setIsModalVisible(false);
+  };
+
   return (
     <TouchableOpacity
       style={styles.card}
@@ -79,6 +153,9 @@ const CollectionCard = ({
         </View>
 
         <View style={styles.rightInfo}>
+          <TouchableOpacity onPress={onShare}>
+            <Ionicons name="ellipsis-horizontal" size={20} color="black" />
+          </TouchableOpacity>
           <View style={styles.poemNumberTag}>
             <Text style={styles.poemNumberText}>
               {size} {poemText}
@@ -97,6 +174,34 @@ const CollectionCard = ({
           </View>
         </View>
       </View>
+      <ShareMenu isVisible={isModalVisible} onClose={onModalClose}>
+        <TouchableOpacity>
+          <View style={styles.listItems}>
+            <Ionicons name="share-outline" size={24} color="black" />
+            <Text style={styles.listText}>Share</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <View style={styles.listItems}>
+            <Ionicons name="create-outline" size={24} color="black" />
+            <Text style={styles.listText}>Edit</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleDeleteCollection}>
+          <View style={styles.listItems}>
+            <Ionicons name="trash-outline" size={24} color="red" />
+            <Text
+              style={{
+                color: "red",
+                fontSize: 18,
+                fontFamily: "Sarabun-Regular",
+              }}
+            >
+              Delete
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </ShareMenu>
     </TouchableOpacity>
   );
 };
@@ -179,6 +284,51 @@ const styles = StyleSheet.create({
   likeNumber: {
     fontFamily: "Sarabun-SemiBold",
     color: "#774BA3",
+  },
+  modalContent: {
+    height: "25%",
+    width: "100%",
+    backgroundColor: "white",
+    borderTopRightRadius: 18,
+    borderTopLeftRadius: 18,
+    position: "absolute",
+    bottom: 0,
+  },
+  modalTitleContainer: {
+    height: "16%",
+    backgroundColor: "white",
+    borderTopRightRadius: 10,
+    borderTopLeftRadius: 10,
+    paddingHorizontal: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  modalTitle: {
+    color: "black",
+    fontSize: 18,
+    fontFamily: "HammersmithOne",
+  },
+  pickerContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 50,
+    paddingVertical: 20,
+    backgroundColor: "red",
+  },
+
+  listItems: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    padding: 10,
+  },
+
+  listText: {
+    color: "black",
+    fontSize: 18,
+    fontFamily: "Sarabun-Regular",
   },
 });
 

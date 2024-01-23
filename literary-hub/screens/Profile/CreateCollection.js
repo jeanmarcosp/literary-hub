@@ -8,7 +8,7 @@ import {
   Alert,
   Image,
 } from "react-native";
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import getUserId from "../../hooks/getUserId";
@@ -23,7 +23,7 @@ const CreateCollection = () => {
   const [title, setTitle] = useState("");
   const [caption, setCaption] = useState("");
 
-  const [coverArt, setCoverArt] = useState("");
+  const [coverArt, setCoverArt] = useState(null);
   const [uploading, setUploading] = useState("");
 
   const handleCreateCollection = async () => {
@@ -41,14 +41,14 @@ const CreateCollection = () => {
         `${ROOT_URL}/create-collection`,
         newCollection
       );
-      
+
       const createdCollection = response.data;
       console.log("Created Collection:", createdCollection);
 
       navigation.navigate("ProfileScreen");
       setTitle("");
       setCaption("");
-      setCoverArt("");
+      setCoverArt(null);
     } catch (error) {
       console.error("Error creating collection:", error);
     }
@@ -66,6 +66,12 @@ const CreateCollection = () => {
     setCoverArt(source);
   };
 
+  useEffect(() => {
+    if (coverArt && coverArt.uri) {
+      handleUploadImage();
+    }
+  }, [coverArt]);
+
   const handleUploadImage = async () => {
     setUploading(true);
     const response = await fetch(coverArt.uri);
@@ -77,6 +83,7 @@ const CreateCollection = () => {
       await ref.put(blob);
       const downloadURL = await ref.getDownloadURL();
       setCoverArt(downloadURL);
+      console.log("url", coverArt);
     } catch (e) {
       console.log(e);
     }
@@ -103,18 +110,21 @@ const CreateCollection = () => {
         <View style={styles.coverPhotoSection}>
           <Text style={styles.header}>Cover photo</Text>
           <View style={styles.emptyCoverPhoto}>
-            <View style={styles.addCoverPhotoCTA}>
+            {coverArt && (
+              <Image source={{ uri: coverArt.uri }} style={styles.coverImage} />
+            )}
+            {/* <View style={styles.addCoverPhotoCTA}>
               <Ionicons
                 onPress={handlePickImage}
                 name="add"
                 size={30}
                 color="#6C7476"
               />
-            </View>
+            </View> */}
           </View>
-          <TouchableOpacity onPress={handleUploadImage}>
+          <TouchableOpacity onPress={handlePickImage}>
             <View style={styles.editPhotoCTA}>
-              <Text style={styles.editPhotoText}>Upload Photo</Text>
+              <Text style={styles.editPhotoText}>Choose Photo</Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -266,5 +276,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: "HammersmithOne",
     color: "white",
+  },
+  coverImage: {
+    width: 200,
+    height: 200,
+    borderRadius: 10,
   },
 });
