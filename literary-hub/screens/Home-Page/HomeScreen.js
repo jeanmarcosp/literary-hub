@@ -26,7 +26,7 @@ const HomeScreen = () => {
 
   const markPoemAsRead = async (poemId) => {
     try {
-      await axios.put(`http://localhost:3000/mark-poem-as-read/${userId}/${poemId}`);
+      await axios.put(`${ROOT_URL}/${userId}/${poemId}`);
       console.log(`Poem ${poemId} marked as read.`);
     } catch (error) {
       console.error('Error marking poem as read:', error);
