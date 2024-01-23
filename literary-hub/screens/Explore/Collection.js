@@ -1,20 +1,50 @@
 import React from 'react';
 import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, FlatList } from 'react-native';
+import { useState } from 'react';
+import { useEffect } from 'react';
 import Like from '../../components/Like';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from '@react-navigation/native';
+import axios from "axios";
 
-const CollectionScreen = ({poems, title, showAuthor = true, showCreator = true}) => {
-
+// const CollectionScreen = ({poems, title, showAuthor = true, showCreator = true}) => {
+const CollectionScreen = ({ route }) => {
+  const { collection } = route.params;
   const navigation = useNavigation();
-  console.log("POOP", poems);
+  console.log("peter", collection.poemsInCollection);
 
-  const Poem = ({ title, author, showAuthor }) => {
+  const poemIds = collection.poemsInCollection;
+  const queryString = `poemIds=${poemIds.join(',')}`;
+  console.log(queryString);
+  console.log(`${ROOT_URL}/poems-by-ids?${queryString}`)
+  // 653035c63bf7b6b3616f9cde
+
+  // fetch poems by the IDs in poemIds
+  const [poems, setPoems] = useState([])
+
+  useEffect(() => {
+    const fetchPoems = async() => {
+      try {
+        const response = await axios.get(`http://localhost:3000/poems-by-ids`, {
+          params: {
+            poemIds: poemIds,
+          },
+        });
+        // const response = await axios.get(`http://localhost:3000/poems-by-ids?poemIds=${poemIds.join(',')}`);
+        setPoems(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchPoems();
+  }, [])
+
+  const Poem = ({poem}) => {
     return (
       <View style={styles.poem}>
         <View style={styles.poemInfo}>
-        <Text style={styles.poemAuthor}>{title}</Text>
-          {showAuthor && <Text style={styles.poemAuthor}>{author}</Text>}
+        <Text style={styles.poemAuthor}>{poem.title}</Text>
+        <Text style={styles.poemAuthor}>{poem.author}</Text>
         </View>
         <Like />
       </View>
@@ -26,7 +56,7 @@ const CollectionScreen = ({poems, title, showAuthor = true, showCreator = true})
       <FlatList
         data={poems}
         renderItem={({ item }) => (
-          <Poem title={item.title} author={item.author} showAuthor={showAuthor}/>
+          <Poem poem={item}/>
         )}
         keyExtractor={(item) => item.id}
         style={styles.poemList}
@@ -48,11 +78,11 @@ const CollectionScreen = ({poems, title, showAuthor = true, showCreator = true})
         </TouchableOpacity>
 
         <View style={styles.collectionInfo}>
-          <Text style={styles.collectionName}>{title}</Text>
-          {showCreator && <Text style={styles.collectionAuthor}>@Emily</Text>}
+          <Text style={styles.collectionName}>{collection.title}</Text>
+          <Text style={styles.collectionAuthor}>@Emily</Text>
           <View style={styles.likes}>
             <Like />
-            <Text style={styles.collectionLikeNumber}>2.5k</Text>
+            <Text style={styles.collectionLikeNumber}>{collection.likes.length}</Text>
           </View>
         </View>
 

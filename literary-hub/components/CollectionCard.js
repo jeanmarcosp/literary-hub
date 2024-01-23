@@ -13,10 +13,9 @@ const CollectionCard = ( { collection } ) => {
   const collectionId = collection.collectionId;
   const poems = collection.poemsInCollection;
   const title = collection.title;
-  
+
   const poemText = collection.poemsInCollection.length === 1 ? "poem" : "poems";
   const likeText = collection.likes.length === 1 ? "like" : "likes";
-
 
   const [liked, setLiked] = useState(false);
 
@@ -57,7 +56,7 @@ const CollectionCard = ( { collection } ) => {
   return (
     <TouchableOpacity
       style={styles.card}
-      onPress={() => navigation.navigate("CollectionScreen", {poem:{poems}, title:{title}, showAuthor:false, showCreator:true})}
+      onPress={() => navigation.navigate("CollectionScreen", {collection})}
     >
       <View style={styles.container}>
         <View style={styles.info}>

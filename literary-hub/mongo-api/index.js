@@ -382,11 +382,12 @@ app.get("/profile/:userId", async (req, res) => {
 app.get('/poems-by-ids', async (req, res) => {
   try {
     const poemIds = req.query.poemIds; // Retrieve poem IDs from the query parameters
-
+    
     // Fetch poems by their IDs
     const poems = await Poem.find({ _id: { $in: poemIds } });
 
     if (!poems || poems.length === 0) {
+      console.log("im here")
       return res.status(404).json({ message: "No poems found for the provided IDs" });
     }
 
@@ -458,7 +459,6 @@ app.delete("/delete-account/:userId", async (req, res) => {
 
 app.get('/author-collection', async (req, res) => {
   const author = req.query.author;
-
   try{
     let query = {};
     if (author) {
@@ -466,7 +466,6 @@ app.get('/author-collection', async (req, res) => {
     }
 
     const poems = await Poem.find(query).sort('author');
-    console.log(poems);
     res.json(poems);
 
     
@@ -477,7 +476,6 @@ app.get('/author-collection', async (req, res) => {
 });
 
 app.get('/trending-authors', async (req, res) => {
-
   try{
     const authors = await Poem.aggregate([
       {
@@ -529,7 +527,6 @@ app.get('/trending-collections', async (req,res) => {
   try{
     const collections = await Collection.find({ poemsInCollection: { $exists: true, $not: { $size: 0 } } });
     res.json(collections);
-    console.log(collections);
     
   } catch (error) {
     console.error(error);
@@ -537,20 +534,4 @@ app.get('/trending-collections', async (req,res) => {
   }
 });
 
-app.get('/username', async (req,res) => {
-  const userId = req.params.userId
-  try{
-    const user = await Users.findById(userId, 'username');
 
-    if (!user) {
-      // User not found
-      return res.status(404).json({ error: 'User not found' });
-    }
-
-    res.json({username: user.username})
-    
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error fetching username from userId' });
-  }
-});
