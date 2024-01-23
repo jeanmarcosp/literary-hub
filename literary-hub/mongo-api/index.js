@@ -220,7 +220,7 @@ app.put("/poems/:poemId/:userId/unlike", async (req, res) => {
 
     const updatedPoem = await Poem.findByIdAndUpdate(
       poemId,
-      { $pull: { likes: userId } }, // Add user's ID to the likes array
+      { $pull: { likes: userId } }, // remove user's ID to the likes array
       { new: true } // To return the updated poem
     );
 
