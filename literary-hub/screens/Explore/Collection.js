@@ -43,7 +43,7 @@ const CollectionScreen = ({ route }) => {
     return (
       <View style={styles.poem}>
         <View style={styles.poemInfo}>
-        <Text style={styles.poemAuthor}>{poem.title}</Text>
+        <Text style={styles.poemName}>{poem.title}</Text>
         <Text style={styles.poemAuthor}>{poem.author}</Text>
         </View>
         <Like />
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
 
   poemName: {
     fontFamily: 'HammersmithOne',
-    fontSize: 20,
+    fontSize: 17,
     color: '#373F41'
   },
 
