@@ -307,15 +307,19 @@ const ProfileScreen = () => {
             <Text style={styles.metricName}>Collections</Text>
           </View>
 
-          <View style={styles.metric}>
-            <Text style={styles.metricNumber}>{user?.followers?.length}</Text>
-            <Text style={styles.metricName}>Followers</Text>
-          </View>
+          <TouchableOpacity onPress={() => navigation.navigate("FollowersScreen")}>
+            <View style={styles.metric}>
+              <Text style={styles.metricNumber}>{user?.followers?.length}</Text>
+              <Text style={styles.metricName}>Followers</Text>
+            </View>
+          </TouchableOpacity>
 
-          <View style={styles.metric}>
-            <Text style={styles.metricNumber}>{user?.following?.length}</Text>
-            <Text style={styles.metricName}>Following</Text>
-          </View>
+          <TouchableOpacity onPress={() => navigation.navigate("FollowingScreen")}>
+            <View style={styles.metric}>
+              <Text style={styles.metricNumber}>{user?.following?.length}</Text>
+              <Text style={styles.metricName}>Following</Text>
+            </View>
+          </TouchableOpacity>
         </View>
 
         {/* <TouchableOpacity>
