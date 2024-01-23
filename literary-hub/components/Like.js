@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     columnGap: 2,
-    padding: 3,
+    padding: 3, 
   },
   count: {
     fontFamily: "PromptRegular",
