@@ -72,7 +72,7 @@ const CollectionCard = ({
   const handleDeleteCollection = async () => {
     try {
       const response = await axios.delete(
-        `http://localhost:3000/delete-collection?userId=${userId}&collectionId=${collectionId}`
+        `${ROOT_URL}/delete-collection?userId=${userId}&collectionId=${collectionId}`
       );
 
       const message = response.data;
