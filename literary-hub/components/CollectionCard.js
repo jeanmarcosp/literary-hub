@@ -22,6 +22,17 @@ const CollectionCard = ({
 
   const [liked, setLiked] = useState(false);
 
+
+  const fetchUsername = async(userId) => {
+    try {
+      const userResponse = await axios.get(`http://your-server-url/api/users/${userId}`);
+      return userResponse.data.name;
+    } catch (error) {
+      console.error(error);
+      return 'Unknown User';
+    }
+  };
+
   const handleLikeCollection = async () => {
     try {
       const response = await axios.put(

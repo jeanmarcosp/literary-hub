@@ -1,6 +1,8 @@
 import React from "react";
 import { View, FlatList, Text, StyleSheet } from "react-native";
 import CollectionCard from "./CollectionCard";
+import { useEffect, useState } from 'react';
+import axios from "axios";
 
 const collectionData = [
   {
@@ -27,22 +29,40 @@ const collectionData = [
 ];
 
 const TrendingCollections = () => {
+  const [collections, setCollections] = useState(null);
+
+  useEffect(() => {
+    const fetchCollections = async() => {
+      try {
+        const response = await axios.get("http://localhost:3000/trending-collections");
+        setCollections(response.data);
+        console.log("HELLO", response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchCollections();
+  }, [])
+
+  const renderItem = ({ item }) => (
+    <View>
+      <CollectionCard
+              coverImage={item.coverArt}
+              title={item.title}
+              creator={item.user}
+              caption={item.caption}
+            />
+    </View>
+  );
+
+
   return (
     <View>
       <FlatList
       style={styles.collectionList}
-        data={collectionData}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <>
-            <CollectionCard
-              coverImage={item.coverArt}
-              title={item.title}
-              creator={item.creator}
-              caption={item.caption}
-            />
-          </>
-        )}
+        data={collections}
+        keyExtractor={(item) => item._id.toString()}
+        renderItem={renderItem}
       />
     </View>
   );

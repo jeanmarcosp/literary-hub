@@ -504,3 +504,34 @@ app.get('/trending-authors', async (req, res) => {
   }
 });
 
+
+app.get('/trending-collections', async (req,res) => {
+
+  try{
+    const collections = await Collection.find({ poemsInCollection: { $exists: true, $not: { $size: 0 } } });
+    res.json(collections);
+    console.log(collections);
+    
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error fetching trending collections' });
+  }
+});
+
+app.get('/username', async (req,res) => {
+  const userId = req.params.userId
+  try{
+    const user = await Users.findById(userId, 'username');
+
+    if (!user) {
+      // User not found
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.json({username: user.username})
+    
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error fetching username from userId' });
+  }
+});
