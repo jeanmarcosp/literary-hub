@@ -29,12 +29,11 @@ const CollectionCard = ({
   const navigation = useNavigation();
   const poemText = size === 1 ? "poem" : "poems";
   const likeText = likes === 1 ? "like" : "likes";
-  
+
   const [liked, setLiked] = useState(false);
-  const [creatorUserId, setCreatorUserId] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [showAppOptions, setShowAppOptions] = useState(false);
-  const [userIsCreator, setUserIsCreated] = useState(false)
+  const [userIsCreator, setUserIsCreated] = useState(false);
 
   const handleLikeCollection = async () => {
     try {
@@ -88,25 +87,23 @@ const CollectionCard = ({
     }
   };
 
-  useEffect(() => {
-    const fetchCreatorUserId = async () => {
-      try {
-        const response = await axios.get(`http://localhost:3000/get-creator/${collectionId}`);
-        const { creatorId } = response.data;
-  
-        creatorId === userId ? setUserIsCreated(true) : setUserIsCreated(false);
-        
-      } catch (error) {
-        console.error('Error fetching creator userId:', error);
-      }
-    };
-  
-    fetchCreatorUserId();
+  // useEffect(() => {
+  //   const fetchCreatorUserId = async () => {
+  //     try {
+  //       const response = await axios.get(`http://localhost:3000/get-creator/${collectionId}`);
+  //       const { creatorId } = response.data;
 
-  }, []); // Empty dependency array for one-time effect
-  
+  //       creatorId === userId ? setUserIsCreated(true) : setUserIsCreated(false);
 
-  // userId === creatorUserId ? setUserIsCreated(true) : setUserIsCreated(false)
+  //     } catch (error) {
+  //       console.error('Error fetching creator userId:', error);
+  //     }
+  //   };
+
+  //   fetchCreatorUserId();
+
+  // }, []); // Empty dependency array for one-time effect
+
   // console.log(userIsCreator)
 
   const ShareMenu = ({ isVisible, children, onClose }) => {
