@@ -8,16 +8,8 @@ const SearchBar = ({onSearch}) => {
   const [searchResults, setSearchResults] = useState([]);
 
 
+
   const handleSearch = (text) => {
-
-    const results = Array.from({ length: 10 }, (_, i) => ({
-      id: i,
-      name: `Result ${i}`,
-    }));
-    setSearchResults(results);
-  };
-
-  const doStuff = (text) => {
     setSearchText(text);
     getResults();
   };
@@ -28,7 +20,9 @@ const SearchBar = ({onSearch}) => {
         params: { query: searchText },
       })
       .then((response) => {
-        setSearchResults([response.data]);
+        setSearchResults(response.data);
+        console.log("response.data: ", response.data);
+        onSearch(response.data);
       })
       .catch((error) => {
         console.log("Error fetching search results from search bar");
@@ -42,9 +36,8 @@ const SearchBar = ({onSearch}) => {
         style={styles.input}
         placeholder="Search poems, collections, and authors"
         value={searchText}
-        onChangeText={(text) => doStuff(text)}
+        onChangeText={(text) => handleSearch(text)}
       />
-      <Text>{searchText}</Text>
       
     </View>
   );

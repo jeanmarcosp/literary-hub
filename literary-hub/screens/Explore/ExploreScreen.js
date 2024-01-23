@@ -14,23 +14,24 @@ import { Ionicons } from "@expo/vector-icons";
 import TrendingPoems from "../../components/TrendingPoems";
 import TrendingCollections from "../../components/TrendingCollections";
 import Quote from "../../components/Quote";
-
+import SearchResult from "../../components/SearchResult.js";
 const ExploreScreen = () => {
   const [segmentedControlView, setSegmentedControlView] =
     useState("Collections");
   const [searchResults, setSearchResults] = useState([]);
   const handleSearch = (results) =>{
+
     setSearchResults(results);
+    console.log('results are: ', results);
   }
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
         <SearchBar onSearch={handleSearch}/>
-        <div>
-        {searchResults.map((poem) => (
-        <PoemCard poemId={poem._id} />
-      ))}
-        </div>
+          {searchResults.map((poem) => (
+          <SearchResult style={styles.text} key={poem._id} title={poem.title} author={poem.author}/>
+          ))}
+          
         <Text style={styles.text}>Author Collections</Text>
         <AuthorList />
 

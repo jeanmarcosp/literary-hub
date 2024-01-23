@@ -511,7 +511,7 @@ app.get('/search', async(req, res) => {
     const { query } = req.query;
     console.log('Query is ', query);
     try{
-      const poemResults = await Poem.find({ title: query }).sort('author');
+      const poemResults = await Poem.find({ title: {$regex: query} }).sort('author');
       console.log(poemResults);
       res.json(poemResults);
 
