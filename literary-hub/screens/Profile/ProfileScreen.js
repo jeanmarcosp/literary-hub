@@ -109,8 +109,6 @@ const ProfileScreen = () => {
     fetchLikedPoems();
   }, [user]);
 
-  // console.log(userId)
-
   // fetch collections
   // useFocusEffect(
   //   React.useCallback(() => {
