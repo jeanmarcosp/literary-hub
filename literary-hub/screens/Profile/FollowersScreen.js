@@ -1,71 +1,115 @@
 import React, { useState, useEffect, useCallback, useContext } from "react";
-import { StyleSheet, Text, View, Image, SafeAreaView, TouchableOpacity, Dimensions, FlatList} from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  SafeAreaView,
+  TouchableOpacity,
+  Dimensions,
+  FlatList,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
-import Follower from './../../components/Follower.js'
+import {
+  useNavigation,
+  useRoute,
+  useFocusEffect,
+} from "@react-navigation/native";
+import Follower from "./../../components/Follower.js";
+import axios from "axios";
 
 const FollowersScreen = () => {
-    const [segmentedControlView, setSegmentedControlView] = useState("Collections");
-    const navigation = useNavigation();
+  const navigation = useNavigation();
+  const route = useRoute();
+  const { followerList, loggedInUser, followingList } = route.params;
 
-    const followers = [
-        {
-            id: '1'
-        },
-        {
-            id: '2'
-        },
-        {
-            id: '3'
-        },
-    ]
+  const [followerInfo, setFollowerInfo] = useState([]);
 
-    return (
-        <SafeAreaView>
-            <View style={styles.container}>
-                <View style={styles.topRow}>
-                    <TouchableOpacity onPress={() => navigation.goBack()}>
-                        <Ionicons name="chevron-back-outline" size={22} color="#373F41" />
-                    </TouchableOpacity>
+  // console.log(followingList.includes(followerList[0]))
+  // console.log(followerList[0])
 
-                    <Text style={styles.title}>57 Followers</Text>
-                    <Ionicons name="chevron-back-outline" size={22} color="#fff" />
-                </View>
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchFollowers = async () => {
+        try {
+          const response = await axios.get(
+            `http://localhost:3000/get-follower-info`,
+            {
+              params: {
+                followerIds: followerList,
+              },
+            }
+          );
+          const followerDetails = response.data;
+          setFollowerInfo(followerDetails);
+        } catch (error) {
+          if (error.response && error.response.status === 404) {
+            console.log("No followers found");
+            setFollowerInfo([]);
+          } else {
+            console.error("Error fetching followers:", error);
+          }
+        }
+      };
 
-                <FlatList
-                    style={styles.list}
-                    data={followers}
-                    keyExtractor={(item) => item._id}
-                    renderItem={({ item }) => (
-                        <Follower />
-                    )}
-                />
-            </View>
-        </SafeAreaView>
-    )
-}
+      fetchFollowers();
+    }, [])
+  );
 
-export default FollowersScreen
+  // console.log(followerInfo);
+
+  return (
+    <SafeAreaView>
+      <View style={styles.container}>
+        <View style={styles.topRow}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Ionicons name="chevron-back-outline" size={22} color="#373F41" />
+          </TouchableOpacity>
+
+          <Text style={styles.title}>{followerInfo?.length} Follower</Text>
+          <Ionicons name="chevron-back-outline" size={22} color="white" />
+        </View>
+
+        <FlatList
+          data={followerInfo}
+          renderItem={({ item }) => (
+            <Follower
+              key={item._id}
+              loggedInUser={loggedInUser}
+              otherUser={item.followerId}
+              name={item.name}
+              username={item.username}
+              profilePicture={item.profilePicture}
+              status={followingList.includes(item.followerId)}
+            />
+          )}
+          keyExtractor={(item) => item._id}
+        />
+      </View>
+    </SafeAreaView>
+  );
+};
+
+export default FollowersScreen;
 
 const styles = StyleSheet.create({
-    container: {
-        paddingHorizontal: 20,
+  container: {
+    paddingHorizontal: 20,
+  },
 
-    },
+  topRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: 10,
+  },
 
-    topRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginTop: 10,
-    },
+  title: {
+    fontFamily: "HammersmithOne",
+    fontSize: 18,
+  },
 
-    title: {
-        fontFamily: 'HammersmithOne',
-        fontSize: 18,
-    },
-
-    list: {
-        marginTop: 20,
-    },
-})
+  list: {
+    marginTop: 20,
+  },
+});
