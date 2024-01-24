@@ -22,7 +22,7 @@ const Follower = ({
   status,
 }) => {
   const [isFollowing, setIsFollowing] = useState(status);
-  console.log(status)
+  console.log(status);
 
   const handlePress = () => {
     if (isFollowing) {
@@ -47,8 +47,8 @@ const Follower = ({
     }
   };
 
-//   console.log("current user", loggedInUser);
-//   console.log("user to follow", otherUser);
+  //   console.log("current user", loggedInUser);
+  //   console.log("user to follow", otherUser);
 
   const handleUnfollow = async () => {
     try {
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
 
   unfollowButton: {
     backgroundColor: "white",
-    borderColor: 'black',
+    borderColor: "black",
     borderWidth: 1,
     borderRadius: 100,
     paddingHorizontal: 20,
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
   unfollowButtonText: {
     fontFamily: "Sarabun-SemiBold",
     fontSize: 16,
-    color: '#644980'
+    color: "#644980",
   },
 
   followButton: {
@@ -156,6 +156,6 @@ const styles = StyleSheet.create({
   followButtonText: {
     fontFamily: "Sarabun-SemiBold",
     fontSize: 16,
-    color: 'white',
-  }
+    color: "white",
+  },
 });

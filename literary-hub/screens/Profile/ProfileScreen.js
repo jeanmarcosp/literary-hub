@@ -44,7 +44,7 @@ const ProfileScreen = () => {
     }, [])
   );
 
-  console.log(user.email);
+  console.log(user.name);
 
   // fetch poems
   // useFocusEffect(
@@ -160,7 +160,7 @@ const ProfileScreen = () => {
           });
 
           const fetchedCollections = response.data;
-          console.log("collections render");
+          // console.log("collections render");
           setCollections(fetchedCollections);
         }
       } catch (error) {
@@ -175,8 +175,6 @@ const ProfileScreen = () => {
 
     fetchCreatedCollections();
   }, [user]);
-
-  console.log(user.id)
 
   const CollectionsView = ({ collections }) => {
     return (
