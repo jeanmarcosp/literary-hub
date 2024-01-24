@@ -31,7 +31,7 @@ const FollowingScreen = () => {
       const fetchFollowing = async () => {
         try {
           const response = await axios.get(
-            `http://localhost:3000/get-follower-info`,
+            `${ROOT_URL}/get-follower-info`,
             {
               params: {
                 followerIds: followingList,

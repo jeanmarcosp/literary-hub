@@ -27,21 +27,38 @@ const ProfileScreen = () => {
   const navigation = useNavigation();
 
   // this gets the users information stored in user?.
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     const fetchProfile = async () => {
+  //       try {
+  //         const response = await axios.get(`${ROOT_URL}/profile/${userId}`);
+  //         const user = response.data.user;
+
+  //         setUser(user);
+  //       } catch (error) {
+  //         console.log("error", error);
+  //       }
+  //     };
+
+  //     fetchProfile();
+  //   }, [])
+  // );
+
+  const fetchProfile = async () => {
+    try {
+      const response = await axios.get(`${ROOT_URL}/profile/${userId}`);
+      const user = response.data.user;
+
+      setUser(user);
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
   useFocusEffect(
     React.useCallback(() => {
-      const fetchProfile = async () => {
-        try {
-          const response = await axios.get(`${ROOT_URL}/profile/${userId}`);
-          const user = response.data.user;
-
-          setUser(user);
-        } catch (error) {
-          console.log("error", error);
-        }
-      };
-
       fetchProfile();
-    }, [])
+    }, [userId])
   );
 
   console.log(user.name);
@@ -201,6 +218,7 @@ const ProfileScreen = () => {
               size={item.poemsInCollection.length}
               likes={item.likes.length}
               inLikes={item.likes.includes(user._id)}
+              handleRefresh={fetchProfile}
             />
           )}
           keyExtractor={(item) => item._id}
@@ -227,6 +245,7 @@ const ProfileScreen = () => {
                 excerpt={item.content}
                 likes={item.likes.length}
                 inLikes={item.likes.includes(user._id)}
+                handleRefresh={fetchProfile}
               />
             );
           }}
@@ -265,7 +284,11 @@ const ProfileScreen = () => {
 
           <TouchableOpacity
             onPress={() =>
-              navigation.navigate("FollowersScreen", { followerList: user?.followers, loggedInUser: userId, followingList: user?.following, })
+              navigation.navigate("FollowersScreen", {
+                followerList: user?.followers,
+                loggedInUser: userId,
+                followingList: user?.following,
+              })
             }
           >
             <View style={styles.metric}>
@@ -276,7 +299,10 @@ const ProfileScreen = () => {
 
           <TouchableOpacity
             onPress={() =>
-              navigation.navigate("FollowingScreen", { followingList: user?.following, loggedInUser: userId })
+              navigation.navigate("FollowingScreen", {
+                followingList: user?.following,
+                loggedInUser: userId,
+              })
             }
           >
             <View style={styles.metric}>
