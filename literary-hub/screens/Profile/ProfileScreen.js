@@ -9,13 +9,12 @@ import {
 } from "react-native";
 import React, { useState, useEffect, useCallback, useContext } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import getUserId from "../../hooks/getUserId";
 import axios from "axios";
 import PoemCard from "../../components/PoemCard";
 import CollectionCard from "../../components/CollectionCard";
 import Quote from "../../components/Quote";
-import { useFocusEffect } from "@react-navigation/native";
 import { collection } from "../../mongo-api/models/user";
 
 const ProfileScreen = () => {
@@ -44,9 +43,8 @@ const ProfileScreen = () => {
       fetchProfile();
     }, [])
   );
-  
 
-  console.log(user.email);
+  console.log(user.name);
 
   // fetch poems
   // useFocusEffect(
@@ -160,7 +158,7 @@ const ProfileScreen = () => {
           });
 
           const fetchedCollections = response.data;
-          console.log("collections render")
+          // console.log("collections render");
           setCollections(fetchedCollections);
         }
       } catch (error) {
@@ -175,7 +173,6 @@ const ProfileScreen = () => {
 
     fetchCreatedCollections();
   }, [user]);
-
 
   const CollectionsView = ({ collections }) => {
     return (
@@ -248,7 +245,7 @@ const ProfileScreen = () => {
       <View style={styles.centerAligned}>
         <Image
           source={{
-            uri: "https://i.pinimg.com/originals/22/8f/c5/228fc5d11fdb37c06bbbed785b9637a7.jpg",
+            uri: user?.profilePicture,
           }}
           style={styles.profilePic}
         />
@@ -266,14 +263,22 @@ const ProfileScreen = () => {
             <Text style={styles.metricName}>Collections</Text>
           </View>
 
-          <TouchableOpacity onPress={() => navigation.navigate("FollowersScreen")}>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("FollowersScreen", { followerList: user?.followers, loggedInUser: userId, followingList: user?.following, })
+            }
+          >
             <View style={styles.metric}>
               <Text style={styles.metricNumber}>{user?.followers?.length}</Text>
               <Text style={styles.metricName}>Followers</Text>
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => navigation.navigate("FollowingScreen")}>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("FollowingScreen", { followingList: user?.following, loggedInUser: userId })
+            }
+          >
             <View style={styles.metric}>
               <Text style={styles.metricNumber}>{user?.following?.length}</Text>
               <Text style={styles.metricName}>Following</Text>
