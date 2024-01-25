@@ -25,7 +25,7 @@ const SearchBar = ({onSearch}) => {
         onSearch(response.data);
       })
       .catch((error) => {
-        console.log("Error fetching search results from search bar");
+        console.log("Error fetching search results from search bar", error);
       });
   };
 

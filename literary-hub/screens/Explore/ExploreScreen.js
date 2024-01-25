@@ -107,9 +107,7 @@ const ExploreScreen = () => {
         {searchResults.map((poem) => (
           <SearchResult
             key={poem._id}
-            title={poem.title}
-            author={poem.author}
-            content={poem.content}
+            Poem = {poem}
             style={styles.overlayResult}
           />
         ))}

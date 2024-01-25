@@ -1,7 +1,8 @@
 // PoemScreen.js
 import React from "react";
-import { View, Text, StyleSheet, Button, Dimensions, ScrollView, Pressable } from "react-native";
+import { View, Text, StyleSheet, Button, Dimensions, ScrollView, Pressable , SafeAreaView} from "react-native";
 import { useRoute } from "@react-navigation/native";
+import { Ionicons } from '@expo/vector-icons';
 
 const PoemScreen = ({ route, navigation}) => {
   const { title, author, content } = route.params;
@@ -12,8 +13,19 @@ const PoemScreen = ({ route, navigation}) => {
   const poemContent = "Your poem content goes here...";
 
   return (
-    <View style={styles.poemContainer}>
-
+    <SafeAreaView>
+    <View style={styles.header}>
+            <Pressable style={styles.backIcon} onPress={() => navigation.goBack()}>
+          
+            
+            
+        <Ionicons name="arrow-back" size={24} color="black" />
+      </Pressable>
+      
+      </View>
+      <View style={styles.poemContainer}>
+      
+    
     
     <ScrollView
         vertical
@@ -35,23 +47,27 @@ const PoemScreen = ({ route, navigation}) => {
             <Text style={styles.pageContent}>{page}</Text>
           </View>
         ))} */}
-        
-            <Text style={styles.title}>{title}</Text>
+          
+      <Text style={styles.title}>{title}</Text>
             <Text style={styles.author}>
               Author: {author}
             </Text>
             <Text style={styles.pageContent}>{content}</Text>          
-      <Button title="Go Back" onPress={() => navigation.goBack()} /> 
       </ScrollView>
       
 
 
     </View>
+    </SafeAreaView>
   );
 };
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
+  header:{
+    paddingHorizontal: 16,
+    position:'relative',
+  },
     poemContainer: {
       height: Dimensions.get('window').height,
       alignItems: 'center',

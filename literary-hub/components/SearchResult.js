@@ -4,12 +4,12 @@ import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 
-const SearchResult = ({title, author, content}) => {
+const SearchResult = ({Poem}) => {
   const navigation = useNavigation();
   const openPoem = () =>{
     //event.persist();
     //navigation.navigate("Poem", { title, author, content });
-    navigation.navigate('Poem', { title: title, author: author, content: content });
+    navigation.navigate('Poem', { title: Poem.title, author:Poem. author, content: Poem.content });
 
   }
 
@@ -18,7 +18,7 @@ const SearchResult = ({title, author, content}) => {
        <TouchableOpacity
        onPress={openPoem}
        >
-        <Text>{title}</Text><Text style={styles.author}>     {author}</Text>
+        <Text>{Poem.title}</Text><Text style={styles.author}>     {Poem.author}</Text>
         </TouchableOpacity> 
     </View>
   );
