@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     width: 332,
     borderRadius: 10,
     backgroundColor: "#000",
-    paddingVertical: 20,
+    paddingVertical: 18,
     marginLeft: "auto",
     marginRight: "auto",
     marginBottom: 10,
@@ -176,8 +176,8 @@ const styles = StyleSheet.create({
 
   loginText: {
     textAlign: "center",
-    fontWeight: "bold",
-    fontSize: 16,
+    fontFamily: 'Sarabun-Bold',
+    fontSize: 18,
     color: "white",
   },
 
