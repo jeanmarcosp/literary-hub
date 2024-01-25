@@ -17,6 +17,7 @@ const jwt = require("jsonwebtoken");
 const User = require("./models/user");
 const Poem = require("./models/poem");
 const Collection = require("./models/collection");
+const { log } = require("console");
 
 mongoose
   .connect(
@@ -225,7 +226,7 @@ app.put("/poems/:poemId/:userId/unlike", async (req, res) => {
 
     const updatedPoem = await Poem.findByIdAndUpdate(
       poemId,
-      { $pull: { likes: userId } }, // Add user's ID to the likes array
+      { $pull: { likes: userId } }, // remove user's ID to the likes array
       { new: true } // To return the updated poem
     );
 
@@ -336,13 +337,16 @@ app.post("/create-collection", async (req, res) => {
     const defaultCaption = "Check out my new collection!";
     const collectionCaption = caption || defaultCaption;
 
-    defaultTitle = "New Collection";
+    const defaultTitle = "New Collection";
     const collectionTitle = title || defaultTitle;
+
+    const defaultCoverArt = "https://i.pinimg.com/originals/08/90/e2/0890e2a78f1e10a25fbe1e796caf5425.jpg";
+    const collectionCoverArt = coverArt || defaultCoverArt;
 
     const newCollection = new Collection({
       user: userId,
       title: collectionTitle,
-      coverArt: coverArt,
+      coverArt: collectionCoverArt,
       likes: [],
       poemsInCollection: [],
       caption: collectionCaption,
@@ -354,7 +358,7 @@ app.post("/create-collection", async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       { $addToSet: { createdCollections: savedCollection._id } },
-      { new: true } // To return the updated user document
+      { new: true } 
     );
 
     res.status(201).json(savedCollection); // 201 status code indicates a resource was created
@@ -594,6 +598,106 @@ app.get("/get-creator/:collectionId", async (req, res) => {
     res.status(500).json({ error: "Error getting creator" });
   }
 });
+
+//endpoint for getting list of liked poems
+app.get("/users/:userId/likedPoems", async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const likedPoems = user.likedPoems;
+
+    res.json(likedPoems);
+  } catch (error) {
+    console.error("Error fetching liked poems:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+//endpoint to get follower info
+app.get("/get-follower-info", async (req, res) => {
+  try {
+    const followerIds = req.query.followerIds;
+
+    // Find the users by IDs in your user data (replace this with MongoDB query)
+    const followers = await User.find({ _id: { $in: followerIds } });
+
+    if (!followers || followers.length === 0) {
+      return res.status(404).json({ error: "Users not found" });
+    }
+
+    // Return an array of user details
+    const followerDetails = followers.map((follower) => ({
+      followerId: follower.id,
+      name: follower.name,
+      username: follower.username,
+      profilePicture: follower.profilePicture,
+    }));
+
+    res.status(200).json(followerDetails);
+  } catch (error) {
+    console.error("Error fetching follower data:", error);
+    res.status(500).send("Error fetching follower data");
+  }
+});
+
+//endpoint to follow a user
+app.post("/follow-user", async (req, res) => {
+  const { loggedInUser, otherUser } = req.body;
+  // console.log("Request Body:", req.body);
+  try {
+    // Update the selected user's followers list
+    await User.findByIdAndUpdate(otherUser, {
+      $push: { followers: loggedInUser },
+    });
+
+    // Update the current user's following list
+    await User.findByIdAndUpdate(loggedInUser, {
+      $push: { following: otherUser },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "User followed successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error in following a user" });
+  }
+});
+
+//endpoint to unfollow a user
+app.post("/unfollow-user", async (req, res) => {
+  const { loggedInUser, otherUser } = req.body;
+  // console.log("Request Body:", req.body);
+  try {
+    // Remove the current user from the selected user's followers list
+    await User.findByIdAndUpdate(otherUser, {
+      $pull: { followers: loggedInUser },
+    });
+
+    // Remove the selected user from the current user's following list
+    await User.findByIdAndUpdate(loggedInUser, {
+      $pull: { following: otherUser },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "User unfollowed successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error in unfollowing a user" });
+  }
+});
+
+
+
 //endpoint for searching 
 app.get('/search', async(req, res) => {
   console.log("in search");

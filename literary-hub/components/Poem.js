@@ -5,14 +5,15 @@ import { View, ScrollView, Text, Dimensions, StyleSheet, Pressable } from 'react
 import React, { useState, useEffect, useContext, useCallback, useMemo, useRef } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
-import Like from "../components/Like";
+import HomePageLike from "./HomePageLike";
 
-const Poem = ({ poem, poemId, onRead }) => {
+const Poem = ({ poem, poemId, onRead, onLike, onUnlike, userLikedPoems }) => {
   const [annotationMode, handleAnnotationMode] = useState(false);
   const [liked, handleLike] = useState(false);
   const bottomSheetRef = useRef(null);
-  const READ_TIMER_DURATION = 30000;
+  const READ_TIMER_DURATION = 5000;
   const [isRead, setIsRead] = useState(false);
+  const isInitiallyLiked = userLikedPoems.includes(poemId);
 
   // if poem is already marked as read, do nothing
   // if it isn't, mark it as read
@@ -60,6 +61,13 @@ const Poem = ({ poem, poemId, onRead }) => {
           </View>
         ))}
       </ScrollView>
+
+      <HomePageLike 
+        inLikes={isInitiallyLiked} 
+        handleLike={() => onLike(poemId)} 
+        handleDislike={() => onUnlike(poemId)}
+      />
+
       <View style={styles.toggle}>
         {annotationMode ? (
           <Pressable
@@ -92,9 +100,9 @@ const Poem = ({ poem, poemId, onRead }) => {
           <Feather name="plus" size={30} color="#644980" />
         </Pressable>
       </View>
-      <View style={styles.heart}>
+      {/* <View style={styles.heart}>
         <Like />
-      </View>
+      </View> */}
 
       
       <CollectionBottomSheet ref={bottomSheetRef} title="Add to Collection" poem={poem} />

@@ -25,6 +25,7 @@ const CollectionCard = ({
   size,
   likes,
   inLikes,
+  handleRefresh,
 }) => {
   const navigation = useNavigation();
   const poemText = size === 1 ? "poem" : "poems";
@@ -46,6 +47,7 @@ const CollectionCard = ({
 
       // Set the liked state to true (or perform any other state update)
       setLiked(true);
+      handleRefresh();
     } catch (error) {
       console.error("Error liking collection:", error);
       // Handle errors or perform any other action
@@ -63,6 +65,7 @@ const CollectionCard = ({
 
       // Set the liked state to false (or perform any other state update)
       setLiked(false);
+      handleRefresh();
     } catch (error) {
       console.error("Error unliking collection:", error);
       // Handle errors or perform any other action
@@ -81,6 +84,7 @@ const CollectionCard = ({
       if (message.success) {
         Alert.alert("Success", "Collection deleted successfully");
       }
+      handleRefresh();
     } catch (error) {
       console.error("Error deleting collection:", error);
       Alert.alert("Error", "Error deleting collection");
