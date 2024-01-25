@@ -68,15 +68,15 @@ const RegisterScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView>
-        <View style={styles.headerContainer}>
-          <Text style={styles.headerText}>Register</Text>
-        </View>
+        <Text style={styles.loginHeader1}>Register for</Text>
+        <Text style={styles.loginHeader2}>Literary Hub</Text>
 
         <View style={styles.inputOuterContainer}>
+          <Text style={styles.sectionHeader}>Name</Text>
           <View style={styles.inputInnerContainer}>
             <MaterialIcons
-              style={{ marginLeft: 8 }}
-              name="person"
+              style={{ marginLeft: 16 }}
+              name="person-outline"
               size={24}
               color="gray"
             />
@@ -85,15 +85,16 @@ const RegisterScreen = () => {
               onChangeText={(text) => setName(text)}
               placeholderTextColor={"gray"}
               style={styles.textInput}
-              placeholder="enter your name"
+              placeholder="Enter name"
             />
           </View>
         </View>
 
         <View style={styles.inputOuterContainer}>
+          <Text style={styles.sectionHeader}>Email</Text>
           <View style={styles.inputInnerContainer}>
             <MaterialIcons
-              style={{ marginLeft: 8 }}
+              style={{ marginLeft: 16 }}
               name="email"
               size={24}
               color="gray"
@@ -103,15 +104,16 @@ const RegisterScreen = () => {
               onChangeText={(text) => setEmail(text)}
               placeholderTextColor={"gray"}
               style={styles.textInput}
-              placeholder="enter your email"
+              placeholder="Enter email"
             />
           </View>
         </View>
 
         <View style={styles.inputOuterContainer}>
+          <Text style={styles.sectionHeader}>Username</Text>
           <View style={styles.inputInnerContainer}>
             <MaterialIcons
-              style={{ marginLeft: 8 }}
+              style={{ marginLeft: 16 }}
               name="alternate-email"
               size={24}
               color="gray"
@@ -121,15 +123,16 @@ const RegisterScreen = () => {
               onChangeText={(text) => setUsername(text)}
               placeholderTextColor={"gray"}
               style={styles.textInput}
-              placeholder="enter your username"
+              placeholder="Enter username"
             />
           </View>
         </View>
 
         <View style={styles.inputOuterContainer}>
+          <Text style={styles.sectionHeader}>Password</Text>
           <View style={styles.inputInnerContainer}>
             <MaterialIcons
-              style={{ marginLeft: 8 }}
+              style={{ marginLeft: 16 }}
               name="lock-outline"
               size={24}
               color="gray"
@@ -140,25 +143,20 @@ const RegisterScreen = () => {
               onChangeText={(text) => setPassword(text)}
               placeholderTextColor={"gray"}
               style={styles.textInput}
-              placeholder="enter your password"
+              placeholder="Enter password"
             />
           </View>
         </View>
-
-        <View style={{ marginTop: 10 }} />
 
         <Pressable onPress={handleRegister} style={styles.registerButton}>
           <Text style={styles.registerButtonText}>Register</Text>
         </Pressable>
 
-        <Pressable
-          onPress={() => navigation.goBack()}
-          style={{ marginTop: 15 }}
-        >
-          <Text style={styles.signInText}>
-            Already have an account? Sign In
-          </Text>
+        <Pressable onPress={() => navigation.goBack()} style={styles.registerCTA}>
+          <Text style={styles.registerCTAText1}>Already have an account?</Text>
+          <Text style={styles.registerCTAText2}>Log in</Text>
         </Pressable>
+
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -172,55 +170,103 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     alignItems: "center",
   },
+
+  loginHeader1: {
+    fontFamily: "Sarabun-ExtraBold",
+    fontSize: 40,
+    marginTop: 30,
+  },
+
+  loginHeader2: {
+    fontFamily: "Sarabun-ExtraBold",
+    fontSize: 40,
+    marginBottom: 0,
+  },
+
   headerContainer: {
     marginTop: 20,
     alignItems: "center",
     justifyContent: "center",
   },
+  
   headerText: {
     fontFamily: "HammersmithOne",
     fontSize: 25,
     fontWeight: "bold",
     marginTop: 25,
   },
+
   inputOuterContainer: {
-    marginTop: 30,
+    marginTop: 20,
   },
+
+  sectionHeader: {
+    fontFamily: 'Sarabun-Bold',
+    fontSize: 17,
+    marginBottom: 7,
+  },
+
   inputInnerContainer: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 5,
-    borderColor: "#D0D0D0",
+    gap: 10,
+    borderColor: "#D9D9D9",
     borderWidth: 1,
     paddingVertical: 5,
     borderRadius: 5,
   },
+
   textInput: {
-    fontFamily: "HammersmithOne",
+    fontFamily: "Sarabun-Regular",
     color: "gray",
-    marginVertical: 10,
-    width: 300,
-    fontSize: 14,
+    marginVertical: 13,
+    width: 280,
+    fontSize: 16,
   },
+
   registerButton: {
-    width: 200,
-    backgroundColor: "#644980",
-    padding: 15,
-    marginTop: 40,
+    width: 332,
+    borderRadius: 10,
+    backgroundColor: "#000",
+    paddingVertical: 18,
     marginLeft: "auto",
     marginRight: "auto",
-    borderRadius: 6,
+    marginBottom: 10,
+    marginTop: 60
   },
+
   registerButtonText: {
-    fontFamily: "HammersmithOne",
+    fontFamily: 'Sarabun-Bold',
     textAlign: "center",
     fontWeight: "bold",
     fontSize: 18,
     color: "white",
   },
+
   signInText: {
     fontFamily: "HammersmithOne",
     textAlign: "center",
     fontSize: 15,
   },
+
+  registerCTA: {
+    flexDirection: 'row',
+    columnGap: 3,
+    alignItems: 'baseline',
+    alignSelf: 'center',
+    marginTop: 10
+  },
+
+  registerCTAText1: {
+    fontFamily: 'Sarabun-Regular',
+    fontSize: 17,
+    color: '#9B59D1',
+  },
+
+  registerCTAText2: {
+    fontFamily: 'Sarabun-Bold',
+    fontSize: 17,
+    color: '#9B59D1',
+    textDecorationLine: 'underline'
+  }
 });
