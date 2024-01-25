@@ -340,7 +340,8 @@ app.post("/create-collection", async (req, res) => {
     const defaultTitle = "New Collection";
     const collectionTitle = title || defaultTitle;
 
-    const defaultCoverArt = "https://i.pinimg.com/originals/08/90/e2/0890e2a78f1e10a25fbe1e796caf5425.jpg";
+    const defaultCoverArt =
+      "https://i.pinimg.com/originals/08/90/e2/0890e2a78f1e10a25fbe1e796caf5425.jpg";
     const collectionCoverArt = coverArt || defaultCoverArt;
 
     const newCollection = new Collection({
@@ -358,7 +359,7 @@ app.post("/create-collection", async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       { $addToSet: { createdCollections: savedCollection._id } },
-      { new: true } 
+      { new: true }
     );
 
     res.status(201).json(savedCollection); // 201 status code indicates a resource was created
@@ -433,7 +434,7 @@ app.get("/collections-by-ids", async (req, res) => {
 //endpoint for registering user in the backend
 app.post("/register", async (req, res) => {
   try {
-    const { name, email, username, password } = req.body;
+    const { name, email, username, password, profilePicture } = req.body;
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -442,8 +443,27 @@ app.post("/register", async (req, res) => {
         .json({ success: false, message: "Email already registered" });
     }
 
+    const defaultProfilePicture =
+      "https://i.pinimg.com/originals/08/90/e2/0890e2a78f1e10a25fbe1e796caf5425.jpg";
+    const userProfilePic = profilePicture || defaultProfilePicture;
+
     // Create a new user
-    const newUser = new User({ name, email, username, password });
+    const newUser = new User({
+      name: name,
+      email: email,
+      username: username,
+      password: password,
+      profilePicture: userProfilePic,
+      sentFollowRequests: [],
+      receivedFollowRequests: [],
+      followers: [],
+      following: [],
+      verified: false,
+      likedCollections: [],
+      likedCollections: [],
+      createdCollections: [],
+      readPoems: [],
+    });
 
     // Save the user to the database
     await newUser.save();
@@ -695,7 +715,6 @@ app.post("/unfollow-user", async (req, res) => {
     res.status(500).json({ message: "Error in unfollowing a user" });
   }
 });
-
 
 
 //endpoint for searching 

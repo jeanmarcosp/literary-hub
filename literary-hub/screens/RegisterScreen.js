@@ -7,13 +7,18 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Alert,
+  Image, 
+  TouchableOpacity,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect,  } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setUser } from "../state/actions/userActions";
+import * as ImagePicker from "expo-image-picker";
+import { firebase } from "../firebaseConfig";
+// import * as filesystem from filesystem
 
 const RegisterScreen = () => {
   const [name, setName] = useState("");
@@ -22,21 +27,40 @@ const RegisterScreen = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const [profilePicture, setProfilePicture] = useState(null);
+  const [uploading, setUploading] = useState("");
+
   const navigation = useNavigation();
   const dispatch = useDispatch();
+
+  const isInputValid = () => {
+    // Check if any of the required fields are empty
+    if (!name || !email || !username || !password) {
+      Alert.alert("Incomplete Information", "Please fill in all the fields");
+      return false;
+    }
+    return true;
+  };
 
   const handleRegister = async () => {
     try {
       setLoading(true);
+
+      if (!isInputValid()) {
+        // If the input is not valid, don't proceed with registration
+        return;
+      }
 
       const user = {
         name: name,
         email: email,
         username: username,
         password: password,
+        profilePicture: profilePicture,
       };
 
       const response = await axios.post(`${ROOT_URL}/register`, user);
+      // const response = await axios.post(`http://localhost:3000/register`, user);
 
       if (response.data.success) {
         Alert.alert(
@@ -54,6 +78,7 @@ const RegisterScreen = () => {
       setEmail("");
       setUsername("");
       setPassword("");
+      setProfilePicture(null)
     } catch (error) {
       console.error("Error during registration:", error);
       Alert.alert(
@@ -65,11 +90,61 @@ const RegisterScreen = () => {
     }
   };
 
+  const handlePickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 4],
+      quality: 1,
+    });
+
+    const source = { uri: result.assets[0].uri };
+    setProfilePicture(source);
+  };
+
+  useEffect(() => {
+    if (profilePicture && profilePicture.uri) {
+      handleUploadImage();
+    }
+  }, [profilePicture]);
+
+  const handleUploadImage = async () => {
+    setUploading(true);
+    const response = await fetch(profilePicture.uri);
+    const blob = await response.blob();
+    const filename = profilePicture.uri.substring(profilePicture.uri.lastIndexOf("/") + 1);
+    var ref = firebase.storage().ref().child(filename);
+
+    try {
+      await ref.put(blob);
+      const downloadURL = await ref.getDownloadURL();
+      setProfilePicture(downloadURL);
+      console.log("url", profilePicture);
+    } catch (e) {
+      console.log(e);
+    }
+    setUploading(false);
+    Alert.alert("Photo uploaded!");
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView>
         <View style={styles.headerContainer}>
           <Text style={styles.headerText}>Register</Text>
+        </View>
+
+        <View style={styles.coverPhotoSection}>
+          <View style={styles.emptyCoverPhoto}>
+            {profilePicture && (
+              <Image source={{ uri: profilePicture.uri }} style={styles.coverImage} />
+            )}
+          </View>
+          <TouchableOpacity onPress={handlePickImage}>
+            <View style={styles.editPhotoCTA}>
+              <Text style={styles.editPhotoText}>Choose Profile Picture</Text>
+            </View>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.inputOuterContainer}>
@@ -222,5 +297,52 @@ const styles = StyleSheet.create({
     fontFamily: "HammersmithOne",
     textAlign: "center",
     fontSize: 15,
+  },
+  coverPhotoSection: {
+    rowGap: 10,
+    marginTop: 20,
+  },
+  header: {
+    fontSize: 18,
+    fontFamily: "HammersmithOne",
+  },
+  headerDescription: {
+    color: "#9CB5BB",
+    fontFamily: "Sarabun-Medium",
+    fontSize: 15,
+  },
+  emptyCoverPhoto: {
+    width: 100,
+    height: 100,
+    backgroundColor: "#F4F5F4",
+    borderRadius: 100,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  addCoverPhotoCTA: {
+    borderRadius: 100,
+    padding: 3,
+    alignSelf: "baseline",
+    backgroundColor: "#E2E5E6",
+  },
+  editPhotoCTA: {
+    alignSelf: "baseline",
+    paddingHorizontal: 7,
+    paddingVertical: 5,
+    borderWidth: 1,
+    borderRadius: 3,
+    borderColor: "#E2E5E6",
+    backgroundColor: "#F4F5F4",
+  },
+  editPhotoText: {
+    color: "#373F41",
+    fontFamily: "HammersmithOne",
+    fontSize: 15,
+  },
+  coverImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 100,
   },
 });
