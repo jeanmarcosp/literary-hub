@@ -698,3 +698,49 @@ app.post("/unfollow-user", async (req, res) => {
 
 
 
+//endpoint for searching 
+app.get('/search', async(req, res) => {
+  console.log("in search");
+  try{
+    const { query } = req.query;
+    console.log('Query is ', query);
+    try{
+     // const poemResults = await Poem.find({ title: {$regex: query} }).limit(10).sort('author');
+      const poemResults = await Poem.aggregate([
+        {
+          $match: {
+            title: { $regex: query, $options: 'i' }
+          }
+        },
+        {
+          $addFields: {
+            likeCount: { $size: "$likes" }
+          }
+        },
+        {
+          $sort: { likeCount: -1 }
+        },
+        {
+          $limit: 10
+        },
+        {
+          $project: {
+            likes: 0
+          }
+        }
+      ]);
+      console.log(poemResults);
+      res.json(poemResults);
+
+    }catch (error) {
+      console.error('Error while getting poem query results ', error);
+      res.status(500).json({ message: "Error while getting user query results" });
+    }
+  }catch (error) {
+    console.error('Error getting search query ', error);
+    res.status(500).json({ message: "Error gettign search query" });
+  
+  }
+  
+})
+
