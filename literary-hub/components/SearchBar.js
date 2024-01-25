@@ -1,17 +1,32 @@
 import React, { useState } from "react";
 import { View, TextInput, FlatList, Text, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import axios from "axios";
 
-const SearchBar = () => {
+const SearchBar = ({onSearch}) => {
   const [searchText, setSearchText] = useState("");
   const [searchResults, setSearchResults] = useState([]);
 
+
+
   const handleSearch = (text) => {
-    const results = Array.from({ length: 10 }, (_, i) => ({
-      id: i,
-      name: `Result ${i}`,
-    }));
-    setSearchResults(results);
+    setSearchText(text);
+    getResults();
+  };
+
+  const getResults = () => {
+    axios
+      .get("http://localhost:3000/search", {
+        params: { query: searchText },
+      })
+      .then((response) => {
+        setSearchResults(response.data);
+        console.log("response.data: ", response.data);
+        onSearch(response.data);
+      })
+      .catch((error) => {
+        console.log("Error fetching search results from search bar", error);
+      });
   };
 
   return (
@@ -21,8 +36,9 @@ const SearchBar = () => {
         style={styles.input}
         placeholder="Search poems, collections, and authors"
         value={searchText}
-        onChangeText={(text) => setSearchText(text)}
+        onChangeText={(text) => handleSearch(text)}
       />
+      
     </View>
   );
 };
