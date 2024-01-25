@@ -4,7 +4,8 @@ import { View, TouchableOpacity, Image, Text, StyleSheet } from "react-native";
 import Like from "./Like";
 import { useNavigation } from "@react-navigation/native";
 
-const AuthorCard = ({ title, poemCount }) => {
+const AuthorCard = ({ collection }) => {
+  console.log("im in author card");
   
   const navigation = useNavigation();
 
@@ -20,8 +21,8 @@ const AuthorCard = ({ title, poemCount }) => {
         </View>
 
         <View style={styles.authorInfo}>
-          <Text style={styles.authorName}>{title}</Text>
-          <Text style={styles.authorDates}>{poemCount} poems</Text>
+          <Text style={styles.authorName}>{collection.title}</Text>
+          <Text style={styles.authorDates}>{collection.likes.length} poems</Text>
         </View>
       </View>
     </TouchableOpacity>

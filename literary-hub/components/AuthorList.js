@@ -7,30 +7,34 @@ import { useEffect, useState } from 'react';
 
 const AuthorList = () => {
 
-  const [authors, setAuthors] = useState(null);
+  const [collections, setCollections] = useState(null);
 
+  // gets authors with more than 10 poems in db
   useEffect(() => {
     const fetchAuthors = async() => {
       try {
-        const response = await axios.get("http://localhost:3000/trending-authors");
-        setAuthors(response.data);
+        // called at beginning to create author collections
+        // await axios.get("http://localhost:3000/create-author-collections");
+        
+        // grab 10 collections
+        const response = await axios.get("http://localhost:3000/explore-authors");
+        setCollections(response.data)
       } catch (error) {
         console.error(error);
       }
     };
     fetchAuthors();
   }, [])
-
   
-
+  console.log("MY 10 AUTHOR COLLECTIONS", collections);
   return (
     <View>
       <FlatList
         style={styles.authorList}
-        data={authors}
+        data={collections}
         keyExtractor={(item) => item._id}
         renderItem={({ item }) => (
-          <AuthorCard title={item._id} poemCount={item.poemCount}/>
+          <AuthorCard collection={item}/>
         )}
         horizontal
         showsHorizontalScrollIndicator={false}

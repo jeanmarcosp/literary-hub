@@ -475,6 +475,7 @@ app.delete("/delete-account/:userId", async (req, res) => {
 
 app.get("/author-collection", async (req, res) => {
   const author = req.query.author;
+  console.log("i am in author-collection");
 
   try {
     let query = {};
@@ -483,16 +484,53 @@ app.get("/author-collection", async (req, res) => {
     }
 
     const poems = await Poem.find(query).sort("author");
-    console.log(poems);
-    res.json(poems);
+
+    // // Create a collection for the author using the "/create-collection" endpoint
+    // const createCollectionResponse = await fetch("your-api-url/create-collection", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({
+    //     title: `${author}'s Collection`,
+    //     // Other parameters like coverArt, caption, etc.
+    //   }),
+    // });
+
+    // const createdCollection = await createCollectionResponse.json();
+    // console.log("POOP1", createdCollection);
+
+    // // Extract the collection ID from the created collection
+    // const collectionId = createdCollection._id;
+    // console.log("POOP_ID", collectionId);
+
+    
+    // // Use your existing endpoint to add poems to the created collection
+    // const addPoemsToCollectionResponse = await fetch(`${ROOT_URL}/addpoemtocollection`, {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({
+    //     poemId: poems.map(poem => poem._id), // Assuming each poem has an _id
+    //     collectionId: collectionId,
+    //   }),
+    // });
+
+    // const updatedCollection = await addPoemsToCollectionResponse.json();
+
+    // res.json(updatedCollection);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error populating author collections" });
   }
 });
 
-app.get("/trending-authors", async (req, res) => {
+// get the authors with 10+ poems and create collections for each of them
+app.get("/create-author-collections", async (req, res) => {
   try {
+    // get the authors
+    console.log("im in create author collections")
     const authors = await Poem.aggregate([
       {
         $group: {
@@ -500,20 +538,78 @@ app.get("/trending-authors", async (req, res) => {
           poemCount: { $sum: 1 },
         },
       },
-      {
-        $match: {
-          poemCount: { $gte: 10 },
-        },
-      },
-      {
-        $sample: { size: 6 },
-      },
     ]);
-    res.json(authors);
-    console.log(authors);
+
+    for (const author of authors) {
+
+      const userId = author._id;
+
+      // Check if a collection already exists for the author
+      const existingCollection = await Collection.findOne({ title: userId });
+
+      if (!existingCollection) {
+          // Create a collection for the author
+
+          const newCollection = new Collection({
+              title: userId,
+              user: "6552982f84f4459fad7d9a7f" // emily's
+          });
+
+          // Fetch poems by the author
+          const poems = await Poem.find({ author: userId });
+
+          // Add fetched poems to the collection
+          newCollection.poemsInCollection = poems.map(poem => poem._id);
+
+          await newCollection.save();
+      }
+  }
+  res.status(200).json({ message: "Author collections created successfully" });
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error fetching trending authors" });
+  }
+});
+
+// authors that show up on the explore page
+app.get("/explore-authors", async (req, res) => {
+  console.log("im in explore authors")
+  try {
+      // Query authors with 10 or more poems
+      const authors = await Poem.aggregate([
+          {
+              $group: {
+                  _id: "$author",
+                  poemCount: { $sum: 1 },
+              },
+          },
+          {
+              $match: {
+                  poemCount: { $gte: 10 },
+              },
+          },
+          {
+            $limit: 6 // Limit the number of authors to 6
+        },
+      ]);
+
+      const collections = [];
+
+      // Loop through authors and fetch their associated collections
+      for (const author of authors) {
+          const userId = author._id;
+
+          // Fetch collections for the author
+          const col = await Collection.find({ title: userId });
+
+          // Push author and collections to the result array
+          collections.push({ col });
+      }
+      res.json({ collections });
+  } catch (error) {
+      console.error("Error fetching trending authors:", error);
+      res.status(500).json({ error: "An error occurred while fetching trending authors." });
   }
 });
 
@@ -540,6 +636,8 @@ app.put("/mark-poem-as-read/:userId/:poemId", async (req, res) => {
 app.delete("/delete-collection", async (req, res) => {
   try {
     const { userId, collectionId } = req.query;
+
+    console.log("HIIII", userId, collectionId);
 
     // Find the collection
     const deletedCollection = await Collection.findById(collectionId);

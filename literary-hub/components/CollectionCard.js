@@ -12,9 +12,7 @@ const CollectionCard = ( { collection } ) => {
   const navigation = useNavigation();
 
   const userId = getUserId();
-  const collectionId = collection.collectionId;
-  const poems = collection.poemsInCollection;
-  const title = collection.title;
+  const collectionId = collection._id;
 
   const poemText = collection.poemsInCollection.length === 1 ? "poem" : "poems";
   const likeText = collection.likes.length === 1 ? "like" : "likes";
