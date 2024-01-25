@@ -2,14 +2,23 @@ import React, { useState } from "react";
 import { View, TextInput, FlatList, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
+import { useNavigation } from "@react-navigation/native";
 
-const SearchResult = ({title, author}) => {
+const SearchResult = ({title, author, content}) => {
+  const navigation = useNavigation();
+  const openPoem = () =>{
+    //event.persist();
+    //navigation.navigate("Poem", { title, author, content });
+    navigation.navigate('Poem', { title: title, author: author, content: content });
 
+  }
 
   return (
     <View style={styles.container}>
-       <TouchableOpacity onPress={openPoem}>
-        <Text>{title}     {author}</Text>
+       <TouchableOpacity
+       onPress={openPoem}
+       >
+        <Text>{title}</Text><Text style={styles.author}>     {author}</Text>
         </TouchableOpacity> 
     </View>
   );
@@ -25,6 +34,10 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 7,
+  },
+  author:{
+    alignItems: "flex-end",
+
   },
   icon: {
     marginRight: 10,

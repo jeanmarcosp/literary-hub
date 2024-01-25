@@ -601,7 +601,30 @@ app.get('/search', async(req, res) => {
     const { query } = req.query;
     console.log('Query is ', query);
     try{
-      const poemResults = await Poem.find({ title: {$regex: query} }).sort('author');
+     // const poemResults = await Poem.find({ title: {$regex: query} }).limit(10).sort('author');
+      const poemResults = await Poem.aggregate([
+        {
+          $match: {
+            title: { $regex: query, $options: 'i' }
+          }
+        },
+        {
+          $addFields: {
+            likeCount: { $size: "$likes" }
+          }
+        },
+        {
+          $sort: { likeCount: -1 }
+        },
+        {
+          $limit: 10
+        },
+        {
+          $project: {
+            likes: 0
+          }
+        }
+      ]);
       console.log(poemResults);
       res.json(poemResults);
 

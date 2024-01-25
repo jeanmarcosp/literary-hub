@@ -28,9 +28,6 @@ const ExploreScreen = () => {
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
         <SearchBar onSearch={handleSearch}/>
-          {searchResults.map((poem) => (
-          <SearchResult style={styles.text} key={poem._id} title={poem.title} author={poem.author}/>
-          ))}
           
         <Text style={styles.text}>Author Collections</Text>
         <AuthorList />
@@ -102,7 +99,21 @@ const ExploreScreen = () => {
           {segmentedControlView === "Poems" && <TrendingPoems />}
           {segmentedControlView === "Quotes" && <Quote />}
         </View>
+        
       </ScrollView>
+
+       {/* Overlay the SearchResult component below the search bar */}
+       <View style={styles.overlayResultContainer}>
+        {searchResults.map((poem) => (
+          <SearchResult
+            key={poem._id}
+            title={poem.title}
+            author={poem.author}
+            content={poem.content}
+            style={styles.overlayResult}
+          />
+        ))}
+      </View>
     </SafeAreaView>
   );
 };
@@ -161,5 +172,16 @@ const styles = StyleSheet.create({
     fontFamily: "HammersmithOne",
     fontSize: 15,
     color: "#644980",
+  },
+  overlayResultContainer: {
+    position: 'absolute',
+    top: 115, 
+    left: 0,
+    right: 0,
+    zIndex: 999, 
+  },
+
+  overlayResult: {
+    backgroundColor: 'rgba(255, 255, 255, 0.8)', 
   },
 });
