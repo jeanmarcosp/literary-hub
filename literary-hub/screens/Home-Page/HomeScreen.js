@@ -37,7 +37,7 @@ const HomeScreen = () => {
 
   const handleLike = async (poemId) => {
     try {
-      await axios.put(`http://localhost:3000/poems/${poemId}/${userId}/like`);
+      await axios.put(`${ROOT_URL}/poems/${poemId}/${userId}/like`);
 
     } catch (error) {
       console.error('Error liking poem:', error);
@@ -46,7 +46,7 @@ const HomeScreen = () => {
   
   const handleDislike = async (poemId) => {
     try {
-      await axios.put(`http://localhost:3000/poems/${poemId}/${userId}/unlike`);
+      await axios.put(`${ROOT_URL}/poems/${poemId}/${userId}/unlike`);
       
     } catch (error) {
       console.error('Error unliking poem:', error);
@@ -105,7 +105,7 @@ const HomeScreen = () => {
   useEffect(() => {
     const fetchLikedPoems = async () => {
       try { 
-        const response = await axios.get(`http://localhost:3000/users/${userId}/likedPoems`);
+        const response = await axios.get(`${ROOT_URL}/users/${userId}/likedPoems`);
         console.log("fetched liked poems")
         setUserLikedPoems(response.data); 
       } catch (error) {
