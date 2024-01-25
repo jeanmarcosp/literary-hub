@@ -12,6 +12,7 @@ const PoemCard = ({
   excerpt,
   likes,
   inLikes,
+  handleRefresh,
 }) => {
   const likeText = likes === 1 ? "like" : "likes";
   timeEstimate = Math.ceil(excerpt.length / 200);
@@ -29,6 +30,7 @@ const PoemCard = ({
 
       // Set the liked state to true (or perform any other state update)
       setLiked(true);
+      handleRefresh();
     } catch (error) {
       console.error("Error liking poem:", error);
     }
@@ -46,6 +48,7 @@ const PoemCard = ({
 
       // Set the liked state to false (or perform any other state update)
       setLiked(false);
+      handleRefresh();
     } catch (error) {
       console.error("Error unliking poem:", error);
     }

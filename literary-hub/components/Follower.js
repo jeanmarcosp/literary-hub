@@ -35,7 +35,7 @@ const Follower = ({
 
   const handleFollow = async () => {
     try {
-      await axios.post("http://localhost:3000/follow-user", {
+      await axios.post(`${ROOT_URL}/follow-user`, {
         loggedInUser: loggedInUser,
         otherUser: otherUser,
       });
@@ -47,12 +47,9 @@ const Follower = ({
     }
   };
 
-  //   console.log("current user", loggedInUser);
-  //   console.log("user to follow", otherUser);
-
   const handleUnfollow = async () => {
     try {
-      await axios.post("http://localhost:3000/unfollow-user", {
+      await axios.post(`${ROOT_URL}/unfollow-user`, {
         loggedInUser: loggedInUser,
         otherUser: otherUser,
       });

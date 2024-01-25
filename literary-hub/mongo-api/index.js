@@ -337,13 +337,16 @@ app.post("/create-collection", async (req, res) => {
     const defaultCaption = "Check out my new collection!";
     const collectionCaption = caption || defaultCaption;
 
-    defaultTitle = "New Collection";
+    const defaultTitle = "New Collection";
     const collectionTitle = title || defaultTitle;
+
+    const defaultCoverArt = "https://i.pinimg.com/originals/08/90/e2/0890e2a78f1e10a25fbe1e796caf5425.jpg";
+    const collectionCoverArt = coverArt || defaultCoverArt;
 
     const newCollection = new Collection({
       user: userId,
       title: collectionTitle,
-      coverArt: coverArt,
+      coverArt: collectionCoverArt,
       likes: [],
       poemsInCollection: [],
       caption: collectionCaption,
@@ -355,7 +358,7 @@ app.post("/create-collection", async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       { $addToSet: { createdCollections: savedCollection._id } },
-      { new: true } // To return the updated user document
+      { new: true } 
     );
 
     res.status(201).json(savedCollection); // 201 status code indicates a resource was created
@@ -646,7 +649,7 @@ app.get("/get-follower-info", async (req, res) => {
 //endpoint to follow a user
 app.post("/follow-user", async (req, res) => {
   const { loggedInUser, otherUser } = req.body;
-  console.log("Request Body:", req.body);
+  // console.log("Request Body:", req.body);
   try {
     // Update the selected user's followers list
     await User.findByIdAndUpdate(otherUser, {
@@ -671,7 +674,7 @@ app.post("/follow-user", async (req, res) => {
 //endpoint to unfollow a user
 app.post("/unfollow-user", async (req, res) => {
   const { loggedInUser, otherUser } = req.body;
-  console.log("Request Body:", req.body);
+  // console.log("Request Body:", req.body);
   try {
     // Remove the current user from the selected user's followers list
     await User.findByIdAndUpdate(otherUser, {
