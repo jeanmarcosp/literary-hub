@@ -8,7 +8,10 @@ import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
 import getUserId from "../hooks/getUserId";
 
-const CollectionCard = ( { collection } ) => {
+const CollectionCard = ({
+  collection,
+  handleRefresh,
+}) => {
   const navigation = useNavigation();
 
   const userId = getUserId();
@@ -33,6 +36,7 @@ const CollectionCard = ( { collection } ) => {
 
       // Set the liked state to true (or perform any other state update)
       setLiked(true);
+      handleRefresh();
     } catch (error) {
       console.error("Error liking collection:", error);
       // Handle errors or perform any other action
@@ -50,6 +54,7 @@ const CollectionCard = ( { collection } ) => {
 
       // Set the liked state to false (or perform any other state update)
       setLiked(false);
+      handleRefresh();
     } catch (error) {
       console.error("Error unliking collection:", error);
       // Handle errors or perform any other action
@@ -68,6 +73,7 @@ const CollectionCard = ( { collection } ) => {
       if (message.success) {
         Alert.alert("Success", "Collection deleted successfully");
       }
+      handleRefresh();
     } catch (error) {
       console.error("Error deleting collection:", error);
       Alert.alert("Error", "Error deleting collection");

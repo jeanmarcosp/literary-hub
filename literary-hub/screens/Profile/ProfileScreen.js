@@ -9,13 +9,13 @@ import {
 } from "react-native";
 import React, { useState, useEffect, useCallback, useContext } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import getUserId from "../../hooks/getUserId";
 import axios from "axios";
 import PoemCard from "../../components/PoemCard";
 import CollectionCard from "../../components/CollectionCard";
 import Quote from "../../components/Quote";
-import { useFocusEffect } from "@react-navigation/native";
+import { collection } from "../../mongo-api/models/user";
 
 const ProfileScreen = () => {
   const userId = getUserId();
@@ -27,25 +27,41 @@ const ProfileScreen = () => {
   const navigation = useNavigation();
 
   // this gets the users information stored in user?.
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     const fetchProfile = async () => {
+  //       try {
+  //         const response = await axios.get(`${ROOT_URL}/profile/${userId}`);
+  //         const user = response.data.user;
+
+  //         setUser(user);
+  //       } catch (error) {
+  //         console.log("error", error);
+  //       }
+  //     };
+
+  //     fetchProfile();
+  //   }, [])
+  // );
+
+  const fetchProfile = async () => {
+    try {
+      const response = await axios.get(`${ROOT_URL}/profile/${userId}`);
+      const user = response.data.user;
+
+      setUser(user);
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
   useFocusEffect(
     React.useCallback(() => {
-      const fetchProfile = async () => {
-        try {
-          const response = await axios.get(`${ROOT_URL}/profile/${userId}`);
-          const user = response.data.user;
-
-          setUser(user);
-        } catch (error) {
-          console.log("error", error);
-        }
-      };
-
       fetchProfile();
-    }, [])
+    }, [userId])
   );
-  
 
-  console.log(user.email);
+  console.log(user.name);
 
   // fetch poems
   // useFocusEffect(
@@ -159,7 +175,7 @@ const ProfileScreen = () => {
           });
 
           const fetchedCollections = response.data;
-          console.log("collections render")
+          // console.log("collections render");
           setCollections(fetchedCollections);
         }
       } catch (error) {
@@ -174,7 +190,6 @@ const ProfileScreen = () => {
 
     fetchCreatedCollections();
   }, [user]);
-
 
   const CollectionsView = ({ collections }) => {
     return (
@@ -194,6 +209,7 @@ const ProfileScreen = () => {
           renderItem={({ item }) => (
             <CollectionCard
               collection={item}
+              handleRefresh={fetchProfile}
             />
           )}
           keyExtractor={(item) => item._id}
@@ -220,6 +236,7 @@ const ProfileScreen = () => {
                 excerpt={item.content}
                 likes={item.likes.length}
                 inLikes={item.likes.includes(user._id)}
+                handleRefresh={fetchProfile}
               />
             );
           }}
@@ -238,7 +255,7 @@ const ProfileScreen = () => {
       <View style={styles.centerAligned}>
         <Image
           source={{
-            uri: "https://i.pinimg.com/originals/22/8f/c5/228fc5d11fdb37c06bbbed785b9637a7.jpg",
+            uri: user?.profilePicture,
           }}
           style={styles.profilePic}
         />
@@ -256,14 +273,29 @@ const ProfileScreen = () => {
             <Text style={styles.metricName}>Collections</Text>
           </View>
 
-          <TouchableOpacity onPress={() => navigation.navigate("FollowersScreen")}>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("FollowersScreen", {
+                followerList: user?.followers,
+                loggedInUser: userId,
+                followingList: user?.following,
+              })
+            }
+          >
             <View style={styles.metric}>
               <Text style={styles.metricNumber}>{user?.followers?.length}</Text>
               <Text style={styles.metricName}>Followers</Text>
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => navigation.navigate("FollowingScreen")}>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("FollowingScreen", {
+                followingList: user?.following,
+                loggedInUser: userId,
+              })
+            }
+          >
             <View style={styles.metric}>
               <Text style={styles.metricNumber}>{user?.following?.length}</Text>
               <Text style={styles.metricName}>Following</Text>
@@ -373,22 +405,25 @@ const styles = StyleSheet.create({
   profilePic: {
     width: 100,
     height: 100,
-    borderRadius: 100 / 2,
+    borderRadius: 50,
     marginTop: 20,
   },
   names: {
     marginTop: 10,
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   name: {
     fontSize: 20,
     fontFamily: "HammersmithOne",
     color: "#373F41",
+    flexDirection: 'column',
+    alignContent: "center",
   },
   username: {
     fontSize: 15,
     fontFamily: "HammersmithOne",
     color: "#373F41",
-    marginLeft: 15,
   },
   metrics: {
     flexDirection: "row",

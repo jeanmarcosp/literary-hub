@@ -6,22 +6,29 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import { React, useState } from "react";
+import PoemCard from "../../components/PoemCard.js";
+import { React, useState} from "react";
 import AuthorList from "../../components/AuthorList";
 import SearchBar from "../../components/SearchBar.js";
 import { Ionicons } from "@expo/vector-icons";
 import TrendingPoems from "../../components/TrendingPoems";
 import TrendingCollections from "../../components/TrendingCollections";
 import Quote from "../../components/Quote";
-
+import SearchResult from "../../components/SearchResult.js";
 const ExploreScreen = () => {
   const [segmentedControlView, setSegmentedControlView] =
     useState("Collections");
+  const [searchResults, setSearchResults] = useState([]);
+  const handleSearch = (results) =>{
+
+    setSearchResults(results);
+    console.log('results are: ', results);
+  }
   return (
     <SafeAreaView style={styles.container}>
-    <ScrollView style={styles.scrollView}>
-        <SearchBar />
-
+      <ScrollView style={styles.scrollView}>
+        <SearchBar onSearch={handleSearch}/>
+          
         <Text style={styles.text}>Author Collections</Text>
         <AuthorList />
 
@@ -92,7 +99,19 @@ const ExploreScreen = () => {
           {segmentedControlView === "Poems" && <TrendingPoems />}
           {segmentedControlView === "Quotes" && <Quote />}
         </View>
+        
       </ScrollView>
+
+       {/* Overlay the SearchResult component below the search bar */}
+       <View style={styles.overlayResultContainer}>
+        {searchResults.map((poem) => (
+          <SearchResult
+            key={poem._id}
+            Poem = {poem}
+            style={styles.overlayResult}
+          />
+        ))}
+      </View>
     </SafeAreaView>
   );
 };
@@ -151,5 +170,16 @@ const styles = StyleSheet.create({
     fontFamily: "HammersmithOne",
     fontSize: 15,
     color: "#644980",
+  },
+  overlayResultContainer: {
+    position: 'absolute',
+    top: 115, 
+    left: 0,
+    right: 0,
+    zIndex: 999, 
+  },
+
+  overlayResult: {
+    backgroundColor: 'rgba(255, 255, 255, 0.8)', 
   },
 });

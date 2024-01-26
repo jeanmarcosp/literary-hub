@@ -17,6 +17,7 @@ const jwt = require("jsonwebtoken");
 const User = require("./models/user");
 const Poem = require("./models/poem");
 const Collection = require("./models/collection");
+const { log } = require("console");
 
 mongoose
   .connect(
@@ -336,13 +337,17 @@ app.post("/create-collection", async (req, res) => {
     const defaultCaption = "Check out my new collection!";
     const collectionCaption = caption || defaultCaption;
 
-    defaultTitle = "New Collection";
+    const defaultTitle = "New Collection";
     const collectionTitle = title || defaultTitle;
+
+    const defaultCoverArt =
+      "https://i.pinimg.com/originals/08/90/e2/0890e2a78f1e10a25fbe1e796caf5425.jpg";
+    const collectionCoverArt = coverArt || defaultCoverArt;
 
     const newCollection = new Collection({
       user: userId,
       title: collectionTitle,
-      coverArt: coverArt,
+      coverArt: collectionCoverArt,
       likes: [],
       poemsInCollection: [],
       caption: collectionCaption,
@@ -354,7 +359,7 @@ app.post("/create-collection", async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       { $addToSet: { createdCollections: savedCollection._id } },
-      { new: true } // To return the updated user document
+      { new: true }
     );
 
     res.status(201).json(savedCollection); // 201 status code indicates a resource was created
@@ -429,7 +434,7 @@ app.get("/collections-by-ids", async (req, res) => {
 //endpoint for registering user in the backend
 app.post("/register", async (req, res) => {
   try {
-    const { name, email, username, password } = req.body;
+    const { name, email, username, password, profilePicture } = req.body;
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -438,8 +443,27 @@ app.post("/register", async (req, res) => {
         .json({ success: false, message: "Email already registered" });
     }
 
+    const defaultProfilePicture =
+      "https://i.pinimg.com/originals/08/90/e2/0890e2a78f1e10a25fbe1e796caf5425.jpg";
+    const userProfilePic = profilePicture || defaultProfilePicture;
+
     // Create a new user
-    const newUser = new User({ name, email, username, password });
+    const newUser = new User({
+      name: name,
+      email: email,
+      username: username,
+      password: password,
+      profilePicture: userProfilePic,
+      sentFollowRequests: [],
+      receivedFollowRequests: [],
+      followers: [],
+      following: [],
+      verified: false,
+      likedCollections: [],
+      likedCollections: [],
+      createdCollections: [],
+      readPoems: [],
+    });
 
     // Save the user to the database
     await newUser.save();
@@ -470,59 +494,6 @@ app.delete("/delete-account/:userId", async (req, res) => {
   } catch (error) {
     console.error("Error deleting account:", error);
     res.status(500).json({ success: false, message: "Error deleting account" });
-  }
-});
-
-app.get("/author-collection", async (req, res) => {
-  const author = req.query.author;
-  console.log("i am in author-collection");
-
-  try {
-    let query = {};
-    if (author) {
-      query.author = author;
-    }
-
-    const poems = await Poem.find(query).sort("author");
-
-    // // Create a collection for the author using the "/create-collection" endpoint
-    // const createCollectionResponse = await fetch("your-api-url/create-collection", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     title: `${author}'s Collection`,
-    //     // Other parameters like coverArt, caption, etc.
-    //   }),
-    // });
-
-    // const createdCollection = await createCollectionResponse.json();
-    // console.log("POOP1", createdCollection);
-
-    // // Extract the collection ID from the created collection
-    // const collectionId = createdCollection._id;
-    // console.log("POOP_ID", collectionId);
-
-    
-    // // Use your existing endpoint to add poems to the created collection
-    // const addPoemsToCollectionResponse = await fetch(`${ROOT_URL}/addpoemtocollection`, {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     poemId: poems.map(poem => poem._id), // Assuming each poem has an _id
-    //     collectionId: collectionId,
-    //   }),
-    // });
-
-    // const updatedCollection = await addPoemsToCollectionResponse.json();
-
-    // res.json(updatedCollection);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Error populating author collections" });
   }
 });
 
@@ -640,8 +611,6 @@ app.delete("/delete-collection", async (req, res) => {
   try {
     const { userId, collectionId } = req.query;
 
-    console.log("HIIII", userId, collectionId);
-
     // Find the collection
     const deletedCollection = await Collection.findById(collectionId);
 
@@ -697,7 +666,7 @@ app.get("/get-creator/:collectionId", async (req, res) => {
 });
 
 //endpoint for getting list of liked poems
-app.get('/users/:userId/likedPoems', async (req, res) => {
+app.get("/users/:userId/likedPoems", async (req, res) => {
   try {
     const userId = req.params.userId;
 
@@ -709,13 +678,138 @@ app.get('/users/:userId/likedPoems', async (req, res) => {
 
     const likedPoems = user.likedPoems;
 
-
-    res.json(likedPoems); 
+    res.json(likedPoems);
   } catch (error) {
-    console.error('Error fetching liked poems:', error);
-    res.status(500).send('Internal Server Error');
+    console.error("Error fetching liked poems:", error);
+    res.status(500).send("Internal Server Error");
   }
 });
+
+//endpoint to get follower info
+app.get("/get-follower-info", async (req, res) => {
+  try {
+    const followerIds = req.query.followerIds;
+
+    // Find the users by IDs in your user data (replace this with MongoDB query)
+    const followers = await User.find({ _id: { $in: followerIds } });
+
+    if (!followers || followers.length === 0) {
+      return res.status(404).json({ error: "Users not found" });
+    }
+
+    // Return an array of user details
+    const followerDetails = followers.map((follower) => ({
+      followerId: follower.id,
+      name: follower.name,
+      username: follower.username,
+      profilePicture: follower.profilePicture,
+    }));
+
+    res.status(200).json(followerDetails);
+  } catch (error) {
+    console.error("Error fetching follower data:", error);
+    res.status(500).send("Error fetching follower data");
+  }
+});
+
+//endpoint to follow a user
+app.post("/follow-user", async (req, res) => {
+  const { loggedInUser, otherUser } = req.body;
+  // console.log("Request Body:", req.body);
+  try {
+    // Update the selected user's followers list
+    await User.findByIdAndUpdate(otherUser, {
+      $push: { followers: loggedInUser },
+    });
+
+    // Update the current user's following list
+    await User.findByIdAndUpdate(loggedInUser, {
+      $push: { following: otherUser },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "User followed successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error in following a user" });
+  }
+});
+
+//endpoint to unfollow a user
+app.post("/unfollow-user", async (req, res) => {
+  const { loggedInUser, otherUser } = req.body;
+  // console.log("Request Body:", req.body);
+  try {
+    // Remove the current user from the selected user's followers list
+    await User.findByIdAndUpdate(otherUser, {
+      $pull: { followers: loggedInUser },
+    });
+
+    // Remove the selected user from the current user's following list
+    await User.findByIdAndUpdate(loggedInUser, {
+      $pull: { following: otherUser },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "User unfollowed successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error in unfollowing a user" });
+  }
+});
+
+
+//endpoint for searching 
+app.get('/search', async(req, res) => {
+  console.log("in search");
+  try{
+    const { query } = req.query;
+    console.log('Query is ', query);
+    try{
+     // const poemResults = await Poem.find({ title: {$regex: query} }).limit(10).sort('author');
+      const poemResults = await Poem.aggregate([
+        {
+          $match: {
+            title: { $regex: query, $options: 'i' }
+          }
+        },
+        {
+          $addFields: {
+            likeCount: { $size: "$likes" }
+          }
+        },
+        {
+          $sort: { likeCount: -1 }
+        },
+        {
+          $limit: 10
+        },
+        {
+          $project: {
+            likes: 0
+          }
+        }
+      ]);
+      console.log(poemResults);
+      res.json(poemResults);
+
+    }catch (error) {
+      console.error('Error while getting poem query results ', error);
+      res.status(500).json({ message: "Error while getting user query results" });
+    }
+  }catch (error) {
+    console.error('Error getting search query ', error);
+    res.status(500).json({ message: "Error gettign search query" });
+  
+  }
+  
+})
+
+
 app.get('/trending-collections', async (req,res) => {
 
   try {

@@ -11,13 +11,9 @@ import axios from "axios";
 const CollectionScreen = ({ route }) => {
   const { collection } = route.params;
   const navigation = useNavigation();
-  console.log("peter", collection.poemsInCollection);
+  const isAuthor = !collection.username;
 
   const poemIds = collection.poemsInCollection;
-  const queryString = `poemIds=${poemIds.join(',')}`;
-  console.log(queryString);
-  console.log(`${ROOT_URL}/poems-by-ids?${queryString}`)
-  // 653035c63bf7b6b3616f9cde
 
   // fetch poems by the IDs in poemIds
   const [poems, setPoems] = useState([])
@@ -30,7 +26,6 @@ const CollectionScreen = ({ route }) => {
             poemIds: poemIds,
           },
         });
-        // const response = await axios.get(`http://localhost:3000/poems-by-ids?poemIds=${poemIds.join(',')}`);
         setPoems(response.data);
       } catch (error) {
         console.error(error);
@@ -44,7 +39,9 @@ const CollectionScreen = ({ route }) => {
       <View style={styles.poem}>
         <View style={styles.poemInfo}>
         <Text style={styles.poemName}>{poem.title}</Text>
-        <Text style={styles.poemAuthor}>{poem.author}</Text>
+        {!isAuthor && (
+          <Text style={styles.poemAuthor}>{poem.author}</Text>
+        )}
         </View>
         <Like />
       </View>
@@ -79,7 +76,9 @@ const CollectionScreen = ({ route }) => {
 
         <View style={styles.collectionInfo}>
           <Text style={styles.collectionName}>{collection.title}</Text>
-          <Text style={styles.collectionAuthor}>@Emily</Text>
+          {!isAuthor && (
+            <Text style={styles.collectionAuthor}>@{collection.username}</Text>
+            )}
           <View style={styles.likes}>
             <Like />
             <Text style={styles.collectionLikeNumber}>{collection.likes.length}</Text>
