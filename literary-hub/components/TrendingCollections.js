@@ -6,7 +6,7 @@ import axios from "axios";
 import AuthorCard from "./AuthorCard";
 
 const TrendingCollections = () => {
-  const [collections, setCollections] = useState(null);
+  const [collections, setCollections] = useState([]);
 
   useEffect(() => {
     const fetchCollections = async() => {
@@ -23,7 +23,7 @@ const TrendingCollections = () => {
 
   const renderItem = ({ item }) => (
     <View>
-      <AuthorCard
+      <CollectionCard
               collection={item}
             />
     </View>

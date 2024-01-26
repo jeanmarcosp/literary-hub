@@ -7,7 +7,7 @@ import AuthorCard from "./AuthorCard";
 
 const AuthorList = () => {
 
-  const [collections, setCollections] = useState(null);
+  const [collections, setCollections] = useState([]);
 
   // gets authors with more than 10 poems in db
   useEffect(() => {
@@ -18,8 +18,8 @@ const AuthorList = () => {
         
         // grab 6 collections
         const response = await axios.get("http://localhost:3000/explore-authors");
-        setCollections(response.data)
-        console.log("peter2" , response.data.extractedCollections)
+        setCollections(response.data.extractedCollections)
+        console.log("peter3" , response.data.extractedCollections)
       } catch (error) {
         console.error(error);
       }
@@ -27,17 +27,29 @@ const AuthorList = () => {
     fetchAuthors();
   }, [])
 
-  const renderItem = ({ item }) => (
-    <View>
-      <AuthorCard
-              collection={item}
-            />
-    </View>
-  );
+  const renderItem = ({ item }) => {
+    console.log("im in render")
+    return (
+      <View>
+        <AuthorCard
+                collection={item}
+              />
+      </View>
+    );
+  }
 
   return (
     //  
+    // <View style={styles.container}>
+    //   {collections &&
+    //     collections.map((item, index) => (
+    //       <View key={index}>
+    //         <AuthorCard collection={item} />
+    //       </View>
+    //     ))}
+    // </View>
     <View>
+    
       <FlatList
         style={styles.container}
         data={collections}

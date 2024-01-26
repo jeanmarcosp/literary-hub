@@ -593,7 +593,7 @@ app.get("/explore-authors", async (req, res) => {
         },
       ]);
 
-      const collections = [];
+      const cols = [];
 
       // Loop through authors and fetch their associated collections
       for (const author of authors) {
@@ -603,11 +603,11 @@ app.get("/explore-authors", async (req, res) => {
           const col = await Collection.find({ title: userId });
 
           // Push author and collections to the result array
-          collections.push(...col);
+          cols.push(...col);
       }
       // Extract collections from the collections array
-      const extractedCollections = collections.map(collection => ({
-      ...collection.toObject(), 
+      const extractedCollections = cols.map(col => ({
+      ...col.toObject(), 
     }));
       res.json({ extractedCollections });
   } catch (error) {
