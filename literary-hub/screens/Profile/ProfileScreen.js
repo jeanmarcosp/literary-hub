@@ -228,6 +228,11 @@ const ProfileScreen = () => {
     );
   };
 
+  const handlePoemPress = (poem) => {
+    console.log("pressed poem card")
+    navigation.navigate('PoemDetailScreen', { poem });
+  };
+
   const LikedPoemsView = ({ poems }) => {
     return (
       <View>
@@ -243,6 +248,7 @@ const ProfileScreen = () => {
                 title={item.title}
                 author={item.author}
                 excerpt={item.content}
+                onPress={() => handlePoemPress(item)}
                 likes={item.likes.length}
                 inLikes={item.likes.includes(user._id)}
                 handleRefresh={fetchProfile}

@@ -10,6 +10,7 @@ import HomeScreen from "./screens/Home-Page/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import OnboardingNavigator from './screens/Onboarding/OnboardingNavigator'
+import PoemDetailScreen from './screens/Profile/PoemDetailScreen.js';
 
 const StackNavigator = () => {
   const Stack = createNativeStackNavigator();
@@ -81,6 +82,7 @@ const StackNavigator = () => {
         <Stack.Screen name="Main" component={BottomTabs} options={{ headerShown: false }}/>
         <Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: false }}/>
         <Stack.Screen name="Onboarding" component={OnboardingNavigator} options={{ headerShown: false }}/>
+        <Stack.Screen name="PoemDetailScreen" component={PoemDetailScreen} options={{ headerShown: false }}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
