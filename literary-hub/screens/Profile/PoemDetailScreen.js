@@ -98,7 +98,7 @@ const PoemDetailScreen = ({ route }) => {
         <Ionicons name="arrow-back" size={30} color="#644980" onPress={goBack}/>
       </TouchableOpacity> */}
       <TouchableOpacity onPress={goBack} style={{ marginRight: 350, marginTop: 30 }}>
-        <Ionicons name="arrow-back" size={40} color="#644980" />
+        <Ionicons name="arrow-back" size={50} color="#644980" />
       </TouchableOpacity>
 
       
