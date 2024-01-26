@@ -230,7 +230,7 @@ const ProfileScreen = () => {
 
   const handlePoemPress = (poem) => {
     console.log("pressed poem card")
-    navigation.navigate('PoemDetailScreen', { poem });
+    navigation.navigate('PoemDetailScreen', { poem: poem, isLiked: true }); 
   };
 
   const LikedPoemsView = ({ poems }) => {

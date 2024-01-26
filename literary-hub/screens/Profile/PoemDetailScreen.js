@@ -12,11 +12,11 @@ import axios from "axios";
 const PoemDetailScreen = ({ route }) => {
   const navigation = useNavigation();
   const [annotationMode, handleAnnotationMode] = useState(false);
-  const [liked, handleLike] = useState(false);
+  const { poem, isLiked } = route.params; // Retrieve isLiked from route params
+  const [liked, setLiked] = useState(isLiked);
   const bottomSheetRef = useRef(null);
   const [userLikedPoems, setUserLikedPoems] = useState([]);
   const userId = getUserId();
-  const { poem } = route.params;
   const [processedPoem, setProcessedPoem] = useState(null); // State to hold processed poem
   const linesPerPage = 20;
 
@@ -125,13 +125,19 @@ const PoemDetailScreen = ({ route }) => {
           ))}
         </ScrollView>
       ) : (
-        <Text>Loading poem...</Text>  // Display loading message or alternative content
+        <Text>Loading poem...</Text>  
       )}
 
       <HomePageLike 
-        inLikes={isInitiallyLiked} 
-        handleLike={() => onLike(poem._id)} 
-        handleDislike={() => onUnlike(poem._id)}
+        inLikes={liked} 
+        handleLike={() => {
+          onLike(poem._id);
+          setLiked(true);
+        }} 
+        handleDislike={() => {
+          onUnlike(poem._id);
+          setLiked(false); 
+        }}
       />
 
 
