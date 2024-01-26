@@ -70,6 +70,11 @@ const PoemDetailScreen = ({ route }) => {
     bottomSheetRef.current?.expand();
   };
 
+  const goBack = () => {
+    console.log("Back button pressed");
+    navigation.goBack();
+  };
+
   useEffect(() => {
     const fetchLikedPoems = async () => {
       try {
@@ -84,12 +89,18 @@ const PoemDetailScreen = ({ route }) => {
   }, [userId]);
 
   const isInitiallyLiked = userLikedPoems.includes(poem._id);
-
+  //onPress={goBack}
+  //onPress={() => navigation.goBack()}
   return (
+
     <View style={styles.poemContainer}>
-      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-        <Ionicons name="arrow-back" size={30} color="#644980" />
+      {/* <TouchableOpacity style={styles.backButton} onPress={goBack}>
+        <Ionicons name="arrow-back" size={30} color="#644980" onPress={goBack}/>
+      </TouchableOpacity> */}
+      <TouchableOpacity onPress={goBack} style={{ marginRight: 150 }}>
+        <Ionicons name="arrow-back" size={100} color="black" />
       </TouchableOpacity>
+
       
       {processedPoem && processedPoem.pages ? (
         <ScrollView
