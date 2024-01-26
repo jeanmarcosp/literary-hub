@@ -1,50 +1,160 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import CollectionBottomSheet from "../../components/CollectionBottomSheet";
+import { View, ScrollView, Text, Dimensions, StyleSheet, Pressable } from 'react-native';
+import React, { useState, useEffect, useContext, useCallback, useMemo, useRef } from "react";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
+import HomePageLike from "../../components/HomePageLike";
 
 const PoemDetailScreen = ({ route }) => {
-  const { poem } = route.params;
+  const [annotationMode, handleAnnotationMode] = useState(false);
+  const [liked, handleLike] = useState(false);
+  const bottomSheetRef = useRef(null);
+  const READ_TIMER_DURATION = 5000;
+  const [isRead, setIsRead] = useState(false);
+  const isInitiallyLiked = userLikedPoems.includes(poemId);
 
+  useEffect(() => {
+    if (isRead) return; 
+
+    const timer = setTimeout(() => {
+      if (onRead) {
+        onRead(poemId);  
+        setIsRead(true); 
+      }
+    }, READ_TIMER_DURATION);
+
+    return () => clearTimeout(timer); 
+  }, [poemId, onRead, isRead]);
+
+	const handleClosePress = () => {
+    bottomSheetRef.current?.close();
+  }
+	const handleOpenPress = () => {
+    bottomSheetRef.current?.expand();
+  };
+
+  
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>{poem.title}</Text>
-        <Text style={styles.author}>By {poem.author}</Text>
+    <View style={styles.poemContainer}>
+      <ScrollView
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator={false}
+        decelerationRate="fast"
+        snapToInterval={Dimensions.get('window').width}
+      >
+        {poem.pages.map((page, index) => (
+          <View key={index} style={styles.page}>
+            {index === 0 && (
+              <React.Fragment>
+                <Text style={styles.title}>{poem.title}</Text>
+                <Text style={styles.author}>
+                  Author: {poem.author}
+                </Text>
+              </React.Fragment>
+            )}
+            <Text style={styles.pageContent}>{page}</Text>
+          </View>
+        ))}
+      </ScrollView>
+
+      <HomePageLike 
+        inLikes={isInitiallyLiked} 
+        handleLike={() => onLike(poemId)} 
+        handleDislike={() => onUnlike(poemId)}
+      />
+
+      <View style={styles.toggle}>
+        {annotationMode ? (
+          <Pressable
+            onPress={() => {
+              handleAnnotationMode(false);
+            }}
+          >
+            <MaterialCommunityIcons
+              name="toggle-switch"
+              size={35}
+              color="#644980"
+            />
+          </Pressable>
+        ) : (
+          <Pressable
+            onPress={() => {
+              handleAnnotationMode(true);
+            }}
+          >
+            <MaterialCommunityIcons
+              name="toggle-switch-off-outline"
+              size={35}
+              color="#644980"
+            />
+          </Pressable>
+        )}
       </View>
-      <View style={styles.content}>
-        <Text style={styles.poemText}>{poem.content}</Text>
+      <View style={styles.plus}>
+        <Pressable onPress={handleOpenPress} style={styles.icon}>
+          <Feather name="plus" size={30} color="#644980" />
+        </Pressable>
       </View>
-    </ScrollView>
+      {/* <View style={styles.heart}>
+        <Like />
+      </View> */}
+
+      
+      <CollectionBottomSheet ref={bottomSheetRef} title="Add to Collection" poem={poem} />
+    </View>
+    
   );
 };
-
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-    padding: 20,
-  },
-  header: {
-    marginBottom: 20,
+  poemContainer: {
+    height: Dimensions.get('window').height,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 16,
+    paddingTop: 30,
+    paddingBottom: 30,
+    position: "relative",
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 5,
-  },
-  author: {
-    fontSize: 18,
-    fontStyle: 'italic',
-    color: 'grey',
     marginBottom: 10,
   },
-  content: {
+  author: {
     fontSize: 16,
+    fontStyle: 'italic',
+    marginBottom: 10,
+  },
+  page: {
+    width: Dimensions.get('window').width,
+    paddingTop: 50,
+  },
+  pageContent: {
+    fontSize: 18,
     lineHeight: 24,
   },
-  poemText: {
-    fontSize: 16,
-    lineHeight: 24,
-    textAlign: 'justify',
+  toggle: {
+    position: "absolute",
+    left: screenWidth * 0.05, 
+    bottom: screenHeight * 0.1, 
+  },
+  heart: {
+    position: "absolute",
+    right: screenWidth * 0.045, 
+    bottom: screenHeight * 0.1, 
+  },
+  plus: {
+    position: "absolute",
+    right: screenWidth * 0.05, 
+    bottom: screenHeight * 0.15, 
+  },
+  bottomSheet: {
+    flex: 1,
+		alignItems: 'center',
+		justifyContent: 'center'
   },
 });
 
