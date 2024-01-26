@@ -13,7 +13,7 @@ const PoemCard = ({
   likes,
   inLikes,
   handleRefresh,
-}) => {
+  onPress, ...props}) => {
   const likeText = likes === 1 ? "like" : "likes";
   timeEstimate = Math.ceil(excerpt.length / 200);
 
@@ -55,6 +55,7 @@ const PoemCard = ({
   };
 
   return (
+    <TouchableOpacity onPress={onPress}>
     <TouchableOpacity style={styles.card}>
       <View style={styles.container}>
         <View style={styles.leftInfo}>
@@ -84,6 +85,7 @@ const PoemCard = ({
           </View>
         </View>
       </View>
+    </TouchableOpacity>
     </TouchableOpacity>
   );
 };
