@@ -729,7 +729,6 @@ app.get('/search', async(req, res) => {
           }
         }
       ]);
-      console.log(poemResults);
       res.json(poemResults);
 
     }catch (error) {
@@ -738,7 +737,7 @@ app.get('/search', async(req, res) => {
     }
   }catch (error) {
     console.error('Error getting search query ', error);
-    res.status(500).json({ message: "Error gettign search query" });
+    res.status(500).json({ message: "Error getting search query" });
   
   }
   

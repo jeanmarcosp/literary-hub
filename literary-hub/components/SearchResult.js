@@ -9,7 +9,7 @@ const SearchResult = ({Poem}) => {
   const openPoem = () =>{
     //event.persist();
     //navigation.navigate("Poem", { title, author, content });
-    navigation.navigate('Poem', { title: Poem.title, author:Poem. author, content: Poem.content });
+    navigation.navigate('Poem', { poem: Poem });
 
   }
 
