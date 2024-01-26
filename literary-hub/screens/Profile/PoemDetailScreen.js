@@ -1,26 +1,66 @@
 import CollectionBottomSheet from "../../components/CollectionBottomSheet";
-import { View, ScrollView, Text, Dimensions, StyleSheet, Pressable } from 'react-native';
+import { View, ScrollView, Text, Dimensions, StyleSheet, Pressable, TouchableOpacity } from 'react-native';
 import React, { useState, useEffect, useContext, useCallback, useMemo, useRef } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import HomePageLike from "../../components/HomePageLike";
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import getUserId from "../../hooks/getUserId";
+import axios from "axios";
 
 const PoemDetailScreen = ({ route }) => {
-  const { poem } = route.params;
   const navigation = useNavigation();
   const [annotationMode, handleAnnotationMode] = useState(false);
   const [liked, handleLike] = useState(false);
   const bottomSheetRef = useRef(null);
-  const isInitiallyLiked = userLikedPoems.includes(poem._id);
+  const [userLikedPoems, setUserLikedPoems] = useState([]);
+  const userId = getUserId();
+  const { poem } = route.params;
+  const [processedPoem, setProcessedPoem] = useState(null); // State to hold processed poem
+  const linesPerPage = 20;
+
+  useEffect(() => {
+    if (poem && poem.content) {
+      const lines = poem.content.split("\n");
+      const pages = [];
+      let currentPage = "";
+      let linesAdded = 0;
+
+      for (const line of lines) {
+        if (linesAdded >= linesPerPage) {
+          pages.push(currentPage);
+          currentPage = "";
+          linesAdded = 0;
+        }
+        currentPage += line + "\n";
+        linesAdded++;
+      }
+
+      if (currentPage.length > 0) {
+        pages.push(currentPage);
+      }
+
+      setProcessedPoem({ ...poem, pages }); 
+    }
+  }, [poem]);
 
   const onLike = async (poemId) => {
-    
+    try {
+      await axios.put(`http://localhost:3000/poems/${poemId}/${userId}/like`);
+
+    } catch (error) {
+      console.error('Error liking poem:', error);
+    }
   };
   
   const onUnlike = async (poemId) => {
-    
+    try {
+      await axios.put(`http://localhost:3000/poems/${poemId}/${userId}/unlike`);
+      
+    } catch (error) {
+      console.error('Error unliking poem:', error);
+    }
   };
   
 	const handleClosePress = () => {
@@ -34,7 +74,7 @@ const PoemDetailScreen = ({ route }) => {
     const fetchLikedPoems = async () => {
       try {
         const response = await axios.get(`http://localhost:3000/users/${userId}/likedPoems`);
-        setUserLikedPoems(response.data);  
+        setUserLikedPoems(response.data);
       } catch (error) {
         console.error('Error fetching liked poems:', error);
       }
@@ -42,35 +82,40 @@ const PoemDetailScreen = ({ route }) => {
   
     fetchLikedPoems();
   }, [userId]);
-  
 
-  
+  const isInitiallyLiked = userLikedPoems.includes(poem._id);
+
   return (
     <View style={styles.poemContainer}>
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-        <Ionicons name="arrow-back" size={24} color="black" />
+        <Ionicons name="arrow-back" size={30} color="#644980" />
       </TouchableOpacity>
-      <ScrollView
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        decelerationRate="fast"
-        snapToInterval={Dimensions.get('window').width}
-      >
-        {poem.pages.map((page, index) => (
-          <View key={index} style={styles.page}>
-            {index === 0 && (
-              <React.Fragment>
-                <Text style={styles.title}>{poem.title}</Text>
-                <Text style={styles.author}>
-                  Author: {poem.author}
-                </Text>
-              </React.Fragment>
-            )}
-            <Text style={styles.pageContent}>{page}</Text>
-          </View>
-        ))}
-      </ScrollView>
+      
+      {processedPoem && processedPoem.pages ? (
+        <ScrollView
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          decelerationRate="fast"
+          snapToInterval={Dimensions.get('window').width}
+        >
+          {processedPoem.pages.map((page, index) => (
+              <View key={index} style={styles.page}>
+                {index === 0 && (
+                  <React.Fragment>
+                    <Text style={styles.title}>{processedPoem.title}</Text>
+                    <Text style={styles.author}>
+                      Author: {processedPoem.author}
+                    </Text>
+                  </React.Fragment>
+                )}
+                <Text style={styles.pageContent}>{page}</Text>
+              </View>
+          ))}
+        </ScrollView>
+      ) : (
+        <Text>Loading poem...</Text>  // Display loading message or alternative content
+      )}
 
       <HomePageLike 
         inLikes={isInitiallyLiked} 
@@ -156,11 +201,6 @@ const styles = StyleSheet.create({
     left: screenWidth * 0.05, 
     bottom: screenHeight * 0.1, 
   },
-  heart: {
-    position: "absolute",
-    right: screenWidth * 0.045, 
-    bottom: screenHeight * 0.1, 
-  },
   plus: {
     position: "absolute",
     right: screenWidth * 0.05, 
@@ -171,6 +211,13 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center'
   },
+  backButton: {
+    position: "absolute",
+    left: screenWidth * 0.05,
+    top: screenHeight * 0.05, 
+  },
 });
 
 export default PoemDetailScreen;
+
+
