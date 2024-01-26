@@ -4,28 +4,25 @@ import React, { useState, useEffect, useContext, useCallback, useMemo, useRef } 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import HomePageLike from "../../components/HomePageLike";
+import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 const PoemDetailScreen = ({ route }) => {
+  const { poem } = route.params;
+  const navigation = useNavigation();
   const [annotationMode, handleAnnotationMode] = useState(false);
   const [liked, handleLike] = useState(false);
   const bottomSheetRef = useRef(null);
-  const READ_TIMER_DURATION = 5000;
-  const [isRead, setIsRead] = useState(false);
-  const isInitiallyLiked = userLikedPoems.includes(poemId);
+  const isInitiallyLiked = userLikedPoems.includes(poem._id);
 
-  useEffect(() => {
-    if (isRead) return; 
-
-    const timer = setTimeout(() => {
-      if (onRead) {
-        onRead(poemId);  
-        setIsRead(true); 
-      }
-    }, READ_TIMER_DURATION);
-
-    return () => clearTimeout(timer); 
-  }, [poemId, onRead, isRead]);
-
+  const onLike = async (poemId) => {
+    
+  };
+  
+  const onUnlike = async (poemId) => {
+    
+  };
+  
 	const handleClosePress = () => {
     bottomSheetRef.current?.close();
   }
@@ -33,9 +30,26 @@ const PoemDetailScreen = ({ route }) => {
     bottomSheetRef.current?.expand();
   };
 
+  useEffect(() => {
+    const fetchLikedPoems = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3000/users/${userId}/likedPoems`);
+        setUserLikedPoems(response.data);  
+      } catch (error) {
+        console.error('Error fetching liked poems:', error);
+      }
+    };
+  
+    fetchLikedPoems();
+  }, [userId]);
+  
+
   
   return (
     <View style={styles.poemContainer}>
+      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <Ionicons name="arrow-back" size={24} color="black" />
+      </TouchableOpacity>
       <ScrollView
         horizontal
         pagingEnabled
@@ -60,9 +74,10 @@ const PoemDetailScreen = ({ route }) => {
 
       <HomePageLike 
         inLikes={isInitiallyLiked} 
-        handleLike={() => onLike(poemId)} 
-        handleDislike={() => onUnlike(poemId)}
+        handleLike={() => onLike(poem._id)} 
+        handleDislike={() => onUnlike(poem._id)}
       />
+
 
       <View style={styles.toggle}>
         {annotationMode ? (
