@@ -5,24 +5,14 @@ import Like from "./Like";
 import { useNavigation } from "@react-navigation/native";
 
 const AuthorCard = ({ collection }) => {
-  console.log("HELLO");
 
   const navigation = useNavigation();
-  console.log("im in author card");
-  // return(
-  //   <TouchableOpacity>
-  //     <View>
-  //       <Text>{collection._id}</Text>
-  //     </View>
-  //   </TouchableOpacity>
-  // )
 
   return (
     <TouchableOpacity style={styles.card} 
     onPress={() => navigation.navigate("CollectionScreen", {collection})}>
       <View style={styles.container}>
         <View style={styles.topRow}>
-          {/* <Image source={coverImage} style={styles.image} /> */}
           <View style={styles.likes}>
             <Like />
             <Text>{collection.likes.length}</Text>
@@ -31,7 +21,7 @@ const AuthorCard = ({ collection }) => {
 
         <View style={styles.authorInfo}>
           <Text style={styles.authorName}>{collection.title}</Text>
-          <Text style={styles.authorDates}>{collection.likes.length} poems</Text>
+          <Text style={styles.authorDates}>{collection.poemsInCollection.length} poems</Text>
         </View>
       </View>
     </TouchableOpacity>

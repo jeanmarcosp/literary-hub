@@ -2,7 +2,6 @@ import React from "react";
 import { View, FlatList, Text, StyleSheet } from "react-native";
 import axios from "axios";
 import { useEffect, useState } from 'react';
-import CollectionCard from "./CollectionCard";
 import AuthorCard from "./AuthorCard";
 
 const AuthorList = () => {
@@ -19,7 +18,6 @@ const AuthorList = () => {
         // grab 6 collections
         const response = await axios.get("http://localhost:3000/explore-authors");
         setCollections(response.data.extractedCollections)
-        console.log("peter3" , response.data.extractedCollections)
       } catch (error) {
         console.error(error);
       }
@@ -28,7 +26,6 @@ const AuthorList = () => {
   }, [])
 
   const renderItem = ({ item }) => {
-    console.log("im in render")
     return (
       <View>
         <AuthorCard
@@ -39,15 +36,6 @@ const AuthorList = () => {
   }
 
   return (
-    //  
-    // <View style={styles.container}>
-    //   {collections &&
-    //     collections.map((item, index) => (
-    //       <View key={index}>
-    //         <AuthorCard collection={item} />
-    //       </View>
-    //     ))}
-    // </View>
     <View>
     
       <FlatList

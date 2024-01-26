@@ -133,7 +133,9 @@ const CollectionCard = ( { collection } ) => {
           <View style={styles.text}>
             <View>
               <Text style={styles.title}>{collection.title}</Text>
-              <Text style={styles.creator}>@{collection.username}</Text>
+              {collection.username && ( 
+                <Text style={styles.creator}>@{collection.username}</Text>
+                )}
             </View>
             <Text style={styles.caption}>{collection.caption}</Text>
           </View>

@@ -721,6 +721,7 @@ app.get('/trending-collections', async (req,res) => {
   try {
     const collections = await Collection.aggregate([
       { $match: { poemsInCollection: { $exists: true, $not: { $size: 0 } } } },
+      { $match: { username: { $ne: null } } },
       { $sample: { size: 5 } } 
     ]);
     res.json(collections);
