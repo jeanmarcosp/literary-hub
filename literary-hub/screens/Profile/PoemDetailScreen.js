@@ -47,7 +47,7 @@ const PoemDetailScreen = ({ route }) => {
 
   const onLike = async (poemId) => {
     try {
-      await axios.put(`http://localhost:3000/poems/${poemId}/${userId}/like`);
+      await axios.put(`${ROOT_URL}/poems/${poemId}/${userId}/like`);
 
     } catch (error) {
       console.error('Error liking poem:', error);
@@ -56,7 +56,7 @@ const PoemDetailScreen = ({ route }) => {
   
   const onUnlike = async (poemId) => {
     try {
-      await axios.put(`http://localhost:3000/poems/${poemId}/${userId}/unlike`);
+      await axios.put(`${ROOT_URL}/poems/${poemId}/${userId}/unlike`);
       
     } catch (error) {
       console.error('Error unliking poem:', error);
@@ -78,7 +78,7 @@ const PoemDetailScreen = ({ route }) => {
   useEffect(() => {
     const fetchLikedPoems = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/users/${userId}/likedPoems`);
+        const response = await axios.get(`${ROOT_URL}/users/${userId}/likedPoems`);
         setUserLikedPoems(response.data);
       } catch (error) {
         console.error('Error fetching liked poems:', error);
@@ -97,8 +97,8 @@ const PoemDetailScreen = ({ route }) => {
       {/* <TouchableOpacity style={styles.backButton} onPress={goBack}>
         <Ionicons name="arrow-back" size={30} color="#644980" onPress={goBack}/>
       </TouchableOpacity> */}
-      <TouchableOpacity onPress={goBack} style={{ marginRight: 150 }}>
-        <Ionicons name="arrow-back" size={100} color="black" />
+      <TouchableOpacity onPress={goBack} style={{ marginRight: 350, marginTop: 30 }}>
+        <Ionicons name="arrow-back" size={40} color="#644980" />
       </TouchableOpacity>
 
       
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
   },
   page: {
     width: Dimensions.get('window').width,
-    paddingTop: 50,
+    paddingTop: 20,
   },
   pageContent: {
     fontSize: 18,
@@ -225,7 +225,6 @@ const styles = StyleSheet.create({
   backButton: {
     position: "absolute",
     left: screenWidth * 0.05,
-    top: screenHeight * 0.05, 
   },
 });
 
