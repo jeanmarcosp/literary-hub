@@ -1,35 +1,24 @@
 import "react-native-gesture-handler";
-import React, { useState, useEffect, useCallback, useContext } from "react";
-import {
-  View,
-  TouchableOpacity,
-  Image,
-  Text,
-  StyleSheet,
-  Modal,
-  Alert,
-} from "react-native";
+import { React, useState, useEffect, useCallback, useContext } from "react";
+import { View, TouchableOpacity, Image, Text, StyleSheet, Modal, Alert } from "react-native";
 import Like from "./Like";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
+import getUserId from "../hooks/getUserId";
 
 const CollectionCard = ({
-  collectionId,
-  userId,
-  coverImage,
-  title,
-  caption,
-  creator,
-  size,
-  likes,
-  inLikes,
+  collection,
   handleRefresh,
 }) => {
   const navigation = useNavigation();
-  const poemText = size === 1 ? "poem" : "poems";
-  const likeText = likes === 1 ? "like" : "likes";
+
+  const userId = getUserId();
+  const collectionId = collection._id;
+
+  const poemText = collection.poemsInCollection.length === 1 ? "poem" : "poems";
+  const likeText = collection.likes.length === 1 ? "like" : "likes";
 
   const [liked, setLiked] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -137,22 +126,24 @@ const CollectionCard = ({
   return (
     <TouchableOpacity
       style={styles.card}
-      onPress={() => navigation.navigate("CollectionScreen")}
+      onPress={() => navigation.navigate("CollectionScreen", {collection})}
     >
       <View style={styles.container}>
         <View style={styles.info}>
           <Image
             source={{
-              uri: coverImage,
+              uri: collection.coverArt,
             }}
             style={styles.image}
           />
           <View style={styles.text}>
             <View>
-              <Text style={styles.title}>{title}</Text>
-              <Text style={styles.creator}>@{creator}</Text>
+              <Text style={styles.title}>{collection.title}</Text>
+              {collection.username && ( 
+                <Text style={styles.creator}>@{collection.username}</Text>
+                )}
             </View>
-            <Text style={styles.caption}>{caption}</Text>
+            <Text style={styles.caption}>{collection.caption}</Text>
           </View>
         </View>
 
@@ -162,18 +153,18 @@ const CollectionCard = ({
           </TouchableOpacity>
           <View style={styles.poemNumberTag}>
             <Text style={styles.poemNumberText}>
-              {size} {poemText}
+              {collection.poemsInCollection.length} {poemText}
             </Text>
           </View>
 
           <View style={styles.likes}>
             <Like
-              inLikes={inLikes}
+              inLikes={collection.likes.includes(userId)}
               handleLike={handleLikeCollection}
               handleDislike={handleUnlikeCollection}
             />
             <Text style={styles.likeNumber}>
-              {likes} {likeText}
+              {collection.likes.length}
             </Text>
           </View>
         </View>

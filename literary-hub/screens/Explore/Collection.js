@@ -1,59 +1,66 @@
 import React from 'react';
 import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, FlatList } from 'react-native';
+import { useState } from 'react';
+import { useEffect } from 'react';
 import Like from '../../components/Like';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from '@react-navigation/native';
+import axios from "axios";
 
-const CollectionScreen = () => {
-
+// const CollectionScreen = ({poems, title, showAuthor = true, showCreator = true}) => {
+const CollectionScreen = ({ route }) => {
+  const { collection } = route.params;
   const navigation = useNavigation();
+  const isAuthor = !collection.username;
 
-  const Poem = ({ author, title }) => {
+  const poemIds = collection.poemsInCollection;
+
+  // fetch poems by the IDs in poemIds
+  const [poems, setPoems] = useState([])
+
+  useEffect(() => {
+    const fetchPoems = async() => {
+      try {
+        const response = await axios.get(`http://localhost:3000/poems-by-ids`, {
+          params: {
+            poemIds: poemIds,
+          },
+        });
+        setPoems(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchPoems();
+  }, [])
+
+  const Poem = ({poem}) => {
     return (
       <View style={styles.poem}>
         <View style={styles.poemInfo}>
-          <Text style={styles.poemName}>{title}</Text>
-          <Text style={styles.poemAuthor}>{author}</Text>
+        <Text style={styles.poemName}>{poem.title}</Text>
+        {!isAuthor && (
+          <Text style={styles.poemAuthor}>{poem.author}</Text>
+        )}
         </View>
         <Like />
       </View>
     )
   }
 
-  const poemData = [
-    {
-      id: "1",
-      title: 'October',
-      author: 'Robert Frost',
-      liked: false
-    },
-    {
-      id: "2",
-      title: 'Beyond the Red River',
-      author: 'Thomas McGrath',
-      liked: false
-    },
-    {
-      id: "3",
-      title: 'For the Chipmunk in My Yard',
-      author: 'Robert Gibb',
-      liked: false
-    },
-  ];
-
   const PoemList = () => {
     return (
       <FlatList
-        data={poemData}
+        data={poems}
         renderItem={({ item }) => (
-          <Poem title={item.title} author={item.author} />
+          <Poem poem={item}/>
         )}
         keyExtractor={(item) => item.id}
         style={styles.poemList}
       />
     );
   };
-
+  
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -68,12 +75,13 @@ const CollectionScreen = () => {
         </TouchableOpacity>
 
         <View style={styles.collectionInfo}>
-          <Text style={styles.collectionName}>fall</Text>
-          <Text style={styles.collectionAuthor}>@catlady123</Text>
-          <Text style={styles.collectionCaption}>my fall 2023 poem collection</Text>
+          <Text style={styles.collectionName}>{collection.title}</Text>
+          {!isAuthor && (
+            <Text style={styles.collectionAuthor}>@{collection.username}</Text>
+            )}
           <View style={styles.likes}>
             <Like />
-            <Text style={styles.collectionLikeNumber}>2.5k</Text>
+            <Text style={styles.collectionLikeNumber}>{collection.likes.length}</Text>
           </View>
         </View>
 
@@ -84,7 +92,7 @@ const CollectionScreen = () => {
         </TouchableOpacity>
       </ImageBackground>
 
-      <PoemList />
+      <PoemList/>
     </View>
   );
 };
@@ -186,7 +194,7 @@ const styles = StyleSheet.create({
 
   poemName: {
     fontFamily: 'HammersmithOne',
-    fontSize: 20,
+    fontSize: 17,
     color: '#373F41'
   },
 

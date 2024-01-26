@@ -208,16 +208,7 @@ const ProfileScreen = () => {
           data={collections}
           renderItem={({ item }) => (
             <CollectionCard
-              key={item._id}
-              collectionId={item._id}
-              userId={user._id}
-              coverImage={item.coverArt}
-              title={item.title}
-              creator={user.username}
-              caption={item.caption}
-              size={item.poemsInCollection.length}
-              likes={item.likes.length}
-              inLikes={item.likes.includes(user._id)}
+              collection={item}
               handleRefresh={fetchProfile}
             />
           )}

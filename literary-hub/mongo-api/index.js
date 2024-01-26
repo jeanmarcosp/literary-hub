@@ -393,7 +393,7 @@ app.get("/profile/:userId", async (req, res) => {
 app.get("/poems-by-ids", async (req, res) => {
   try {
     const poemIds = req.query.poemIds; // Retrieve poem IDs from the query parameters
-
+    
     // Fetch poems by their IDs
     const poems = await Poem.find({ _id: { $in: poemIds } });
 
@@ -497,26 +497,11 @@ app.delete("/delete-account/:userId", async (req, res) => {
   }
 });
 
-app.get("/author-collection", async (req, res) => {
-  const author = req.query.author;
-
+// get the authors with 10+ poems and create collections for each of them
+app.get("/create-author-collections", async (req, res) => {
   try {
-    let query = {};
-    if (author) {
-      query.author = author;
-    }
-
-    const poems = await Poem.find(query).sort("author");
-    console.log(poems);
-    res.json(poems);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Error populating author collections" });
-  }
-});
-
-app.get("/trending-authors", async (req, res) => {
-  try {
+    // get the authors
+    console.log("im in create author collections")
     const authors = await Poem.aggregate([
       {
         $group: {
@@ -524,20 +509,81 @@ app.get("/trending-authors", async (req, res) => {
           poemCount: { $sum: 1 },
         },
       },
-      {
-        $match: {
-          poemCount: { $gte: 10 },
-        },
-      },
-      {
-        $sample: { size: 6 },
-      },
     ]);
-    res.json(authors);
-    console.log(authors);
+
+    for (const author of authors) {
+
+      const userId = author._id;
+
+      // Check if a collection already exists for the author
+      const existingCollection = await Collection.findOne({ title: userId });
+
+      if (!existingCollection) {
+          // Create a collection for the author
+
+          const newCollection = new Collection({
+              title: userId,
+              user: "6552982f84f4459fad7d9a7f" // emily's
+          });
+
+          // Fetch poems by the author
+          const poems = await Poem.find({ author: userId });
+
+          // Add fetched poems to the collection
+          newCollection.poemsInCollection = poems.map(poem => poem._id);
+
+          await newCollection.save();
+      }
+  }
+  res.status(200).json({ message: "Author collections created successfully" });
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error fetching trending authors" });
+  }
+});
+
+// authors that show up on the explore page
+app.get("/explore-authors", async (req, res) => {
+  try {
+      // Query authors with 10 or more poems
+      const authors = await Poem.aggregate([
+          {
+              $group: {
+                  _id: "$author",
+                  poemCount: { $sum: 1 },
+              },
+          },
+          {
+              $match: {
+                  poemCount: { $gte: 10 },
+              },
+          },
+          {
+            $limit: 6 // Limit the number of authors to 6
+        },
+      ]);
+
+      const cols = [];
+
+      // Loop through authors and fetch their associated collections
+      for (const author of authors) {
+          const userId = author._id;
+
+          // Fetch collections for the author
+          const col = await Collection.find({ title: userId });
+
+          // Push author and collections to the result array
+          cols.push(...col);
+      }
+      // Extract collections from the collections array
+      const extractedCollections = cols.map(col => ({
+      ...col.toObject(), 
+    }));
+      res.json({ extractedCollections });
+  } catch (error) {
+      console.error("Error fetching trending authors:", error);
+      res.status(500).json({ error: "An error occurred while fetching trending authors." });
   }
 });
 
@@ -762,4 +808,20 @@ app.get('/search', async(req, res) => {
   }
   
 })
+
+
+app.get('/trending-collections', async (req,res) => {
+
+  try {
+    const collections = await Collection.aggregate([
+      { $match: { poemsInCollection: { $exists: true, $not: { $size: 0 } } } },
+      { $match: { username: { $ne: null } } },
+      { $sample: { size: 5 } } 
+    ]);
+    res.json(collections);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error fetching trending collections' });
+  }
+});
 
