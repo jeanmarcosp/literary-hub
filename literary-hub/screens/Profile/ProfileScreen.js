@@ -229,6 +229,7 @@ const ProfileScreen = () => {
   };
 
   const handlePoemPress = (poem) => {
+    console.log("pressed poem card")
     navigation.navigate('PoemDetailScreen', { poem });
   };
 

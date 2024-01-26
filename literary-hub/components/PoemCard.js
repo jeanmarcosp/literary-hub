@@ -55,8 +55,7 @@ const PoemCard = ({
   };
 
   return (
-    <TouchableOpacity onPress={onPress}>
-    <TouchableOpacity style={styles.card}>
+    <TouchableOpacity style={styles.card} onPress={onPress}>
       <View style={styles.container}>
         <View style={styles.leftInfo}>
           <View style={styles.mainInfo}>
@@ -85,7 +84,6 @@ const PoemCard = ({
           </View>
         </View>
       </View>
-    </TouchableOpacity>
     </TouchableOpacity>
   );
 };
