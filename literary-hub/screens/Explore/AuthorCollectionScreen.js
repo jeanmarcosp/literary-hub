@@ -15,18 +15,18 @@ const AuthorCollectionScreen = ({route}) => {
 
   const [poems, setPoems] = useState(null);
   console.log("i am in author-collections frontend");
-  // useEffect(() => {
-  //   const fetchPoemsByAuthor = async(authorName) => {
-  //     try {
-  //       const response = await axios.get(`${ROOT_URL}/author-collection?author=${authorName}`)
+  useEffect(() => {
+    const fetchPoemsByAuthor = async(authorName) => {
+      try {
+        const response = await axios.get(`${ROOT_URL}/author-collection?author=${authorName}`)
         
-  //       setPoems(response.data);
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
-  //   fetchPoemsByAuthor(author);
-  // }, [])
+        setPoems(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchPoemsByAuthor(author);
+  }, [])
 
   return (
     <CollectionScreen poems={poems} title={author} showAuthor={false} showCreator={true}/>);

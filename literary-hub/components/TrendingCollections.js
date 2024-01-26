@@ -3,6 +3,7 @@ import { View, FlatList, Text, StyleSheet } from "react-native";
 import CollectionCard from "./CollectionCard";
 import { useEffect, useState } from 'react';
 import axios from "axios";
+import AuthorCard from "./AuthorCard";
 
 const TrendingCollections = () => {
   const [collections, setCollections] = useState(null);
@@ -12,6 +13,7 @@ const TrendingCollections = () => {
       try {
         const response = await axios.get("http://localhost:3000/trending-collections");
         setCollections(response.data);
+        console.log("norton", response.data)
       } catch (error) {
         console.error(error);
       }
@@ -21,7 +23,7 @@ const TrendingCollections = () => {
 
   const renderItem = ({ item }) => (
     <View>
-      <CollectionCard
+      <AuthorCard
               collection={item}
             />
     </View>

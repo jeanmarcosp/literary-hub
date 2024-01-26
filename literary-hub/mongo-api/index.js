@@ -574,7 +574,6 @@ app.get("/create-author-collections", async (req, res) => {
 
 // authors that show up on the explore page
 app.get("/explore-authors", async (req, res) => {
-  console.log("im in explore authors")
   try {
       // Query authors with 10 or more poems
       const authors = await Poem.aggregate([
@@ -604,9 +603,13 @@ app.get("/explore-authors", async (req, res) => {
           const col = await Collection.find({ title: userId });
 
           // Push author and collections to the result array
-          collections.push({ col });
+          collections.push(...col);
       }
-      res.json({ collections });
+      // Extract collections from the collections array
+      const extractedCollections = collections.map(collection => ({
+      ...collection.toObject(), 
+    }));
+      res.json({ extractedCollections });
   } catch (error) {
       console.error("Error fetching trending authors:", error);
       res.status(500).json({ error: "An error occurred while fetching trending authors." });
@@ -715,14 +718,15 @@ app.get('/users/:userId/likedPoems', async (req, res) => {
 });
 app.get('/trending-collections', async (req,res) => {
 
-  try{
-    const collections = await Collection.find({ poemsInCollection: { $exists: true, $not: { $size: 0 } } });
+  try {
+    const collections = await Collection.aggregate([
+      { $match: { poemsInCollection: { $exists: true, $not: { $size: 0 } } } },
+      { $sample: { size: 5 } } 
+    ]);
     res.json(collections);
-    
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error fetching trending collections' });
   }
 });
-
 

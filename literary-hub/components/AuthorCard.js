@@ -5,18 +5,27 @@ import Like from "./Like";
 import { useNavigation } from "@react-navigation/native";
 
 const AuthorCard = ({ collection }) => {
-  console.log("im in author card");
-  
+  console.log("HELLO");
+
   const navigation = useNavigation();
+  console.log("im in author card");
+  // return(
+  //   <TouchableOpacity>
+  //     <View>
+  //       <Text>{collection._id}</Text>
+  //     </View>
+  //   </TouchableOpacity>
+  // )
 
   return (
-    <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('AuthorCollectionScreen', { author: title })}>
+    <TouchableOpacity style={styles.card} 
+    onPress={() => navigation.navigate("CollectionScreen", {collection})}>
       <View style={styles.container}>
         <View style={styles.topRow}>
           {/* <Image source={coverImage} style={styles.image} /> */}
           <View style={styles.likes}>
             <Like />
-            <Text>10k</Text>
+            <Text>{collection.likes.length}</Text>
           </View>
         </View>
 

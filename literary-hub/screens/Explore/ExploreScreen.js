@@ -19,7 +19,6 @@ const ExploreScreen = () => {
     useState("Collections");
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scrollView}>
         <SearchBar />
 
         <Text style={styles.text}>Author Collections</Text>
@@ -92,7 +91,6 @@ const ExploreScreen = () => {
           {segmentedControlView === "Poems" && <TrendingPoems />}
           {segmentedControlView === "Quotes" && <Quote />}
         </View>
-      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -103,6 +101,8 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#FFFFFF",
     flex: 1,
+    paddingHorizontal: 50,
+    paddingTop:15
   },
 
   scrollView: {
@@ -119,7 +119,8 @@ const styles = StyleSheet.create({
   segmentedControl: {
     flexDirection: "row",
     marginTop: 7,
-    columnGap: 10,
+    // columnGap: 10,
+    justifyContent:"space-between",
   },
 
   segmentedControlSelected: {
