@@ -221,35 +221,33 @@ const ProfileScreen = () => {
 
   const handlePoemPress = (poem) => {
     console.log("pressed poem card")
-    navigation.navigate('PoemDetailScreen', { poem });
+    navigation.navigate('PoemDetailScreen', { poem: poem, isLiked: true }); 
   };
 
   const LikedPoemsView = ({ poems }) => {
+  
     return (
-      <View>
-        <FlatList
-          data={poems}
-          keyExtractor={(item) => item._id.toString()}
-          renderItem={({ item }) => {
-            return (
-              <PoemCard
-                key={item._id}
-                poemId={item._id}
-                userId={user._id}
-                title={item.title}
-                author={item.author}
-                excerpt={item.content}
-                onPress={() => handlePoemPress(item)}
-                likes={item.likes.length}
-                inLikes={item.likes.includes(user._id)}
-                handleRefresh={fetchProfile}
-              />
-            );
-          }}
-        />
-      </View>
+      <FlatList
+        data={poems}
+        keyExtractor={(item) => item._id.toString()}
+        renderItem={({ item }) => (
+          <PoemCard
+            key={item._id}
+            poemId={item._id}
+            userId={userId}
+            title={item.title}
+            author={item.author}
+            excerpt={item.content}
+            onPress={() => handlePoemPress(item)}
+            likes={item.likes.length}
+            inLikes={item.likes.includes(userId)}
+            handleRefresh={fetchProfile}
+          />
+        )}
+      />
     );
   };
+  
 
   return (
     <SafeAreaView style={styles.container}>

@@ -685,6 +685,26 @@ app.get("/users/:userId/likedPoems", async (req, res) => {
   }
 });
 
+//endpoint for getting list of read poems
+app.get("/users/:userId/readPoems", async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const readPoems = user.readPoems;
+
+    res.json(readPoems);
+  } catch (error) {
+    console.error("Error fetching read poems:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 //endpoint to get follower info
 app.get("/get-follower-info", async (req, res) => {
   try {
