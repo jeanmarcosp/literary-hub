@@ -6,6 +6,8 @@ import {
   Image,
   TouchableOpacity,
   FlatList,
+  ScrollView,
+  TouchableWithoutFeedback,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -157,14 +159,15 @@ const ProfileScreen = () => {
             </Text>
           </View>
         </TouchableOpacity>
-        <FlatList
-          data={collections}
-          renderItem={({ item }) => (
-            <CollectionCard collection={item} handleRefresh={fetchProfile} />
-          )}
-          keyExtractor={(item) => item._id}
-          style={styles.collections}
-        />
+          <FlatList
+            data={collections}
+            renderItem={({ item }) => (
+              <CollectionCard collection={item} handleRefresh={fetchProfile} />
+            )}
+            keyExtractor={(item) => item._id}
+            style={styles.collections}
+            contentInset= {{bottom: 80}}
+          />
       </View>
     );
   };
@@ -188,6 +191,8 @@ const ProfileScreen = () => {
             handleRefresh={fetchProfile}
           />
         )}
+        style={styles.collections}
+        contentInset= {{bottom: 40}}
       />
     );
   };
@@ -202,6 +207,7 @@ const ProfileScreen = () => {
           )}
           keyExtractor={(item) => item._id}
           style={styles.collections}
+          contentInset= {{bottom: 40}}
         />
       </View>
     );
@@ -363,20 +369,24 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
   },
+
   centerAligned: {
     alignItems: "center",
   },
+  
   profilePic: {
     width: 100,
     height: 100,
     borderRadius: 50,
     marginTop: 20,
   },
+
   names: {
     marginTop: 10,
     flexDirection: "column",
     alignItems: "center",
   },
+
   name: {
     fontSize: 20,
     fontFamily: "HammersmithOne",
@@ -384,28 +394,34 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignContent: "center",
   },
+
   username: {
     fontSize: 15,
     fontFamily: "HammersmithOne",
     color: "#373F41",
   },
+
   metrics: {
     flexDirection: "row",
     columnGap: 20,
     marginTop: 10,
   },
+
   metric: {
     alignItems: "center",
   },
+
   metricNumber: {
     fontSize: 20,
     fontFamily: "HammersmithOne",
     color: "#373F41",
   },
+
   metricName: {
     fontFamily: "Sarabun-Regular",
     color: "#6C7476",
   },
+
   followButton: {
     flexDirection: "row",
     columnGap: 10,
@@ -416,15 +432,17 @@ const styles = StyleSheet.create({
     backgroundColor: "#644980",
     marginTop: 15,
   },
+
   followText: {
     fontSize: 17,
     fontFamily: "HammersmithOne",
     color: "#fff",
   },
+
   segmentedControl: {
     flexDirection: "row",
     justifyContent: "space-around",
-    width: 400,
+    width: '90%',
     marginTop: 20,
     marginBottom: 10,
     borderWidth: 1,
@@ -434,6 +452,7 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
     backgroundColor: "#E1DBE6",
   },
+
   segmentedControlSelected: {
     borderRadius: 100,
     width: 140,
@@ -441,69 +460,85 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     alignItems: "center",
   },
+
   segmentedControlSelectedText: {
     color: "#373F41",
     fontSize: 15,
     fontFamily: "HammersmithOne",
   },
+
   segmentedControlUnselected: {
     borderRadius: 5,
     width: 118,
     paddingVertical: 10,
     alignItems: "center",
   },
+
   segmentedControlUnselectedText: {
     fontSize: 15,
     fontFamily: "HammersmithOne",
     color: "#373F41",
   },
+
   leftAligned: {
-    paddingHorizontal: 17,
   },
+
   createCollectionCTA: {
     flexDirection: "row",
     alignItems: "center",
     columnGap: 7,
     marginTop: 15,
+    paddingLeft: 18,
   },
+
   createCollectionText: {
     fontSize: 17,
     color: "#373F41",
     fontFamily: "HammersmithOne",
   },
+
   collections: {
-    marginTop: 20,
-    overflow: "visible",
+    marginTop: 8,
+    paddingHorizontal: 18,
+    paddingTop: 12,
+    height: 400,
   },
+
   collection: {
     marginBottom: 10,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
   },
+
   collectionMain: {
     flexDirection: "row",
     alignItems: "center",
     columnGap: 20,
   },
+  
   collectionPic: {
     width: 70,
     height: 70,
     borderRadius: 10,
   },
+
   collectionText: {
     rowGap: 5,
   },
+
   collectionName: {
     fontSize: 18,
     fontFamily: "HammersmithOne",
     color: "#373F41",
   },
+
   collectionStat: {
     fontSize: 15,
     fontFamily: "Sarabun-Regular",
     color: "#6C7476",
   },
+
   ownershipTag: {
     borderWidth: 1,
     borderRadius: 100,
@@ -512,9 +547,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+
   ownershipText: {
     fontSize: 15,
   },
+
   savedQuote: {
     rowGap: 10,
     borderWidth: 1,
@@ -525,26 +562,31 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     backgroundColor: "#F4F5F4",
   },
+
   savedQuoteText: {
     fontSize: 18,
     fontFamily: "Sarabun-Regular",
     color: "#373F41",
   },
+
   savedQuoteCTAs: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
   },
+
   viewPoem: {
     flexDirection: "row",
     overflow: "visible",
     color: "red",
   },
+
   viewPoemText: {
     fontSize: 17,
     fontFamily: "Sarabun-SemiBold",
     color: "#6C7476",
   },
+
   settingsButton: {
     alignItems: "flex-end",
     marginRight: 24,

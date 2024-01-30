@@ -1,14 +1,15 @@
 // Poem.js
 import CollectionBottomSheet from "../components/CollectionBottomSheet";
-import { View, ScrollView, Text, Dimensions, StyleSheet, Pressable, ImageBackground } from 'react-native';
+import { View, ScrollView, Text, Dimensions, StyleSheet, Pressable, Keyboard, Button, TouchableOpacity, InputAccessoryView, } from 'react-native';
 import React, { useState, useEffect, useContext, useCallback, useMemo, useRef } from "react";
+import { TextInput } from "react-native-gesture-handler";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import HomePageLike from "./HomePageLike";
+import CommentSection from "./CommentSection";
 import { markPoemAsRead, handleDislike, handleLike } from "../hooks/poemActions";
 import getUserId from "../hooks/getUserId";
-import { Ionicons } from "@expo/vector-icons";
-import { TouchableOpacity } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 
 const Poem = ({ route }) => {
@@ -17,9 +18,12 @@ const Poem = ({ route }) => {
   const [annotationMode, handleAnnotationMode] = useState(false);
   // const [liked, handleLike] = useState(false);
   const bottomSheetRef = useRef(null);
+  const commentSectionRef = useRef(null);
   const READ_TIMER_DURATION = 5000;
   const [isRead, setIsRead] = useState(false);
   const isInitiallyLiked = userLikedPoems.includes(poemId);
+  const [openComments, setOpenComments] = useState(false);
+  const [newComment, setNewComment] = useState('');
   const userId = getUserId();
 
   // if poem is already marked as read, do nothing
@@ -43,6 +47,18 @@ const Poem = ({ route }) => {
 	const handleOpenPress = () => {
     bottomSheetRef.current?.expand();
   };
+
+  const handleCommentsOpen = () => {
+    commentSectionRef.current?.expand();
+    setOpenComments(true)
+  };
+
+  const handleCommentsClose = () => {
+    commentSectionRef.current?.close();
+    setOpenComments(false)
+  };
+
+  
   return (
     <View>
     {collection && (  
@@ -123,19 +139,42 @@ const Poem = ({ route }) => {
           <Feather name="plus" size={30} color="#644980" />
         </Pressable>
       </View>
+
+      <View style={styles.commentIcon}>
+        <Pressable onPress={handleCommentsOpen} style={styles.icon}>
+          <Ionicons name="chatbox-outline" size={30} color="#644980" />
+        </Pressable>
+      </View>
       {/* <View style={styles.heart}>
         <Like />
       </View> */}
 
       
       <CollectionBottomSheet ref={bottomSheetRef} title="Add to Collection" poem={poem} />
+      <CommentSection ref={commentSectionRef} handleCommentsClose={handleCommentsClose} />
+
+      {openComments && (
+        <InputAccessoryView>
+          <View style={styles.inputContainer}>
+              <TextInput 
+                  value={newComment}
+                  placeholder={'Add comment'}
+                  onChangeText={setNewComment}
+                  style={styles.commentInput}
+                  multiline={true}
+              />
+          </View>
+        </InputAccessoryView>
+      )}
     </View>
     </View>
     
   );
 };
+
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
+
 const styles = StyleSheet.create({
   poemContainer: {
     alignItems: 'center',
@@ -145,43 +184,71 @@ const styles = StyleSheet.create({
     position: "relative",
     backgroundColor: '#fff'
   },
+
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
   },
+
   author: {
     fontSize: 16,
     fontStyle: 'italic',
     marginBottom: 10,
   },
+
   page: {
     width: Dimensions.get('window').width,
   },
+
   pageContent: {
     fontSize: 18,
     lineHeight: 24,
   },
+
   toggle: {
     position: "absolute",
     left: screenWidth * 0.05, 
     bottom: screenHeight * 0.1, 
   },
+
   heart: {
     position: "absolute",
     right: screenWidth * 0.045, 
     bottom: screenHeight * 0.1, 
   },
+
   plus: {
     position: "absolute",
     right: screenWidth * 0.05, 
     bottom: screenHeight * 0.15, 
   },
+
+  commentIcon: {
+    position: "absolute",
+    right: screenWidth * 0.05, 
+    bottom: screenHeight * 0.2, 
+  },
+
   bottomSheet: {
     flex: 1,
 		alignItems: 'center',
 		justifyContent: 'center'
   },
+
+  inputContainer: {
+    backgroundColor: '#fff',
+  },
+
+  commentInput: {
+      borderRadius: 100,
+      backgroundColor: '#F4F5F4',
+      marginHorizontal: 12,
+      marginVertical: 12,
+      height: 30,
+      paddingHorizontal: 10,
+  },
+
   backButton: {
     position: 'absolute',
     top: 40,
