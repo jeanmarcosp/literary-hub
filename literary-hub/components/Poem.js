@@ -10,8 +10,6 @@ import HomePageLike from "./HomePageLike";
 import CommentSection from "./CommentSection";
 import { markPoemAsRead, handleDislike, handleLike } from "../hooks/poemActions";
 import getUserId from "../hooks/getUserId";
-import { Ionicons } from "@expo/vector-icons";
-import { TouchableOpacity } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 
 const Poem = ({ route }) => {
@@ -250,7 +248,7 @@ const styles = StyleSheet.create({
       height: 30,
       paddingHorizontal: 10,
   },
-  
+
   backButton: {
     position: 'absolute',
     top: 40,
