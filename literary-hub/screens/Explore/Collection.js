@@ -54,21 +54,6 @@ const CollectionScreen = ({ route }) => {
     poemToPage(poems, 20);
   }
 
-  // fetch list of liked poems
-  // useEffect(() => {
-  //   const fetchLikedPoems = async () => {
-  //     try { 
-  //       const response = await axios.get(`${ROOT_URL}/users/${userId}/likedPoems`);
-  //       console.log("fetched liked poems")
-  //       setUserLikedPoems(response.data); 
-  //     } catch (error) {
-  //       console.error('Error fetching liked poems:', error);
-  //     }
-  //   };
-
-  //   fetchLikedPoems();
-  // }, []);
-
   const navigateToSinglePoem = (poem, poemId, userLikedPoems ) => {
     navigation.navigate('SinglePoem', { poem, poemId, userLikedPoems, fromHome:false, collection }); 
   };

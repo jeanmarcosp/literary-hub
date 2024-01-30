@@ -24,33 +24,6 @@ export const handleDislike = async (userId, poemId) => {
   }
 };
 
-// // split the poem into pages
-// export const poemToPage = (poems, linesPerPage) => {
-//     poems.forEach(poem => {
-//         const lines = poem.content.split("\n");
-//         const pages = [];
-//         let currentPage = "";
-//         let linesAdded = 0;
-        
-//         for (const line of lines) {
-            
-//             if (linesAdded >= linesPerPage) {
-//                 pages.push(currentPage);
-//                 currentPage = "";
-//                 linesAdded = 0;
-//             }
-//             currentPage += line + "\n";
-//             linesAdded++;
-//             }
-
-//             if (currentPage.length > 0) {
-//             pages.push(currentPage);
-//             }
-//             poem.pages = pages; // Add pages to poem object
-//             console.log("MY POEM", poem);
-//     });
-// }
-
 export const poemToPage = (poems, linesPerPage) => {
     return new Promise((resolve, reject) => {
         try {
@@ -74,11 +47,11 @@ export const poemToPage = (poems, linesPerPage) => {
                 if (currentPage.length > 0) {
                     pages.push(currentPage);
                 }
-                poem.pages = pages; // Add pages to poem object
+                poem.pages = pages; 
             });
-            resolve(poems); // Resolve the promise with modified poems
+            resolve(poems); 
         } catch (error) {
-            reject(error); // Reject the promise if an error occurs
+            reject(error); 
         }
     });
 }

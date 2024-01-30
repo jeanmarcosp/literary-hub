@@ -71,7 +71,7 @@ const Poem = ({ route }) => {
         snapToInterval={Dimensions.get('window').width}
       >
         {poem.pages.map((page, index) => (
-          <View key={index} style={styles.page}>
+          <View key={index} style={[styles.page, {paddingTop: collection ? 20 : 50}]}>
             {index === 0 && (
               <React.Fragment>
                 <Text style={styles.title}>{poem.title}</Text>
@@ -157,7 +157,6 @@ const styles = StyleSheet.create({
   },
   page: {
     width: Dimensions.get('window').width,
-    paddingTop: 50,
   },
   pageContent: {
     fontSize: 18,
@@ -209,8 +208,8 @@ const styles = StyleSheet.create({
     flexDirection: "row", // Align items in a row
     alignItems: "center", // Center items vertically
     paddingHorizontal: 20, // Adjust as needed
-    paddingVertical: 30, // Adjust as needed
-    top: 30,
+    paddingVertical: 10, // Adjust as needed
+    top: 60,
   },
 });
 

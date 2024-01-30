@@ -28,33 +28,6 @@ const HomeScreen = () => {
   const linesPerPage = 20;
   const [readPoems, setReadPoems] = useState([]);
 
-  // const markPoemAsRead = async (poemId) => {
-  //   try {
-  //     await axios.put(`${ROOT_URL}/mark-poem-as-read/${userId}/${poemId}`);
-  //     //console.log(`Poem ${poemId} marked as read.`);
-  //   } catch (error) {
-  //     console.error('Error marking poem as read:', error);
-  //   }
-  // };
-
-  // const handleLike = async (poemId) => {
-  //   try {
-  //     await axios.put(`${ROOT_URL}/poems/${poemId}/${userId}/like`);
-
-  //   } catch (error) {
-  //     console.error('Error liking poem:', error);
-  //   }
-  // };
-  
-  // const handleDislike = async (poemId) => {
-  //   try {
-  //     await axios.put(`${ROOT_URL}/poems/${poemId}/${userId}/unlike`);
-      
-  //   } catch (error) {
-  //     console.error('Error unliking poem:', error);
-  //   }
-  // };
-
   const loadMorePoems = async () => {
     if (loading) return;
   
@@ -76,33 +49,9 @@ const HomeScreen = () => {
 
       // filter out previously read poems
       const newPoems = response.data.filter(poem => !readPoems.includes(poem.id));
-      console.log("going to newpoems");
+
       poemToPage(newPoems, linesPerPage);
   
-      //   const lines = poem.content.split("\n");
-      //   const pages = [];
-      //   let currentPage = "";
-      //   let linesAdded = 0;
-  
-      //   for (const line of lines) {
-      //     if (linesAdded >= linesPerPage) {
-      //       pages.push(currentPage);
-      //       currentPage = "";
-      //       linesAdded = 0;
-      //     }
-      //     currentPage += line + "\n";
-      //     linesAdded++;
-      //   }
-  
-      //   if (currentPage.length > 0) {
-      //     pages.push(currentPage);
-      //   }
-
-      //   poem.pages = pages; // Add pages to poem object
-      // });
-  
-      // Update the state with the filtered and processed poems
-      // console.log("this is my poem.pages", poem.pages);
       setPoems(prevPoems => [...prevPoems, ...newPoems]);
       setLoading(false);
     } catch (error) {
@@ -171,10 +120,7 @@ const HomeScreen = () => {
           <Poem 
           key={poem._id || index} 
           poem={poem} 
-          poemId={poem._id} // pass the _id as poemId
-          // onRead={() => markPoemAsRead(userId, poem._id)}
-          // onLike={() => handleLike(userId, poem._id)}
-          // onUnlike={() => handleDislike(userId, poem._id)}
+          poemId={poem._id} 
           userLikedPoems={userLikedPoems}
           route={{params: {poem, poemId: poem._id, userLikedPoems, fromHome:true }}}
           />
