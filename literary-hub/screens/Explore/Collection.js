@@ -34,17 +34,24 @@ const CollectionScreen = ({ route }) => {
     fetchPoems();
   }, [])
 
-  const Poem = ({poem}) => {
+  const navigateToSinglePoem = (poem,  ) => {
+    navigation.navigate('SinglePoem', { poem, poemId:'123445', userLikedPoems:[] }); 
+  };
+
+  const PoemName = ({poem}) => {
     return (
-      <View style={styles.poem}>
-        <View style={styles.poemInfo}>
-        <Text style={styles.poemName}>{poem.title}</Text>
-        {!isAuthor && (
-          <Text style={styles.poemAuthor}>{poem.author}</Text>
-        )}
+      <TouchableOpacity onPress={() => navigateToSinglePoem(poem)}>
+        <View style={styles.poem}>
+          <View style={styles.poemInfo}>
+          <Text style={styles.poemName}>{poem.title}</Text>
+          {!isAuthor && (
+            <Text style={styles.poemAuthor}>{poem.author}</Text>
+          )}
+          </View>
+          <Like />
         </View>
-        <Like />
-      </View>
+      </TouchableOpacity>
+      
     )
   }
 
@@ -53,7 +60,7 @@ const CollectionScreen = ({ route }) => {
       <FlatList
         data={poems}
         renderItem={({ item }) => (
-          <Poem poem={item}/>
+          <PoemName poem={item}/>
         )}
         keyExtractor={(item) => item.id}
         style={styles.poemList}

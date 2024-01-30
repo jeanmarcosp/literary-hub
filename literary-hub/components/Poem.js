@@ -5,14 +5,19 @@ import React, { useState, useEffect, useContext, useCallback, useMemo, useRef } 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import HomePageLike from "./HomePageLike";
+import { markPoemAsRead, handleDislike, handleLike } from "../hooks/poemActions";
+import getUserId from "../hooks/getUserId";
 
-const Poem = ({ poem, poemId, onRead, onLike, onUnlike, userLikedPoems }) => {
+const Poem = ({ poem, poemId, userLikedPoems }) => {
+  console.log("I AM IN BIG POEM JS");
+  console.log(poem.title);
   const [annotationMode, handleAnnotationMode] = useState(false);
-  const [liked, handleLike] = useState(false);
+  // const [liked, handleLike] = useState(false);
   const bottomSheetRef = useRef(null);
   const READ_TIMER_DURATION = 5000;
   const [isRead, setIsRead] = useState(false);
   const isInitiallyLiked = userLikedPoems.includes(poemId);
+  const userId = getUserId();
 
   // if poem is already marked as read, do nothing
   // if it isn't, mark it as read
@@ -20,14 +25,14 @@ const Poem = ({ poem, poemId, onRead, onLike, onUnlike, userLikedPoems }) => {
     if (isRead) return; 
 
     const timer = setTimeout(() => {
-      if (onRead) {
-        onRead(poemId);  
+      if (true) {
+        markPoemAsRead(userId, poemId);  
         setIsRead(true); 
       }
     }, READ_TIMER_DURATION);
 
     return () => clearTimeout(timer); 
-  }, [poemId, onRead, isRead]);
+  }, [poemId, isRead]);
 
 	const handleClosePress = () => {
     bottomSheetRef.current?.close();
@@ -63,8 +68,8 @@ const Poem = ({ poem, poemId, onRead, onLike, onUnlike, userLikedPoems }) => {
 
       <HomePageLike 
         inLikes={isInitiallyLiked} 
-        handleLike={() => onLike(poemId)} 
-        handleDislike={() => onUnlike(poemId)}
+        handleLike={() => handleLike(userId, poemId)} 
+        handleDislike={() => handleDislike(userId, poemId)}
       />
 
       <View style={styles.toggle}>

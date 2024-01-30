@@ -18,6 +18,7 @@ import getUserId from "../../hooks/getUserId";
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import CollectionBottomSheet from "../../components/CollectionBottomSheet";
 import { setUser } from "../../state/actions/userActions";
+import { markPoemAsRead, handleLike, handleDislike } from "../../hooks/poemActions.js";
 
 
 const HomeScreen = () => {
@@ -28,32 +29,32 @@ const HomeScreen = () => {
   const linesPerPage = 20;
   const [readPoems, setReadPoems] = useState([]);
 
-  const markPoemAsRead = async (poemId) => {
-    try {
-      await axios.put(`${ROOT_URL}/mark-poem-as-read/${userId}/${poemId}`);
-      //console.log(`Poem ${poemId} marked as read.`);
-    } catch (error) {
-      console.error('Error marking poem as read:', error);
-    }
-  };
+  // const markPoemAsRead = async (poemId) => {
+  //   try {
+  //     await axios.put(`${ROOT_URL}/mark-poem-as-read/${userId}/${poemId}`);
+  //     //console.log(`Poem ${poemId} marked as read.`);
+  //   } catch (error) {
+  //     console.error('Error marking poem as read:', error);
+  //   }
+  // };
 
-  const handleLike = async (poemId) => {
-    try {
-      await axios.put(`${ROOT_URL}/poems/${poemId}/${userId}/like`);
+  // const handleLike = async (poemId) => {
+  //   try {
+  //     await axios.put(`${ROOT_URL}/poems/${poemId}/${userId}/like`);
 
-    } catch (error) {
-      console.error('Error liking poem:', error);
-    }
-  };
+  //   } catch (error) {
+  //     console.error('Error liking poem:', error);
+  //   }
+  // };
   
-  const handleDislike = async (poemId) => {
-    try {
-      await axios.put(`${ROOT_URL}/poems/${poemId}/${userId}/unlike`);
+  // const handleDislike = async (poemId) => {
+  //   try {
+  //     await axios.put(`${ROOT_URL}/poems/${poemId}/${userId}/unlike`);
       
-    } catch (error) {
-      console.error('Error unliking poem:', error);
-    }
-  };
+  //   } catch (error) {
+  //     console.error('Error unliking poem:', error);
+  //   }
+  // };
 
   const loadMorePoems = async () => {
     if (loading) return;
@@ -171,9 +172,9 @@ const HomeScreen = () => {
           key={poem._id || index} 
           poem={poem} 
           poemId={poem._id} // pass the _id as poemId
-          onRead={markPoemAsRead}
-          onLike={handleLike}
-          onUnlike={handleDislike}
+          onRead={() => markPoemAsRead(userId, poem._id)}
+          onLike={() => handleLike(userId, poem._id)}
+          onUnlike={() => handleDislike(userId, poem._id)}
           userLikedPoems={userLikedPoems}
           />
         ))}
