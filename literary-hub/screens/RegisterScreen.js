@@ -130,8 +130,8 @@ const RegisterScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView>
-        <Text style={styles.loginHeader1}>Register for</Text>
-        <Text style={styles.loginHeader2}>Literary Hub</Text>
+        <Text style={styles.loginHeader1}>Create an account</Text>
+        {/* <Text style={styles.loginHeader2}>Literary Hub</Text> */}
 
         <View style={styles.coverPhotoSection}>
           <View style={styles.emptyCoverPhoto}>
@@ -272,7 +272,7 @@ const styles = StyleSheet.create({
   },
 
   inputOuterContainer: {
-    marginTop: 20,
+    marginTop: 15,
   },
 
   sectionHeader: {
@@ -287,7 +287,7 @@ const styles = StyleSheet.create({
     gap: 10,
     borderColor: "#D9D9D9",
     borderWidth: 1,
-    paddingVertical: 5,
+    paddingVertical: 2,
     borderRadius: 5,
   },
 
@@ -307,7 +307,7 @@ const styles = StyleSheet.create({
     marginLeft: "auto",
     marginRight: "auto",
     marginBottom: 10,
-    marginTop: 60
+    marginTop: 35,
   },
 
   registerButtonText: {
