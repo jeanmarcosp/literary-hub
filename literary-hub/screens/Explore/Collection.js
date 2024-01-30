@@ -52,9 +52,6 @@ const CollectionScreen = ({ route }) => {
 
   if (poems) {
     poemToPage(poems, 20);
-    poems.forEach(poem => {
-      console.log(poem.pages);
-    })
   }
 
   // fetch list of liked poems
@@ -73,9 +70,7 @@ const CollectionScreen = ({ route }) => {
   // }, []);
 
   const navigateToSinglePoem = (poem, poemId, userLikedPoems ) => {
-    console.log("poem id in collection", poemId);
-    console.log("userlikedpoems in collection", userLikedPoems);
-    navigation.navigate('SinglePoem', { poem, poemId, userLikedPoems }); 
+    navigation.navigate('SinglePoem', { poem, poemId, userLikedPoems, fromHome:false, collection }); 
   };
 
   const PoemName = ({poem, poemId, userLikedPoems}) => {
@@ -111,7 +106,7 @@ const CollectionScreen = ({ route }) => {
   return (
     <View style={styles.container}>
       <ImageBackground
-        source={require('./../../assets/collection-images/fall-collection-image.png')}
+        source={collection.coverArt ? { uri: collection.coverArt } : require('../../assets/collection-images/defaultCover.jpeg')}
         style={styles.image}
         resizeMode="cover"
       >

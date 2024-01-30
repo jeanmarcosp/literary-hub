@@ -1,6 +1,6 @@
 // Poem.js
 import CollectionBottomSheet from "../components/CollectionBottomSheet";
-import { View, ScrollView, Text, Dimensions, StyleSheet, Pressable } from 'react-native';
+import { View, ScrollView, Text, Dimensions, StyleSheet, Pressable, ImageBackground } from 'react-native';
 import React, { useState, useEffect, useContext, useCallback, useMemo, useRef } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
@@ -12,7 +12,7 @@ import { TouchableOpacity } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 
 const Poem = ({ route }) => {
-  const {poem, poemId, userLikedPoems} = route.params || {};
+  const {poem, poemId, userLikedPoems, fromHome, collection} = route.params || {};
   const navigation = useNavigation();
   const [annotationMode, handleAnnotationMode] = useState(false);
   // const [liked, handleLike] = useState(false);
@@ -43,19 +43,26 @@ const Poem = ({ route }) => {
 	const handleOpenPress = () => {
     bottomSheetRef.current?.expand();
   };
-
-  
   return (
-    <View style={styles.poemContainer}>
     <View>
-      <TouchableOpacity onPress={() => {navigation.goBack()}}>
-            <View style={styles.backButton}>
-              <Ionicons name="chevron-back" size={23} color="#fff" />
-            </View>
-      </TouchableOpacity>
-    </View>
-     
-      
+    {collection && (  
+      <ImageBackground
+      source={collection.coverArt ? { uri: collection.coverArt } : require('../assets/collection-images/defaultCover.jpeg')}
+      style={styles.image}
+      resizeMode="cover"
+    >
+      {!fromHome && (  
+        <TouchableOpacity
+          style={styles.bannerContainer}
+          onPress={() => navigation.goBack()}
+        >
+          <Ionicons name="chevron-back" size={24} color="white" />
+          <Text style={styles.collectionTitle}>{collection.title}</Text>
+        </TouchableOpacity>
+      )}
+    </ImageBackground>
+    )}
+    <View style={styles.poemContainer}>
       <ScrollView
         horizontal
         pagingEnabled
@@ -124,6 +131,7 @@ const Poem = ({ route }) => {
       
       <CollectionBottomSheet ref={bottomSheetRef} title="Add to Collection" poem={poem} />
     </View>
+    </View>
     
   );
 };
@@ -135,9 +143,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 16,
-    paddingTop: 30,
+    paddingTop: 0,
     paddingBottom: 30,
     position: "relative",
+    backgroundColor: '#fff'
   },
   title: {
     fontSize: 24,
@@ -179,12 +188,32 @@ const styles = StyleSheet.create({
   },
   backButton: {
     position: 'absolute',
-    left: 20,
     top: 40,
+    left: 20,
+    zIndex: 1,
     backgroundColor: '#00000080',
     borderRadius: 100,
-    alignSelf: 'baseline',
     padding: 5,
+  },
+  image: {
+    position: 'relative',
+    width: '100%',
+    height: 100,
+    alignItems: 'left',
+  },
+  collectionTitle: {
+    color: "white",
+    fontFamily: 'HammersmithOne',
+    fontSize: 15,
+    fontWeight: 'bold',
+    textAlign: "center",
+  },
+  bannerContainer: {
+    flexDirection: "row", // Align items in a row
+    alignItems: "center", // Center items vertically
+    paddingHorizontal: 20, // Adjust as needed
+    paddingVertical: 30, // Adjust as needed
+    top: 30,
   },
 });
 

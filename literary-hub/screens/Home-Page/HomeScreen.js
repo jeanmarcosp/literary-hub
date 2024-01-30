@@ -80,11 +80,6 @@ const HomeScreen = () => {
       console.log("going to newpoems");
       poemToPage(newPoems, linesPerPage);
   
-      // split the poem into pages
-      newPoems.forEach(poem => {
-        console.log("this is my poem pages")
-        console.log(poem.pages);
-      })
       //   const lines = poem.content.split("\n");
       //   const pages = [];
       //   let currentPage = "";
@@ -182,7 +177,7 @@ const HomeScreen = () => {
           // onLike={() => handleLike(userId, poem._id)}
           // onUnlike={() => handleDislike(userId, poem._id)}
           userLikedPoems={userLikedPoems}
-          route={{params: {poem, poemId: poem._id, userLikedPoems }}}
+          route={{params: {poem, poemId: poem._id, userLikedPoems, fromHome:true }}}
           />
         ))}
 
