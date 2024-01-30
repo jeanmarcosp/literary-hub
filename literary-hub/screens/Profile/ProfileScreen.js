@@ -7,43 +7,30 @@ import {
   TouchableOpacity,
   FlatList,
 } from "react-native";
-import React, { useState, useEffect, useCallback, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import getUserId from "../../hooks/getUserId";
 import axios from "axios";
 import PoemCard from "../../components/PoemCard";
 import CollectionCard from "../../components/CollectionCard";
-import Quote from "../../components/Quote";
-import { collection } from "../../mongo-api/models/user";
 
 const ProfileScreen = () => {
   const userId = getUserId();
   const [user, setUser] = useState({});
   const [poems, setPoems] = useState([]);
   const [collections, setCollections] = useState([]);
+  const [likedCollections, setLikedCollections] = useState([]);
   const [segmentedControlView, setSegmentedControlView] =
-    useState("Collections");
+    useState("My Collections");
   const navigation = useNavigation();
 
+  const handlePoemPress = (poem) => {
+    console.log("pressed poem card");
+    navigation.navigate("PoemDetailScreen", { poem: poem, isLiked: true });
+  };
+
   // this gets the users information stored in user?.
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     const fetchProfile = async () => {
-  //       try {
-  //         const response = await axios.get(`${ROOT_URL}/profile/${userId}`);
-  //         const user = response.data.user;
-
-  //         setUser(user);
-  //       } catch (error) {
-  //         console.log("error", error);
-  //       }
-  //     };
-
-  //     fetchProfile();
-  //   }, [])
-  // );
-
   const fetchProfile = async () => {
     try {
       const response = await axios.get(`${ROOT_URL}/profile/${userId}`);
@@ -64,39 +51,6 @@ const ProfileScreen = () => {
   console.log(user.name);
 
   // fetch poems
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     const fetchLikedPoems = async () => {
-  //       try {
-  //         const poemIdsToFetch = user?.likedPoems;
-
-  //         // Check if poemIdsToFetch is truthy before making the API call
-  //         if (poemIdsToFetch) {
-  //           const response = await axios.get(`${ROOT_URL}/poems-by-ids`, {
-  //             params: {
-  //               poemIds: poemIdsToFetch,
-  //             },
-  //           });
-
-  //           const fetchedPoems = response.data;
-  //           // console.log("rerendering poems");
-
-  //           setPoems(fetchedPoems);
-  //         }
-  //       } catch (error) {
-  //         if (error.response && error.response.status === 404) {
-  //           console.log("No liked poems found");
-  //           setPoems([]);
-  //         } else {
-  //           console.error("Error fetching poems:", error);
-  //         }
-  //       }
-  //     };
-
-  //     fetchLikedPoems();
-  //   }, [user])
-  // );
-
   useEffect(() => {
     const fetchLikedPoems = async () => {
       try {
@@ -126,40 +80,7 @@ const ProfileScreen = () => {
     fetchLikedPoems();
   }, [user]);
 
-  // fetch collections
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     const fetchCreatedCollections = async () => {
-  //       try {
-  //         const collectionIdsToFetch = user?.createdCollections;
-
-  //         // Check if collectionIdsToFetch is truthy before making the API call
-  //         if (collectionIdsToFetch) {
-  //           const response = await axios.get(`${ROOT_URL}/collections-by-ids`, {
-  //             params: {
-  //               collectionIds: collectionIdsToFetch,
-  //             },
-  //           });
-
-  //           const fetchedCollections = response.data;
-  //           // console.log("rerendering collections");
-
-  //           setCollections(fetchedCollections);
-  //         }
-  //       } catch (error) {
-  //         if (error.response && error.response.status === 404) {
-  //           console.log("No liked collections found");
-  //           setCollections([]);
-  //         } else {
-  //           console.error("Error fetching collections:", error);
-  //         }
-  //       }
-  //     };
-
-  //     fetchCreatedCollections();
-  //   }, [user])
-  // );
-
+  // fetch created collections
   useEffect(() => {
     // Fetch collections based on user's createdCollections
     const fetchCreatedCollections = async () => {
@@ -191,6 +112,38 @@ const ProfileScreen = () => {
     fetchCreatedCollections();
   }, [user]);
 
+// fetch liked collections
+  useEffect(() => {
+    // Fetch collections based on user's createdCollections
+    const fetchLikedCollections = async () => {
+      try {
+        const collectionIdsToFetch = user?.likedCollections;
+
+        // Check if collectionIdsToFetch is truthy before making the API call
+        if (collectionIdsToFetch) {
+          const response = await axios.get(`${ROOT_URL}/collections-by-ids`, {
+            params: {
+              collectionIds: collectionIdsToFetch,
+            },
+          });
+
+          const fetchedLikedCollections = response.data;
+          // console.log("collections render");
+          setLikedCollections(fetchedLikedCollections);
+        }
+      } catch (error) {
+        if (error.response && error.response.status === 404) {
+          console.log("No liked collections found");
+          setLikedCollections([]);
+        } else {
+          console.error("Error fetching liked collections:", error);
+        }
+      }
+    };
+
+    fetchLikedCollections();
+  }, [user]);
+
   const CollectionsView = ({ collections }) => {
     return (
       <View>
@@ -207,10 +160,7 @@ const ProfileScreen = () => {
         <FlatList
           data={collections}
           renderItem={({ item }) => (
-            <CollectionCard
-              collection={item}
-              handleRefresh={fetchProfile}
-            />
+            <CollectionCard collection={item} handleRefresh={fetchProfile} />
           )}
           keyExtractor={(item) => item._id}
           style={styles.collections}
@@ -219,13 +169,7 @@ const ProfileScreen = () => {
     );
   };
 
-  const handlePoemPress = (poem) => {
-    console.log("pressed poem card")
-    navigation.navigate('PoemDetailScreen', { poem: poem, isLiked: true }); 
-  };
-
   const LikedPoemsView = ({ poems }) => {
-  
     return (
       <FlatList
         data={poems}
@@ -247,7 +191,21 @@ const ProfileScreen = () => {
       />
     );
   };
-  
+
+  const LikedCollectionsView = ({ likedCollections }) => {
+    return (
+      <View>
+        <FlatList
+          data={likedCollections}
+          renderItem={({ item }) => (
+            <CollectionCard collection={item} handleRefresh={fetchProfile} />
+          )}
+          keyExtractor={(item) => item._id}
+          style={styles.collections}
+        />
+      </View>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -316,23 +274,23 @@ const ProfileScreen = () => {
 
         <View style={styles.segmentedControl}>
           <TouchableOpacity
-            onPress={() => setSegmentedControlView("Collections")}
+            onPress={() => setSegmentedControlView("My Collections")}
           >
             <View
               style={
-                segmentedControlView === "Collections"
+                segmentedControlView === "My Collections"
                   ? styles.segmentedControlSelected
                   : styles.segmentedControlUnselected
               }
             >
               <Text
                 style={
-                  segmentedControlView === "Collections"
+                  segmentedControlView === "My Collections"
                     ? styles.segmentedControlSelectedText
                     : styles.segmentedControlUnselectedText
                 }
               >
-                Collections
+                My Collections
               </Text>
             </View>
           </TouchableOpacity>
@@ -360,23 +318,23 @@ const ProfileScreen = () => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => setSegmentedControlView("Saved quotes")}
+            onPress={() => setSegmentedControlView("Liked Collections")}
           >
             <View
               style={
-                segmentedControlView === "Saved quotes"
+                segmentedControlView === "Liked Collections"
                   ? styles.segmentedControlSelected
                   : styles.segmentedControlUnselected
               }
             >
               <Text
                 style={
-                  segmentedControlView === "Saved quotes"
+                  segmentedControlView === "Liked Collections"
                     ? styles.segmentedControlSelectedText
                     : styles.segmentedControlUnselectedText
                 }
               >
-                Saved quotes
+                Liked Collections
               </Text>
             </View>
           </TouchableOpacity>
@@ -384,13 +342,15 @@ const ProfileScreen = () => {
       </View>
 
       <View style={styles.leftAligned}>
-        {segmentedControlView === "Collections" && (
+        {segmentedControlView === "My Collections" && (
           <CollectionsView collections={collections} />
         )}
         {segmentedControlView === "Liked poems" && (
           <LikedPoemsView poems={poems} />
         )}
-        {segmentedControlView === "Saved quotes" && <Quote />}
+        {segmentedControlView === "Liked Collections" && (
+          <LikedCollectionsView likedCollections={likedCollections} />
+        )}
       </View>
     </SafeAreaView>
   );
@@ -414,14 +374,14 @@ const styles = StyleSheet.create({
   },
   names: {
     marginTop: 10,
-    flexDirection: 'column',
-    alignItems: 'center',
+    flexDirection: "column",
+    alignItems: "center",
   },
   name: {
     fontSize: 20,
     fontFamily: "HammersmithOne",
     color: "#373F41",
-    flexDirection: 'column',
+    flexDirection: "column",
     alignContent: "center",
   },
   username: {
@@ -463,6 +423,8 @@ const styles = StyleSheet.create({
   },
   segmentedControl: {
     flexDirection: "row",
+    justifyContent: "space-around",
+    width: 400,
     marginTop: 20,
     marginBottom: 10,
     borderWidth: 1,
@@ -474,9 +436,9 @@ const styles = StyleSheet.create({
   },
   segmentedControlSelected: {
     borderRadius: 100,
-    width: 118,
+    width: 140,
     paddingVertical: 10,
-    backgroundColor: "#fff",
+    backgroundColor: "white",
     alignItems: "center",
   },
   segmentedControlSelectedText: {

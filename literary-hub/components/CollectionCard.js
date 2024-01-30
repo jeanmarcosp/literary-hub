@@ -1,17 +1,21 @@
 import "react-native-gesture-handler";
-import { React, useState, useEffect, useCallback, useContext } from "react";
-import { View, TouchableOpacity, Image, Text, StyleSheet, Modal, Alert } from "react-native";
+import { React, useState } from "react";
+import {
+  View,
+  TouchableOpacity,
+  Image,
+  Text,
+  StyleSheet,
+  Modal,
+  Alert,
+} from "react-native";
 import Like from "./Like";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { Ionicons } from "@expo/vector-icons";
-import { useFocusEffect } from "@react-navigation/native";
 import getUserId from "../hooks/getUserId";
 
-const CollectionCard = ({
-  collection,
-  handleRefresh,
-}) => {
+const CollectionCard = ({ collection, handleRefresh }) => {
   const navigation = useNavigation();
 
   const userId = getUserId();
@@ -19,11 +23,10 @@ const CollectionCard = ({
 
   const poemText = collection.poemsInCollection.length === 1 ? "poem" : "poems";
   const likeText = collection.likes.length === 1 ? "like" : "likes";
+  const userIsCreator = collection.user === userId;
 
   const [liked, setLiked] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [showAppOptions, setShowAppOptions] = useState(false);
-  const [userIsCreator, setUserIsCreated] = useState(false);
 
   const handleLikeCollection = async () => {
     try {
@@ -80,25 +83,6 @@ const CollectionCard = ({
     }
   };
 
-  // useEffect(() => {
-  //   const fetchCreatorUserId = async () => {
-  //     try {
-  //       const response = await axios.get(`http://localhost:3000/get-creator/${collectionId}`);
-  //       const { creatorId } = response.data;
-
-  //       creatorId === userId ? setUserIsCreated(true) : setUserIsCreated(false);
-
-  //     } catch (error) {
-  //       console.error('Error fetching creator userId:', error);
-  //     }
-  //   };
-
-  //   fetchCreatorUserId();
-
-  // }, []); // Empty dependency array for one-time effect
-
-  // console.log(userIsCreator)
-
   const ShareMenu = ({ isVisible, children, onClose }) => {
     return (
       <Modal animationType="slide" transparent={true} visible={isVisible}>
@@ -126,7 +110,7 @@ const CollectionCard = ({
   return (
     <TouchableOpacity
       style={styles.card}
-      onPress={() => navigation.navigate("CollectionScreen", {collection})}
+      onPress={() => navigation.navigate("CollectionScreen", { collection })}
     >
       <View style={styles.container}>
         <View style={styles.info}>
@@ -139,9 +123,9 @@ const CollectionCard = ({
           <View style={styles.text}>
             <View>
               <Text style={styles.title}>{collection.title}</Text>
-              {collection.username && ( 
+              {collection.username && (
                 <Text style={styles.creator}>@{collection.username}</Text>
-                )}
+              )}
             </View>
             <Text style={styles.caption}>{collection.caption}</Text>
           </View>
@@ -163,39 +147,48 @@ const CollectionCard = ({
               handleLike={handleLikeCollection}
               handleDislike={handleUnlikeCollection}
             />
-            <Text style={styles.likeNumber}>
-              {collection.likes.length}
-            </Text>
+            <Text style={styles.likeNumber}>{collection.likes.length}</Text>
           </View>
         </View>
       </View>
       <ShareMenu isVisible={isModalVisible} onClose={onModalClose}>
-        <TouchableOpacity>
-          <View style={styles.listItems}>
-            <Ionicons name="share-outline" size={24} color="black" />
-            <Text style={styles.listText}>Share</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <View style={styles.listItems}>
-            <Ionicons name="create-outline" size={24} color="black" />
-            <Text style={styles.listText}>Edit</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleDeleteCollection}>
-          <View style={styles.listItems}>
-            <Ionicons name="trash-outline" size={24} color="red" />
-            <Text
-              style={{
-                color: "red",
-                fontSize: 18,
-                fontFamily: "Sarabun-Regular",
-              }}
-            >
-              Delete
-            </Text>
-          </View>
-        </TouchableOpacity>
+        {userIsCreator ? (
+          <>
+            <TouchableOpacity>
+              <View style={styles.listItems}>
+                <Ionicons name="share-outline" size={24} color="black" />
+                <Text style={styles.listText}>Share</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <View style={styles.listItems}>
+                <Ionicons name="create-outline" size={24} color="black" />
+                <Text style={styles.listText}>Edit</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleDeleteCollection}>
+              <View style={styles.listItems}>
+                <Ionicons name="trash-outline" size={24} color="red" />
+                <Text
+                  style={{
+                    color: "red",
+                    fontSize: 18,
+                    fontFamily: "Sarabun-Regular",
+                  }}
+                >
+                  Delete
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </>
+        ) : (
+          <TouchableOpacity>
+            <View style={styles.listItems}>
+              <Ionicons name="share-outline" size={24} color="black" />
+              <Text style={styles.listText}>Share</Text>
+            </View>
+          </TouchableOpacity>
+        )}
       </ShareMenu>
     </TouchableOpacity>
   );
