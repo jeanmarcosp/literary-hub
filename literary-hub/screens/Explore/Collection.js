@@ -6,17 +6,21 @@ import Like from '../../components/Like';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from '@react-navigation/native';
 import axios from "axios";
+import getUserId from '../../hooks/getUserId';
+import { poemToPage } from '../../hooks/poemActions';
 
 // const CollectionScreen = ({poems, title, showAuthor = true, showCreator = true}) => {
 const CollectionScreen = ({ route }) => {
   const { collection } = route.params;
   const navigation = useNavigation();
   const isAuthor = !collection.username;
+  const userId = getUserId();
 
   const poemIds = collection.poemsInCollection;
 
   // fetch poems by the IDs in poemIds
   const [poems, setPoems] = useState([])
+  const [userLikedPoems, setUserLikedPoems] = useState([]);
 
   useEffect(() => {
     const fetchPoems = async() => {
@@ -32,28 +36,51 @@ const CollectionScreen = ({ route }) => {
       }
     };
     fetchPoems();
+
+    const fetchLikedPoems = async () => {
+      try { 
+        const response = await axios.get(`${ROOT_URL}/users/${userId}/likedPoems`);
+        console.log("fetched liked poems")
+        setUserLikedPoems(response.data); 
+      } catch (error) {
+        console.error('Error fetching liked poems:', error);
+      }
+    };
+
+    fetchLikedPoems();
   }, [])
 
-  const Poem = ({poem}) => {
+  if (poems) {
+    poemToPage(poems, 20);
+  }
+
+  const navigateToSinglePoem = (poem, poemId, userLikedPoems ) => {
+    navigation.navigate('SinglePoem', { poem, poemId, userLikedPoems, fromHome:false, collection }); 
+  };
+
+  const PoemName = ({poem, poemId, userLikedPoems}) => {
     return (
-      <View style={styles.poem}>
-        <View style={styles.poemInfo}>
-        <Text style={styles.poemName}>{poem.title}</Text>
-        {!isAuthor && (
-          <Text style={styles.poemAuthor}>{poem.author}</Text>
-        )}
+      <TouchableOpacity onPress={() => navigateToSinglePoem(poem, poemId, userLikedPoems)}>
+        <View style={styles.poem}>
+          <View style={styles.poemInfo}>
+          <Text style={styles.poemName}>{poem.title}</Text>
+          {!isAuthor && (
+            <Text style={styles.poemAuthor}>{poem.author}</Text>
+          )}
+          </View>
+          <Like />
         </View>
-        <Like />
-      </View>
+      </TouchableOpacity>
+      
     )
   }
 
-  const PoemList = () => {
+  const PoemList = ({userLikedPoems}) => {
     return (
       <FlatList
         data={poems}
         renderItem={({ item }) => (
-          <Poem poem={item}/>
+          <PoemName poem={item} poemId= {item._id} userLikedPoems={userLikedPoems}/>
         )}
         keyExtractor={(item) => item.id}
         style={styles.poemList}
@@ -64,7 +91,7 @@ const CollectionScreen = ({ route }) => {
   return (
     <View style={styles.container}>
       <ImageBackground
-        source={require('./../../assets/collection-images/fall-collection-image.png')}
+        source={collection.coverArt ? { uri: collection.coverArt } : require('../../assets/collection-images/defaultCover.jpeg')}
         style={styles.image}
         resizeMode="cover"
       >
@@ -92,7 +119,7 @@ const CollectionScreen = ({ route }) => {
         </TouchableOpacity>
       </ImageBackground>
 
-      <PoemList/>
+      <PoemList userLikedPoems={userLikedPoems}/>
     </View>
   );
 };

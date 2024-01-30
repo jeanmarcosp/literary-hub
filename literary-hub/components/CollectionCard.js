@@ -115,9 +115,7 @@ const CollectionCard = ({ collection, handleRefresh }) => {
       <View style={styles.container}>
         <View style={styles.info}>
           <Image
-            source={{
-              uri: collection.coverArt,
-            }}
+            source={collection.coverArt ? { uri: collection.coverArt } : require('../assets/collection-images/defaultCover.jpeg')}
             style={styles.image}
           />
           <View style={styles.text}>

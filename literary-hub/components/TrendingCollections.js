@@ -13,7 +13,6 @@ const TrendingCollections = () => {
       try {
         const response = await axios.get("http://localhost:3000/trending-collections");
         setCollections(response.data);
-        console.log("norton", response.data)
       } catch (error) {
         console.error(error);
       }

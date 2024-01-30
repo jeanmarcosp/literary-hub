@@ -1,18 +1,26 @@
 // Poem.js
 import CollectionBottomSheet from "../components/CollectionBottomSheet";
-import { View, ScrollView, Text, Dimensions, StyleSheet, Pressable } from 'react-native';
+import { View, ScrollView, Text, Dimensions, StyleSheet, Pressable, ImageBackground } from 'react-native';
 import React, { useState, useEffect, useContext, useCallback, useMemo, useRef } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import HomePageLike from "./HomePageLike";
+import { markPoemAsRead, handleDislike, handleLike } from "../hooks/poemActions";
+import getUserId from "../hooks/getUserId";
+import { Ionicons } from "@expo/vector-icons";
+import { TouchableOpacity } from "react-native";
+import { useNavigation } from '@react-navigation/native';
 
-const Poem = ({ poem, poemId, onRead, onLike, onUnlike, userLikedPoems }) => {
+const Poem = ({ route }) => {
+  const {poem, poemId, userLikedPoems, fromHome, collection} = route.params || {};
+  const navigation = useNavigation();
   const [annotationMode, handleAnnotationMode] = useState(false);
-  const [liked, handleLike] = useState(false);
+  // const [liked, handleLike] = useState(false);
   const bottomSheetRef = useRef(null);
   const READ_TIMER_DURATION = 5000;
   const [isRead, setIsRead] = useState(false);
   const isInitiallyLiked = userLikedPoems.includes(poemId);
+  const userId = getUserId();
 
   // if poem is already marked as read, do nothing
   // if it isn't, mark it as read
@@ -20,14 +28,14 @@ const Poem = ({ poem, poemId, onRead, onLike, onUnlike, userLikedPoems }) => {
     if (isRead) return; 
 
     const timer = setTimeout(() => {
-      if (onRead) {
-        onRead(poemId);  
+      if (true) {
+        markPoemAsRead(userId, poemId);  
         setIsRead(true); 
       }
     }, READ_TIMER_DURATION);
 
     return () => clearTimeout(timer); 
-  }, [poemId, onRead, isRead]);
+  }, [poemId, isRead]);
 
 	const handleClosePress = () => {
     bottomSheetRef.current?.close();
@@ -35,10 +43,26 @@ const Poem = ({ poem, poemId, onRead, onLike, onUnlike, userLikedPoems }) => {
 	const handleOpenPress = () => {
     bottomSheetRef.current?.expand();
   };
-
-  
   return (
-    <View style={styles.poemContainer}>
+    <View>
+    {collection && (  
+      <ImageBackground
+      source={collection.coverArt ? { uri: collection.coverArt } : require('../assets/collection-images/defaultCover.jpeg')}
+      style={styles.image}
+      resizeMode="cover"
+    >
+      {!fromHome && (  
+        <TouchableOpacity
+          style={styles.bannerContainer}
+          onPress={() => navigation.goBack()}
+        >
+          <Ionicons name="chevron-back" size={24} color="white" />
+          <Text style={styles.collectionTitle}>{collection.title}</Text>
+        </TouchableOpacity>
+      )}
+    </ImageBackground>
+    )}
+    <View style={[styles.poemContainer, { height: collection ? Dimensions.get('window').height - 100 : Dimensions.get('window').height  }]}>
       <ScrollView
         horizontal
         pagingEnabled
@@ -47,7 +71,7 @@ const Poem = ({ poem, poemId, onRead, onLike, onUnlike, userLikedPoems }) => {
         snapToInterval={Dimensions.get('window').width}
       >
         {poem.pages.map((page, index) => (
-          <View key={index} style={styles.page}>
+          <View key={index} style={[styles.page, {paddingTop: collection ? 20 : 50}]}>
             {index === 0 && (
               <React.Fragment>
                 <Text style={styles.title}>{poem.title}</Text>
@@ -63,8 +87,8 @@ const Poem = ({ poem, poemId, onRead, onLike, onUnlike, userLikedPoems }) => {
 
       <HomePageLike 
         inLikes={isInitiallyLiked} 
-        handleLike={() => onLike(poemId)} 
-        handleDislike={() => onUnlike(poemId)}
+        handleLike={() => handleLike(userId, poemId)} 
+        handleDislike={() => handleDislike(userId, poemId)}
       />
 
       <View style={styles.toggle}>
@@ -106,6 +130,7 @@ const Poem = ({ poem, poemId, onRead, onLike, onUnlike, userLikedPoems }) => {
       
       <CollectionBottomSheet ref={bottomSheetRef} title="Add to Collection" poem={poem} />
     </View>
+    </View>
     
   );
 };
@@ -113,13 +138,12 @@ const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
   poemContainer: {
-    height: Dimensions.get('window').height,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 16,
-    paddingTop: 30,
-    paddingBottom: 30,
+    paddingBottom: 0,
     position: "relative",
+    backgroundColor: '#fff'
   },
   title: {
     fontSize: 24,
@@ -133,7 +157,6 @@ const styles = StyleSheet.create({
   },
   page: {
     width: Dimensions.get('window').width,
-    paddingTop: 50,
   },
   pageContent: {
     fontSize: 18,
@@ -158,6 +181,35 @@ const styles = StyleSheet.create({
     flex: 1,
 		alignItems: 'center',
 		justifyContent: 'center'
+  },
+  backButton: {
+    position: 'absolute',
+    top: 40,
+    left: 20,
+    zIndex: 1,
+    backgroundColor: '#00000080',
+    borderRadius: 100,
+    padding: 5,
+  },
+  image: {
+    position: 'relative',
+    width: '100%',
+    height: 100,
+    alignItems: 'left',
+  },
+  collectionTitle: {
+    color: "white",
+    fontFamily: 'HammersmithOne',
+    fontSize: 15,
+    fontWeight: 'bold',
+    textAlign: "center",
+  },
+  bannerContainer: {
+    flexDirection: "row", // Align items in a row
+    alignItems: "center", // Center items vertically
+    paddingHorizontal: 20, // Adjust as needed
+    paddingVertical: 10, // Adjust as needed
+    top: 60,
   },
 });
 
