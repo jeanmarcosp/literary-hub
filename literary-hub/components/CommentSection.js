@@ -248,6 +248,7 @@ import React, {
 
     commentsList: {
         marginTop: 20,
+        marginBottom: 90,
     },
 
     inputContainer: {

@@ -1,7 +1,8 @@
 // Poem.js
 import CollectionBottomSheet from "../components/CollectionBottomSheet";
-import { View, ScrollView, Text, Dimensions, StyleSheet, Pressable } from 'react-native';
+import { View, ScrollView, Text, Dimensions, StyleSheet, Pressable, Keyboard, Button, TouchableOpacity, InputAccessoryView, } from 'react-native';
 import React, { useState, useEffect, useContext, useCallback, useMemo, useRef } from "react";
+import { TextInput } from "react-native-gesture-handler";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
@@ -127,6 +128,20 @@ const Poem = ({ poem, poemId, onRead, onLike, onUnlike, userLikedPoems }) => {
       
       <CollectionBottomSheet ref={bottomSheetRef} title="Add to Collection" poem={poem} />
       <CommentSection ref={commentSectionRef} handleCommentsClose={handleCommentsClose} />
+
+      {openComments && (
+        <InputAccessoryView>
+          <View style={styles.inputContainer}>
+              <TextInput 
+                  value={newComment}
+                  placeholder={'Add comment'}
+                  onChangeText={setNewComment}
+                  style={styles.commentInput}
+                  multiline={true}
+              />
+          </View>
+        </InputAccessoryView>
+      )}
     </View>
     
   );
@@ -197,6 +212,19 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center'
   },
+
+  inputContainer: {
+    backgroundColor: '#fff',
+  },
+
+  commentInput: {
+      borderRadius: 100,
+      backgroundColor: '#F4F5F4',
+      marginHorizontal: 12,
+      marginVertical: 12,
+      height: 30,
+      paddingHorizontal: 10,
+  }
 });
 
 export default Poem;
