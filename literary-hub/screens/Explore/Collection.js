@@ -6,17 +6,21 @@ import Like from '../../components/Like';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from '@react-navigation/native';
 import axios from "axios";
+import getUserId from '../../hooks/getUserId';
+import { poemToPage } from '../../hooks/poemActions';
 
 // const CollectionScreen = ({poems, title, showAuthor = true, showCreator = true}) => {
 const CollectionScreen = ({ route }) => {
   const { collection } = route.params;
   const navigation = useNavigation();
   const isAuthor = !collection.username;
+  const userId = getUserId();
 
   const poemIds = collection.poemsInCollection;
 
   // fetch poems by the IDs in poemIds
   const [poems, setPoems] = useState([])
+  const [userLikedPoems, setUserLikedPoems] = useState([]);
 
   useEffect(() => {
     const fetchPoems = async() => {
@@ -32,15 +36,51 @@ const CollectionScreen = ({ route }) => {
       }
     };
     fetchPoems();
+
+    const fetchLikedPoems = async () => {
+      try { 
+        const response = await axios.get(`${ROOT_URL}/users/${userId}/likedPoems`);
+        console.log("fetched liked poems")
+        setUserLikedPoems(response.data); 
+      } catch (error) {
+        console.error('Error fetching liked poems:', error);
+      }
+    };
+
+    fetchLikedPoems();
   }, [])
 
-  const navigateToSinglePoem = (poem,  ) => {
-    navigation.navigate('SinglePoem', { poem, poemId:'123445', userLikedPoems:[] }); 
+  if (poems) {
+    poemToPage(poems, 20);
+    poems.forEach(poem => {
+      console.log(poem.pages);
+    })
+  }
+
+  // fetch list of liked poems
+  // useEffect(() => {
+  //   const fetchLikedPoems = async () => {
+  //     try { 
+  //       const response = await axios.get(`${ROOT_URL}/users/${userId}/likedPoems`);
+  //       console.log("fetched liked poems")
+  //       setUserLikedPoems(response.data); 
+  //     } catch (error) {
+  //       console.error('Error fetching liked poems:', error);
+  //     }
+  //   };
+
+  //   fetchLikedPoems();
+  // }, []);
+
+  const navigateToSinglePoem = (poem, poemId, userLikedPoems ) => {
+    console.log("poem id in collection", poemId);
+    console.log("userlikedpoems in collection", userLikedPoems);
+    navigation.navigate('SinglePoem', { poem, poemId, userLikedPoems }); 
   };
 
-  const PoemName = ({poem}) => {
+  const PoemName = ({poem, poemId, userLikedPoems}) => {
     return (
-      <TouchableOpacity onPress={() => navigateToSinglePoem(poem)}>
+      <TouchableOpacity onPress={() => navigateToSinglePoem(poem, poemId, userLikedPoems)}>
         <View style={styles.poem}>
           <View style={styles.poemInfo}>
           <Text style={styles.poemName}>{poem.title}</Text>
@@ -55,12 +95,12 @@ const CollectionScreen = ({ route }) => {
     )
   }
 
-  const PoemList = () => {
+  const PoemList = ({userLikedPoems}) => {
     return (
       <FlatList
         data={poems}
         renderItem={({ item }) => (
-          <PoemName poem={item}/>
+          <PoemName poem={item} poemId= {item._id} userLikedPoems={userLikedPoems}/>
         )}
         keyExtractor={(item) => item.id}
         style={styles.poemList}
@@ -99,7 +139,7 @@ const CollectionScreen = ({ route }) => {
         </TouchableOpacity>
       </ImageBackground>
 
-      <PoemList/>
+      <PoemList userLikedPoems={userLikedPoems}/>
     </View>
   );
 };

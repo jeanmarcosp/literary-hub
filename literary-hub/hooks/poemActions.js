@@ -23,3 +23,31 @@ export const handleDislike = async (userId, poemId) => {
     console.error('Error unliking poem:', error);
   }
 };
+
+// split the poem into pages
+export const poemToPage = async(poems, linesPerPage) => {
+    poems.forEach(poem => {
+        const lines = poem.content.split("\n");
+        const pages = [];
+        let currentPage = "";
+        let linesAdded = 0;
+        
+        for (const line of lines) {
+            
+            if (linesAdded >= linesPerPage) {
+                pages.push(currentPage);
+                currentPage = "";
+                linesAdded = 0;
+            }
+            currentPage += line + "\n";
+            linesAdded++;
+            }
+
+            if (currentPage.length > 0) {
+            pages.push(currentPage);
+            }
+            poem.pages = pages; // Add pages to poem object
+            console.log("MY POEM", poem);
+    });
+}
+      

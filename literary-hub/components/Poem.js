@@ -7,10 +7,13 @@ import { Feather } from "@expo/vector-icons";
 import HomePageLike from "./HomePageLike";
 import { markPoemAsRead, handleDislike, handleLike } from "../hooks/poemActions";
 import getUserId from "../hooks/getUserId";
+import { Ionicons } from "@expo/vector-icons";
+import { TouchableOpacity } from "react-native";
+import { useNavigation } from '@react-navigation/native';
 
-const Poem = ({ poem, poemId, userLikedPoems }) => {
-  console.log("I AM IN BIG POEM JS");
-  console.log(poem.title);
+const Poem = ({ route }) => {
+  const {poem, poemId, userLikedPoems} = route.params || {};
+  const navigation = useNavigation();
   const [annotationMode, handleAnnotationMode] = useState(false);
   // const [liked, handleLike] = useState(false);
   const bottomSheetRef = useRef(null);
@@ -44,6 +47,15 @@ const Poem = ({ poem, poemId, userLikedPoems }) => {
   
   return (
     <View style={styles.poemContainer}>
+    <View>
+      <TouchableOpacity onPress={() => {navigation.goBack()}}>
+            <View style={styles.backButton}>
+              <Ionicons name="chevron-back" size={23} color="#fff" />
+            </View>
+      </TouchableOpacity>
+    </View>
+     
+      
       <ScrollView
         horizontal
         pagingEnabled
@@ -65,6 +77,7 @@ const Poem = ({ poem, poemId, userLikedPoems }) => {
           </View>
         ))}
       </ScrollView>
+      
 
       <HomePageLike 
         inLikes={isInitiallyLiked} 
@@ -163,6 +176,15 @@ const styles = StyleSheet.create({
     flex: 1,
 		alignItems: 'center',
 		justifyContent: 'center'
+  },
+  backButton: {
+    position: 'absolute',
+    left: 20,
+    top: 40,
+    backgroundColor: '#00000080',
+    borderRadius: 100,
+    alignSelf: 'baseline',
+    padding: 5,
   },
 });
 

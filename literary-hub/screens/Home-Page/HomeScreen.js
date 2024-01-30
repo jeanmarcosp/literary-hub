@@ -19,7 +19,7 @@ import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import CollectionBottomSheet from "../../components/CollectionBottomSheet";
 import { setUser } from "../../state/actions/userActions";
 import { markPoemAsRead, handleLike, handleDislike } from "../../hooks/poemActions.js";
-
+import { poemToPage } from '../../hooks/poemActions';
 
 const HomeScreen = () => {
   const [poems, setPoems] = useState([]);
@@ -77,32 +77,38 @@ const HomeScreen = () => {
 
       // filter out previously read poems
       const newPoems = response.data.filter(poem => !readPoems.includes(poem.id));
+      console.log("going to newpoems");
+      poemToPage(newPoems, linesPerPage);
   
       // split the poem into pages
       newPoems.forEach(poem => {
-        const lines = poem.content.split("\n");
-        const pages = [];
-        let currentPage = "";
-        let linesAdded = 0;
+        console.log("this is my poem pages")
+        console.log(poem.pages);
+      })
+      //   const lines = poem.content.split("\n");
+      //   const pages = [];
+      //   let currentPage = "";
+      //   let linesAdded = 0;
   
-        for (const line of lines) {
-          if (linesAdded >= linesPerPage) {
-            pages.push(currentPage);
-            currentPage = "";
-            linesAdded = 0;
-          }
-          currentPage += line + "\n";
-          linesAdded++;
-        }
+      //   for (const line of lines) {
+      //     if (linesAdded >= linesPerPage) {
+      //       pages.push(currentPage);
+      //       currentPage = "";
+      //       linesAdded = 0;
+      //     }
+      //     currentPage += line + "\n";
+      //     linesAdded++;
+      //   }
   
-        if (currentPage.length > 0) {
-          pages.push(currentPage);
-        }
+      //   if (currentPage.length > 0) {
+      //     pages.push(currentPage);
+      //   }
 
-        poem.pages = pages; // Add pages to poem object
-      });
+      //   poem.pages = pages; // Add pages to poem object
+      // });
   
       // Update the state with the filtered and processed poems
+      // console.log("this is my poem.pages", poem.pages);
       setPoems(prevPoems => [...prevPoems, ...newPoems]);
       setLoading(false);
     } catch (error) {
@@ -172,10 +178,11 @@ const HomeScreen = () => {
           key={poem._id || index} 
           poem={poem} 
           poemId={poem._id} // pass the _id as poemId
-          onRead={() => markPoemAsRead(userId, poem._id)}
-          onLike={() => handleLike(userId, poem._id)}
-          onUnlike={() => handleDislike(userId, poem._id)}
+          // onRead={() => markPoemAsRead(userId, poem._id)}
+          // onLike={() => handleLike(userId, poem._id)}
+          // onUnlike={() => handleDislike(userId, poem._id)}
           userLikedPoems={userLikedPoems}
+          route={{params: {poem, poemId: poem._id, userLikedPoems }}}
           />
         ))}
 
