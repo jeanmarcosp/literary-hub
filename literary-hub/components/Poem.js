@@ -4,7 +4,9 @@ import { View, ScrollView, Text, Dimensions, StyleSheet, Pressable } from 'react
 import React, { useState, useEffect, useContext, useCallback, useMemo, useRef } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import HomePageLike from "./HomePageLike";
+import CommentSection from "./CommentSection";
 
 const Poem = ({ poem, poemId, onRead, onLike, onUnlike, userLikedPoems }) => {
   const [annotationMode, handleAnnotationMode] = useState(false);
@@ -99,6 +101,12 @@ const Poem = ({ poem, poemId, onRead, onLike, onUnlike, userLikedPoems }) => {
           <Feather name="plus" size={30} color="#644980" />
         </Pressable>
       </View>
+
+      <View style={styles.commentIcon}>
+        <Pressable onPress={handleOpenPress} style={styles.icon}>
+          <Ionicons name="chatbox-outline" size={30} color="#644980" />
+        </Pressable>
+      </View>
       {/* <View style={styles.heart}>
         <Like />
       </View> */}
@@ -109,8 +117,10 @@ const Poem = ({ poem, poemId, onRead, onLike, onUnlike, userLikedPoems }) => {
     
   );
 };
+
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
+
 const styles = StyleSheet.create({
   poemContainer: {
     height: Dimensions.get('window').height,
@@ -121,39 +131,53 @@ const styles = StyleSheet.create({
     paddingBottom: 30,
     position: "relative",
   },
+
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
   },
+
   author: {
     fontSize: 16,
     fontStyle: 'italic',
     marginBottom: 10,
   },
+
   page: {
     width: Dimensions.get('window').width,
     paddingTop: 50,
   },
+
   pageContent: {
     fontSize: 18,
     lineHeight: 24,
   },
+
   toggle: {
     position: "absolute",
     left: screenWidth * 0.05, 
     bottom: screenHeight * 0.1, 
   },
+
   heart: {
     position: "absolute",
     right: screenWidth * 0.045, 
     bottom: screenHeight * 0.1, 
   },
+
   plus: {
     position: "absolute",
     right: screenWidth * 0.05, 
     bottom: screenHeight * 0.15, 
   },
+
+  commentIcon: {
+    position: "absolute",
+    right: screenWidth * 0.05, 
+    bottom: screenHeight * 0.2, 
+  },
+
   bottomSheet: {
     flex: 1,
 		alignItems: 'center',
