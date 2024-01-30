@@ -442,7 +442,7 @@ const styles = StyleSheet.create({
   segmentedControl: {
     flexDirection: "row",
     justifyContent: "space-around",
-    width: 400,
+    width: '90%',
     marginTop: 20,
     marginBottom: 10,
     borderWidth: 1,
