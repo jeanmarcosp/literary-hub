@@ -22,7 +22,9 @@ const Follower = ({
   status,
 }) => {
   const [isFollowing, setIsFollowing] = useState(status);
-  console.log(status);
+  console.log(otherUser);
+
+  const navigation = useNavigation();
 
   const handlePress = () => {
     if (isFollowing) {
@@ -61,33 +63,56 @@ const Follower = ({
     }
   };
 
-  return (
-    <View style={styles.profile}>
-      <View style={styles.profileInfo}>
-        <Image
-          source={{
-            uri: profilePicture,
-          }}
-          style={styles.profilePic}
-        />
-        <View style={styles.text}>
-          <Text style={styles.username}>{username}</Text>
-          <Text style={styles.name}>{name}</Text>
-        </View>
-      </View>
+  const handleUserPress = () => {
+    console.log("pressed user");
+    if (loggedInUser === otherUser) {
+      navigation.navigate("ProfileScreen");
+    } else {
+      navigation.navigate("UserDetailScreen", {
+        otherUserId: otherUser,
+        isFollowing: isFollowing,
+        callbacks: {
+          handleFollow: handleFollow,
+          handleUnfollow: handleUnfollow,
+        },
+      });
+    }
+  };
+  
 
-      <TouchableOpacity onPress={handlePress}>
-        {isFollowing ? (
-          <View style={styles.unfollowButton}>
-            <Text style={styles.unfollowButtonText}>Unfollow</Text>
+  return (
+    <TouchableOpacity onPress={handleUserPress}>
+      <View style={styles.profile}>
+        <View style={styles.profileInfo}>
+          <Image
+            source={{
+              uri: profilePicture,
+            }}
+            style={styles.profilePic}
+          />
+          <View style={styles.text}>
+            <Text style={styles.username}>{username}</Text>
+            <Text style={styles.name}>{name}</Text>
           </View>
-        ) : (
-          <View style={styles.followButton}>
-            <Text style={styles.followButtonText}>Follow</Text>
-          </View>
-        )}
-      </TouchableOpacity>
-    </View>
+        </View>
+
+        <TouchableOpacity onPress={handlePress}>
+          {loggedInUser !== otherUser && (
+            <>
+              {isFollowing ? (
+                <View style={styles.unfollowButton}>
+                  <Text style={styles.unfollowButtonText}>Unfollow</Text>
+                </View>
+              ) : (
+                <View style={styles.followButton}>
+                  <Text style={styles.followButtonText}>Follow</Text>
+                </View>
+              )}
+            </>
+          )}
+        </TouchableOpacity>
+      </View>
+    </TouchableOpacity>
   );
 };
 

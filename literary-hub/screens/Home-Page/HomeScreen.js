@@ -18,7 +18,7 @@ import getUserId from "../../hooks/getUserId";
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import CollectionBottomSheet from "../../components/CollectionBottomSheet";
 import { setUser } from "../../state/actions/userActions";
-
+import { poemToPage } from '../../hooks/poemActions';
 
 const HomeScreen = () => {
   const [poems, setPoems] = useState([]);
@@ -27,33 +27,6 @@ const HomeScreen = () => {
   const userId = getUserId();
   const linesPerPage = 20;
   const [readPoems, setReadPoems] = useState([]);
-
-  const markPoemAsRead = async (poemId) => {
-    try {
-      await axios.put(`${ROOT_URL}/mark-poem-as-read/${userId}/${poemId}`);
-      //console.log(`Poem ${poemId} marked as read.`);
-    } catch (error) {
-      console.error('Error marking poem as read:', error);
-    }
-  };
-
-  const handleLike = async (poemId) => {
-    try {
-      await axios.put(`${ROOT_URL}/poems/${poemId}/${userId}/like`);
-
-    } catch (error) {
-      console.error('Error liking poem:', error);
-    }
-  };
-  
-  const handleDislike = async (poemId) => {
-    try {
-      await axios.put(`${ROOT_URL}/poems/${poemId}/${userId}/unlike`);
-      
-    } catch (error) {
-      console.error('Error unliking poem:', error);
-    }
-  };
 
   const loadMorePoems = async () => {
     if (loading) return;
@@ -76,32 +49,9 @@ const HomeScreen = () => {
 
       // filter out previously read poems
       const newPoems = response.data.filter(poem => !readPoems.includes(poem.id));
-  
-      // split the poem into pages
-      newPoems.forEach(poem => {
-        const lines = poem.content.split("\n");
-        const pages = [];
-        let currentPage = "";
-        let linesAdded = 0;
-  
-        for (const line of lines) {
-          if (linesAdded >= linesPerPage) {
-            pages.push(currentPage);
-            currentPage = "";
-            linesAdded = 0;
-          }
-          currentPage += line + "\n";
-          linesAdded++;
-        }
-  
-        if (currentPage.length > 0) {
-          pages.push(currentPage);
-        }
 
-        poem.pages = pages; // Add pages to poem object
-      });
+      poemToPage(newPoems, linesPerPage);
   
-      // Update the state with the filtered and processed poems
       setPoems(prevPoems => [...prevPoems, ...newPoems]);
       setLoading(false);
     } catch (error) {
@@ -170,11 +120,9 @@ const HomeScreen = () => {
           <Poem 
           key={poem._id || index} 
           poem={poem} 
-          poemId={poem._id} // pass the _id as poemId
-          onRead={markPoemAsRead}
-          onLike={handleLike}
-          onUnlike={handleDislike}
+          poemId={poem._id} 
           userLikedPoems={userLikedPoems}
+          route={{params: {poem, poemId: poem._id, userLikedPoems, fromHome:true }}}
           />
         ))}
 

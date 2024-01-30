@@ -8,10 +8,17 @@ import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import HomePageLike from "./HomePageLike";
 import CommentSection from "./CommentSection";
+import { markPoemAsRead, handleDislike, handleLike } from "../hooks/poemActions";
+import getUserId from "../hooks/getUserId";
+import { Ionicons } from "@expo/vector-icons";
+import { TouchableOpacity } from "react-native";
+import { useNavigation } from '@react-navigation/native';
 
-const Poem = ({ poem, poemId, onRead, onLike, onUnlike, userLikedPoems }) => {
+const Poem = ({ route }) => {
+  const {poem, poemId, userLikedPoems, fromHome, collection} = route.params || {};
+  const navigation = useNavigation();
   const [annotationMode, handleAnnotationMode] = useState(false);
-  const [liked, handleLike] = useState(false);
+  // const [liked, handleLike] = useState(false);
   const bottomSheetRef = useRef(null);
   const commentSectionRef = useRef(null);
   const READ_TIMER_DURATION = 5000;
@@ -19,6 +26,7 @@ const Poem = ({ poem, poemId, onRead, onLike, onUnlike, userLikedPoems }) => {
   const isInitiallyLiked = userLikedPoems.includes(poemId);
   const [openComments, setOpenComments] = useState(false);
   const [newComment, setNewComment] = useState('');
+  const userId = getUserId();
 
   // if poem is already marked as read, do nothing
   // if it isn't, mark it as read
@@ -26,14 +34,14 @@ const Poem = ({ poem, poemId, onRead, onLike, onUnlike, userLikedPoems }) => {
     if (isRead) return; 
 
     const timer = setTimeout(() => {
-      if (onRead) {
-        onRead(poemId);  
+      if (true) {
+        markPoemAsRead(userId, poemId);  
         setIsRead(true); 
       }
     }, READ_TIMER_DURATION);
 
     return () => clearTimeout(timer); 
-  }, [poemId, onRead, isRead]);
+  }, [poemId, isRead]);
 
 	const handleClosePress = () => {
     bottomSheetRef.current?.close();
@@ -54,7 +62,25 @@ const Poem = ({ poem, poemId, onRead, onLike, onUnlike, userLikedPoems }) => {
 
   
   return (
-    <View style={styles.poemContainer}>
+    <View>
+    {collection && (  
+      <ImageBackground
+      source={collection.coverArt ? { uri: collection.coverArt } : require('../assets/collection-images/defaultCover.jpeg')}
+      style={styles.image}
+      resizeMode="cover"
+    >
+      {!fromHome && (  
+        <TouchableOpacity
+          style={styles.bannerContainer}
+          onPress={() => navigation.goBack()}
+        >
+          <Ionicons name="chevron-back" size={24} color="white" />
+          <Text style={styles.collectionTitle}>{collection.title}</Text>
+        </TouchableOpacity>
+      )}
+    </ImageBackground>
+    )}
+    <View style={[styles.poemContainer, { height: collection ? Dimensions.get('window').height - 100 : Dimensions.get('window').height  }]}>
       <ScrollView
         horizontal
         pagingEnabled
@@ -63,7 +89,7 @@ const Poem = ({ poem, poemId, onRead, onLike, onUnlike, userLikedPoems }) => {
         snapToInterval={Dimensions.get('window').width}
       >
         {poem.pages.map((page, index) => (
-          <View key={index} style={styles.page}>
+          <View key={index} style={[styles.page, {paddingTop: collection ? 20 : 50}]}>
             {index === 0 && (
               <React.Fragment>
                 <Text style={styles.title}>{poem.title}</Text>
@@ -79,8 +105,8 @@ const Poem = ({ poem, poemId, onRead, onLike, onUnlike, userLikedPoems }) => {
 
       <HomePageLike 
         inLikes={isInitiallyLiked} 
-        handleLike={() => onLike(poemId)} 
-        handleDislike={() => onUnlike(poemId)}
+        handleLike={() => handleLike(userId, poemId)} 
+        handleDislike={() => handleDislike(userId, poemId)}
       />
 
       <View style={styles.toggle}>
@@ -143,6 +169,7 @@ const Poem = ({ poem, poemId, onRead, onLike, onUnlike, userLikedPoems }) => {
         </InputAccessoryView>
       )}
     </View>
+    </View>
     
   );
 };
@@ -152,13 +179,12 @@ const screenHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
   poemContainer: {
-    height: Dimensions.get('window').height,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 16,
-    paddingTop: 30,
-    paddingBottom: 30,
+    paddingBottom: 0,
     position: "relative",
+    backgroundColor: '#fff'
   },
 
   title: {
@@ -175,7 +201,6 @@ const styles = StyleSheet.create({
 
   page: {
     width: Dimensions.get('window').width,
-    paddingTop: 50,
   },
 
   pageContent: {
@@ -224,7 +249,37 @@ const styles = StyleSheet.create({
       marginVertical: 12,
       height: 30,
       paddingHorizontal: 10,
-  }
+  },
+  
+  backButton: {
+    position: 'absolute',
+    top: 40,
+    left: 20,
+    zIndex: 1,
+    backgroundColor: '#00000080',
+    borderRadius: 100,
+    padding: 5,
+  },
+  image: {
+    position: 'relative',
+    width: '100%',
+    height: 100,
+    alignItems: 'left',
+  },
+  collectionTitle: {
+    color: "white",
+    fontFamily: 'HammersmithOne',
+    fontSize: 15,
+    fontWeight: 'bold',
+    textAlign: "center",
+  },
+  bannerContainer: {
+    flexDirection: "row", // Align items in a row
+    alignItems: "center", // Center items vertically
+    paddingHorizontal: 20, // Adjust as needed
+    paddingVertical: 10, // Adjust as needed
+    top: 60,
+  },
 });
 
 export default Poem;
