@@ -18,7 +18,6 @@ import getUserId from "../../hooks/getUserId";
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import CollectionBottomSheet from "../../components/CollectionBottomSheet";
 import { setUser } from "../../state/actions/userActions";
-import { markPoemAsRead, handleLike, handleDislike } from "../../hooks/poemActions.js";
 import { poemToPage } from '../../hooks/poemActions';
 
 const HomeScreen = () => {

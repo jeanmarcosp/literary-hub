@@ -62,7 +62,7 @@ const Poem = ({ route }) => {
       )}
     </ImageBackground>
     )}
-    <View style={styles.poemContainer}>
+    <View style={[styles.poemContainer, { height: collection ? Dimensions.get('window').height - 100 : Dimensions.get('window').height  }]}>
       <ScrollView
         horizontal
         pagingEnabled
@@ -84,7 +84,6 @@ const Poem = ({ route }) => {
           </View>
         ))}
       </ScrollView>
-      
 
       <HomePageLike 
         inLikes={isInitiallyLiked} 
@@ -139,12 +138,10 @@ const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
   poemContainer: {
-    height: Dimensions.get('window').height,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 16,
-    paddingTop: 0,
-    paddingBottom: 30,
+    paddingBottom: 0,
     position: "relative",
     backgroundColor: '#fff'
   },
