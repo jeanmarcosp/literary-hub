@@ -67,14 +67,14 @@ const LoginScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView>
-        <View style={{ alignItems: "center", justifyContent: "center" }}>
-          <Text style={styles.loginHeader}>Login</Text>
-        </View>
+        <Text style={styles.loginHeader1}>Sign in to</Text>
+        <Text style={styles.loginHeader2}>Literary Hub</Text>
         <View>
+          <Text style={styles.sectionHeader}>Email</Text>
           <View style={styles.inputView}>
             <MaterialCommunityIcons
-              style={{ marginLeft: 8 }}
-              name="email"
+              style={{ marginLeft: 16 }}
+              name="email-outline"
               size={24}
               color="gray"
             />
@@ -87,23 +87,23 @@ const LoginScreen = () => {
               placeholder="Enter your Email"
             />
           </View>
-          <View style={{ marginTop: 30 }}>
-            <View style={styles.inputView}>
-              <MaterialCommunityIcons
-                style={{ marginLeft: 8 }}
-                name="lock"
-                size={24}
-                color="gray"
-              />
-              <TextInput
-                secureTextEntry={true}
-                value={password}
-                onChangeText={(text) => setPassword(text)}
-                placeholderTextColor={"gray"}
-                style={styles.textBox}
-                placeholder="Enter your Password"
-              />
-            </View>
+
+          <Text style={styles.sectionHeader}>Password</Text>
+          <View style={styles.inputView}>
+            <MaterialCommunityIcons
+              style={{ marginLeft: 16 }}
+              name="lock-outline"
+              size={24}
+              color="gray"
+            />
+            <TextInput
+              secureTextEntry={true}
+              value={password}
+              onChangeText={(text) => setPassword(text)}
+              placeholderTextColor={"gray"}
+              style={styles.textBox}
+              placeholder="Enter your Password"
+            />
           </View>
 
           <View style={styles.forgotPasswordContainer}>
@@ -113,16 +113,12 @@ const LoginScreen = () => {
 
         <View>
           <Pressable onPress={handleLogin} style={styles.loginContainer}>
-            <Text style={styles.loginText}>Login</Text>
+            <Text style={styles.loginText}>Log in</Text>
           </Pressable>
 
-          <Pressable
-            onPress={() => navigation.navigate("Register")}
-            style={{ marginTop: 10 }}
-          >
-            <Text style={{ textAlign: "center", fontSize: 16, color: "#007FFF" }}>
-              Don't have an account? Sign Up
-            </Text>
+          <Pressable onPress={() => navigation.navigate("Register")} style={styles.registerCTA}>
+            <Text style={styles.registerCTAText1}>Don't have an account?</Text>
+            <Text style={styles.registerCTAText2}>Register</Text>
           </Pressable>
         </View>
       </KeyboardAvoidingView>
@@ -138,54 +134,99 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     alignItems: "center",
   },
+
   inputView: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 5,
-    borderColor: "#D0D0D0",
+    gap: 10,
+    borderColor: "#D9D9D9",
     borderWidth: 1,
     paddingVertical: 5,
     borderRadius: 5,
   },
-  loginHeader: {
-    fontFamily: "HammersmithOne",
-    fontSize: 30,
-    marginTop: 75,
-    marginBottom: 30,
+
+  loginHeader1: {
+    fontFamily: "Sarabun-ExtraBold",
+    fontSize: 40,
+    marginTop: 30,
   },
+
+  loginHeader2: {
+    fontFamily: "Sarabun-ExtraBold",
+    fontSize: 40,
+    marginBottom: 40,
+  },
+
+  sectionHeader: {
+    fontFamily: 'Sarabun-Bold',
+    fontSize: 17,
+    marginBottom: 7,
+    marginTop: 20,
+  },
+
   loginContainer: {
-    width: 200,
-    backgroundColor: "#644980",
-    padding: 15,
+    width: 332,
+    borderRadius: 10,
+    backgroundColor: "#000",
+    paddingVertical: 18,
     marginLeft: "auto",
     marginRight: "auto",
     marginBottom: 10,
   },
+
   loginText: {
     textAlign: "center",
-    fontWeight: "bold",
-    fontSize: 16,
+    fontFamily: 'Sarabun-Bold',
+    fontSize: 18,
     color: "white",
   },
+
   textBox: {
-    color: "gray",
-    marginVertical: 10,
-    width: 300,
+    marginVertical: 13,
+    width: 280,
     fontSize: 16,
+    fontFamily: 'Sarabun-Regular',
+    color: '#A6A6A6'
   },
+
   forgotPasswordContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginTop: 12,
-    marginBottom: 45,
+    marginTop: 10,
+    marginBottom: 80,
   },
+
   forgotPasswordText: {
-    fontWeight: "500",
-    color: "#007FFF",
+    fontFamily: 'Sarabun-Bold',
+    fontSize: 15,
+    color: "#9B59D1",
+    textDecorationLine: 'underline'
   },
+
   signUpText: {
     textAlign: "center",
     fontSize: 14,
   },
+
+  registerCTA: {
+    flexDirection: 'row',
+    columnGap: 3,
+    alignItems: 'baseline',
+    alignSelf: 'center',
+    marginTop: 10
+  },
+
+  registerCTAText1: {
+    fontFamily: 'Sarabun-Regular',
+    fontSize: 17,
+    color: '#9B59D1',
+  },
+
+  registerCTAText2: {
+    fontFamily: 'Sarabun-Bold',
+    fontSize: 17,
+    color: '#9B59D1',
+    textDecorationLine: 'underline'
+  }
 });
