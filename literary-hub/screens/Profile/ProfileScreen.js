@@ -208,16 +208,7 @@ const ProfileScreen = () => {
           data={collections}
           renderItem={({ item }) => (
             <CollectionCard
-              key={item._id}
-              collectionId={item._id}
-              userId={user._id}
-              coverImage={item.coverArt}
-              title={item.title}
-              creator={user.username}
-              caption={item.caption}
-              size={item.poemsInCollection.length}
-              likes={item.likes.length}
-              inLikes={item.likes.includes(user._id)}
+              collection={item}
               handleRefresh={fetchProfile}
             />
           )}
@@ -228,31 +219,35 @@ const ProfileScreen = () => {
     );
   };
 
+  const handlePoemPress = (poem) => {
+    console.log("pressed poem card")
+    navigation.navigate('PoemDetailScreen', { poem: poem, isLiked: true }); 
+  };
+
   const LikedPoemsView = ({ poems }) => {
+  
     return (
-      <View>
-        <FlatList
-          data={poems}
-          keyExtractor={(item) => item._id.toString()}
-          renderItem={({ item }) => {
-            return (
-              <PoemCard
-                key={item._id}
-                poemId={item._id}
-                userId={user._id}
-                title={item.title}
-                author={item.author}
-                excerpt={item.content}
-                likes={item.likes.length}
-                inLikes={item.likes.includes(user._id)}
-                handleRefresh={fetchProfile}
-              />
-            );
-          }}
-        />
-      </View>
+      <FlatList
+        data={poems}
+        keyExtractor={(item) => item._id.toString()}
+        renderItem={({ item }) => (
+          <PoemCard
+            key={item._id}
+            poemId={item._id}
+            userId={userId}
+            title={item.title}
+            author={item.author}
+            excerpt={item.content}
+            onPress={() => handlePoemPress(item)}
+            likes={item.likes.length}
+            inLikes={item.likes.includes(userId)}
+            handleRefresh={fetchProfile}
+          />
+        )}
+      />
     );
   };
+  
 
   return (
     <SafeAreaView style={styles.container}>
@@ -414,22 +409,25 @@ const styles = StyleSheet.create({
   profilePic: {
     width: 100,
     height: 100,
-    borderRadius: 100 / 2,
+    borderRadius: 50,
     marginTop: 20,
   },
   names: {
     marginTop: 10,
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   name: {
     fontSize: 20,
     fontFamily: "HammersmithOne",
     color: "#373F41",
+    flexDirection: 'column',
+    alignContent: "center",
   },
   username: {
     fontSize: 15,
     fontFamily: "HammersmithOne",
     color: "#373F41",
-    marginLeft: 15,
   },
   metrics: {
     flexDirection: "row",

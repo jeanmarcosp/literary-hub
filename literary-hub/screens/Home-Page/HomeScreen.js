@@ -19,12 +19,14 @@ import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import CollectionBottomSheet from "../../components/CollectionBottomSheet";
 import { setUser } from "../../state/actions/userActions";
 
+
 const HomeScreen = () => {
   const [poems, setPoems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [userLikedPoems, setUserLikedPoems] = useState([]);
   const userId = getUserId();
   const linesPerPage = 20;
+  const [readPoems, setReadPoems] = useState([]);
 
   const markPoemAsRead = async (poemId) => {
     try {
@@ -37,7 +39,7 @@ const HomeScreen = () => {
 
   const handleLike = async (poemId) => {
     try {
-      await axios.put(`http://localhost:3000/poems/${poemId}/${userId}/like`);
+      await axios.put(`${ROOT_URL}/poems/${poemId}/${userId}/like`);
 
     } catch (error) {
       console.error('Error liking poem:', error);
@@ -46,7 +48,7 @@ const HomeScreen = () => {
   
   const handleDislike = async (poemId) => {
     try {
-      await axios.put(`http://localhost:3000/poems/${poemId}/${userId}/unlike`);
+      await axios.put(`${ROOT_URL}/poems/${poemId}/${userId}/unlike`);
       
     } catch (error) {
       console.error('Error unliking poem:', error);
@@ -71,29 +73,36 @@ const HomeScreen = () => {
         setLoading(false);
         return;
       }
+
+      // filter out previously read poems
+      const newPoems = response.data.filter(poem => !readPoems.includes(poem.id));
   
       // split the poem into pages
-      const lines = response.data[0].content.split("\n");
-      const pages = [];
-      let currentPage = "";
-      let linesAdded = 0;
+      newPoems.forEach(poem => {
+        const lines = poem.content.split("\n");
+        const pages = [];
+        let currentPage = "";
+        let linesAdded = 0;
   
-      for (const line of lines) {
-        if (linesAdded >= linesPerPage) {
-          pages.push(currentPage);
-          currentPage = "";
-          linesAdded = 0;
+        for (const line of lines) {
+          if (linesAdded >= linesPerPage) {
+            pages.push(currentPage);
+            currentPage = "";
+            linesAdded = 0;
+          }
+          currentPage += line + "\n";
+          linesAdded++;
         }
-        currentPage += line + "\n";
-        linesAdded++;
-      }
   
-      if (currentPage.length > 0) {
-        pages.push(currentPage);
-      }
+        if (currentPage.length > 0) {
+          pages.push(currentPage);
+        }
+
+        poem.pages = pages; // Add pages to poem object
+      });
   
-      // update the state with the poem and its pages
-      setPoems((prevPoems) => [...prevPoems, { ...response.data[0], pages }]);
+      // Update the state with the filtered and processed poems
+      setPoems(prevPoems => [...prevPoems, ...newPoems]);
       setLoading(false);
     } catch (error) {
       console.error('Error loading poems:', error);
@@ -101,11 +110,11 @@ const HomeScreen = () => {
     }
   };
 
-  
+  // fetch list of liked poems
   useEffect(() => {
     const fetchLikedPoems = async () => {
       try { 
-        const response = await axios.get(`http://localhost:3000/users/${userId}/likedPoems`);
+        const response = await axios.get(`${ROOT_URL}/users/${userId}/likedPoems`);
         console.log("fetched liked poems")
         setUserLikedPoems(response.data); 
       } catch (error) {
@@ -115,6 +124,22 @@ const HomeScreen = () => {
 
     fetchLikedPoems();
   }, [userId]);
+
+  // fetch list of read poems
+  useEffect(() => {
+    const fetchReadPoems = async () => {
+      try { 
+        const response = await axios.get(`${ROOT_URL}/users/${userId}/readPoems`);
+        console.log("fetched read poems")
+        setReadPoems(response.data); 
+      } catch (error) {
+        console.error('Error fetching read poems:', error);
+      }
+    };
+
+    fetchReadPoems();
+  }, [userId]);
+
 
   useEffect(() => {
     loadMorePoems(); 

@@ -1,5 +1,4 @@
 // Poem.js
-import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import CollectionBottomSheet from "../components/CollectionBottomSheet";
 import { View, ScrollView, Text, Dimensions, StyleSheet, Pressable } from 'react-native';
 import React, { useState, useEffect, useContext, useCallback, useMemo, useRef } from "react";
