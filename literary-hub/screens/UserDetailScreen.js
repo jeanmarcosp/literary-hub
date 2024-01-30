@@ -10,33 +10,44 @@ import {
 import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
-import getUserId from "../../hooks/getUserId";
 import axios from "axios";
-import PoemCard from "../../components/PoemCard";
-import CollectionCard from "../../components/CollectionCard";
+import getUserId from "../hooks/getUserId";
+import PoemCard from "../components/PoemCard";
+import CollectionCard from "../components/CollectionCard";
 
-const ProfileScreen = () => {
+const UserDetailScreen = ({ route }) => {
   const userId = getUserId();
-  const [user, setUser] = useState({});
+  const [otherUser, setOtherUser] = useState({});
   const [poems, setPoems] = useState([]);
   const [collections, setCollections] = useState([]);
   const [likedCollections, setLikedCollections] = useState([]);
-  const [segmentedControlView, setSegmentedControlView] =
-    useState("My Collections");
+  const [segmentedControlView, setSegmentedControlView] = useState("Collections");
   const navigation = useNavigation();
+  const { otherUserId, isFollowing, callbacks } = route.params;
+  const [following, setFollowing] = useState(isFollowing);
 
   const handlePoemPress = (poem) => {
     console.log("pressed poem card");
     navigation.navigate("PoemDetailScreen", { poem: poem, isLiked: true });
   };
 
+  const handlePress = () => {
+    if (callbacks && callbacks.handleFollow && following) {
+      callbacks.handleUnfollow(); 
+    }
+    if (callbacks && callbacks.handleUnfollow) {
+      callbacks.handleFollow(); 
+    }
+    setFollowing(!following);
+  };
+
   // this gets the users information stored in user?.
   const fetchProfile = async () => {
     try {
-      const response = await axios.get(`${ROOT_URL}/profile/${userId}`);
+      const response = await axios.get(`${ROOT_URL}/profile/${otherUserId}`);
       const user = response.data.user;
 
-      setUser(user);
+      setOtherUser(user);
     } catch (error) {
       console.log("error", error);
     }
@@ -45,16 +56,16 @@ const ProfileScreen = () => {
   useFocusEffect(
     React.useCallback(() => {
       fetchProfile();
-    }, [userId])
+    }, [otherUserId])
   );
 
-  console.log(user.name);
+  console.log(otherUser.name);
 
   // fetch poems
   useEffect(() => {
     const fetchLikedPoems = async () => {
       try {
-        const poemIdsToFetch = user?.likedPoems;
+        const poemIdsToFetch = otherUser?.likedPoems;
 
         // Check if poemIdsToFetch is truthy before making the API call
         if (poemIdsToFetch) {
@@ -78,14 +89,14 @@ const ProfileScreen = () => {
     };
 
     fetchLikedPoems();
-  }, [user]);
+  }, [otherUser]);
 
   // fetch created collections
   useEffect(() => {
     // Fetch collections based on user's createdCollections
     const fetchCreatedCollections = async () => {
       try {
-        const collectionIdsToFetch = user?.createdCollections;
+        const collectionIdsToFetch = otherUser?.createdCollections;
 
         // Check if collectionIdsToFetch is truthy before making the API call
         if (collectionIdsToFetch) {
@@ -110,14 +121,14 @@ const ProfileScreen = () => {
     };
 
     fetchCreatedCollections();
-  }, [user]);
+  }, [otherUser]);
 
-// fetch liked collections
+  // fetch liked collections
   useEffect(() => {
     // Fetch collections based on user's createdCollections
     const fetchLikedCollections = async () => {
       try {
-        const collectionIdsToFetch = user?.likedCollections;
+        const collectionIdsToFetch = otherUser?.likedCollections;
 
         // Check if collectionIdsToFetch is truthy before making the API call
         if (collectionIdsToFetch) {
@@ -142,30 +153,18 @@ const ProfileScreen = () => {
     };
 
     fetchLikedCollections();
-  }, [user]);
+  }, [otherUser]);
 
   const CollectionsView = ({ collections }) => {
     return (
-      <View>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("CreateCollectionScreen")}
-        >
-          <View style={styles.createCollectionCTA}>
-            <Ionicons name="add" size={22} color="#373F41" />
-            <Text style={styles.createCollectionText}>
-              Create new collection
-            </Text>
-          </View>
-        </TouchableOpacity>
-        <FlatList
-          data={collections}
-          renderItem={({ item }) => (
-            <CollectionCard collection={item} handleRefresh={fetchProfile} />
-          )}
-          keyExtractor={(item) => item._id}
-          style={styles.collections}
-        />
-      </View>
+      <FlatList
+        data={collections}
+        renderItem={({ item }) => (
+          <CollectionCard collection={item} handleRefresh={fetchProfile} />
+        )}
+        keyExtractor={(item) => item._id}
+        style={styles.collections}
+      />
     );
   };
 
@@ -178,7 +177,7 @@ const ProfileScreen = () => {
           <PoemCard
             key={item._id}
             poemId={item._id}
-            userId={userId}
+            userId={otherUserId}
             title={item.title}
             author={item.author}
             excerpt={item.content}
@@ -209,28 +208,28 @@ const ProfileScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.navigate("SettingsScreen")}>
+      <TouchableOpacity onPress={() => navigation.goBack()}>
         <View style={styles.settingsButton}>
-          <Ionicons name="settings-outline" size={26} color="#373F41" />
+          <Ionicons name="chevron-back" size={26} color="#373F41" />
         </View>
       </TouchableOpacity>
       <View style={styles.centerAligned}>
         <Image
           source={{
-            uri: user?.profilePicture,
+            uri: otherUser?.profilePicture,
           }}
           style={styles.profilePic}
         />
 
         <View style={styles.names}>
-          <Text style={styles.name}>{user?.name}</Text>
-          <Text style={styles.username}>@{user?.username}</Text>
+          <Text style={styles.name}>{otherUser?.name}</Text>
+          <Text style={styles.username}>@{otherUser?.username}</Text>
         </View>
 
         <View style={styles.metrics}>
           <View style={styles.metric}>
             <Text style={styles.metricNumber}>
-              {user?.createdCollections?.length}
+              {otherUser?.createdCollections?.length}
             </Text>
             <Text style={styles.metricName}>Collections</Text>
           </View>
@@ -238,14 +237,16 @@ const ProfileScreen = () => {
           <TouchableOpacity
             onPress={() =>
               navigation.navigate("FollowersScreen", {
-                followerList: user?.followers,
+                followerList: otherUser?.followers,
                 loggedInUser: userId,
-                followingList: user?.following,
+                followingList: otherUser?.following,
               })
             }
           >
             <View style={styles.metric}>
-              <Text style={styles.metricNumber}>{user?.followers?.length}</Text>
+              <Text style={styles.metricNumber}>
+                {otherUser?.followers?.length}
+              </Text>
               <Text style={styles.metricName}>Followers</Text>
             </View>
           </TouchableOpacity>
@@ -253,44 +254,57 @@ const ProfileScreen = () => {
           <TouchableOpacity
             onPress={() =>
               navigation.navigate("FollowingScreen", {
-                followingList: user?.following,
+                followingList: otherUser?.following,
                 loggedInUser: userId,
               })
             }
           >
             <View style={styles.metric}>
-              <Text style={styles.metricNumber}>{user?.following?.length}</Text>
+              <Text style={styles.metricNumber}>
+                {otherUser?.following?.length}
+              </Text>
               <Text style={styles.metricName}>Following</Text>
             </View>
           </TouchableOpacity>
         </View>
 
-        {/* <TouchableOpacity>
-          <View style={styles.followButton}>
-            <Ionicons name="person-add-outline" size={17} color="white" />
-            <Text style={styles.followText}>Follow</Text>
-          </View>
-        </TouchableOpacity> */}
+        <TouchableOpacity onPress={handlePress}>
+          {following ? (
+            <View style={styles.unfollowButton}>
+              <Ionicons
+                name="person-remove-outline"
+                size={17}
+                color="#644980"
+              />
+              <Text style={styles.unfollowText}>Unfollow</Text>
+            </View>
+          ) : (
+            <View style={styles.followButton}>
+              <Ionicons name="person-add-outline" size={17} color="white" />
+              <Text style={styles.followText}>Follow</Text>
+            </View>
+          )}
+        </TouchableOpacity>
 
         <View style={styles.segmentedControl}>
           <TouchableOpacity
-            onPress={() => setSegmentedControlView("My Collections")}
+            onPress={() => setSegmentedControlView("Collections")}
           >
             <View
               style={
-                segmentedControlView === "My Collections"
+                segmentedControlView === "Collections"
                   ? styles.segmentedControlSelected
                   : styles.segmentedControlUnselected
               }
             >
               <Text
                 style={
-                  segmentedControlView === "My Collections"
+                  segmentedControlView === "Collections"
                     ? styles.segmentedControlSelectedText
                     : styles.segmentedControlUnselectedText
                 }
               >
-                My Collections
+                Collections
               </Text>
             </View>
           </TouchableOpacity>
@@ -342,7 +356,7 @@ const ProfileScreen = () => {
       </View>
 
       <View style={styles.leftAligned}>
-        {segmentedControlView === "My Collections" && (
+        {segmentedControlView === "Collections" && (
           <CollectionsView collections={collections} />
         )}
         {segmentedControlView === "Liked poems" && (
@@ -356,7 +370,7 @@ const ProfileScreen = () => {
   );
 };
 
-export default ProfileScreen;
+export default UserDetailScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -421,6 +435,23 @@ const styles = StyleSheet.create({
     fontFamily: "HammersmithOne",
     color: "#fff",
   },
+  unfollowButton: {
+    flexDirection: "row",
+    columnGap: 10,
+    alignItems: "center",
+    borderColor: "#644980",
+    borderWidth: 1,
+    borderRadius: 100,
+    paddingHorizontal: 20,
+    paddingVertical: 7,
+    backgroundColor: "white",
+    marginTop: 15,
+  },
+  unfollowText: {
+    fontSize: 17,
+    fontFamily: "HammersmithOne",
+    color: "#644980",
+  },
   segmentedControl: {
     flexDirection: "row",
     justifyContent: "space-around",
@@ -472,7 +503,7 @@ const styles = StyleSheet.create({
     fontFamily: "HammersmithOne",
   },
   collections: {
-    marginTop: 20,
+    marginTop: 5,
     overflow: "visible",
   },
   collection: {
@@ -546,8 +577,8 @@ const styles = StyleSheet.create({
     color: "#6C7476",
   },
   settingsButton: {
-    alignItems: "flex-end",
-    marginRight: 24,
+    alignItems: "flex-start",
+    marginLeft: 24,
     marginTop: 16,
   },
 });

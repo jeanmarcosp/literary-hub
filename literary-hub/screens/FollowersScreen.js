@@ -15,18 +15,16 @@ import {
   useRoute,
   useFocusEffect,
 } from "@react-navigation/native";
-import Follower from "./../../components/Follower.js";
+import Follower from "../components/Follower";
 import axios from "axios";
 
 const FollowersScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const { followerList, loggedInUser, followingList } = route.params;
+  console.log()
 
   const [followerInfo, setFollowerInfo] = useState([]);
-
-  // console.log(followingList.includes(followerList[0]))
-  // console.log(followerList[0])
 
   useFocusEffect(
     React.useCallback(() => {
@@ -53,7 +51,7 @@ const FollowersScreen = () => {
       };
 
       fetchFollowers();
-    }, [])
+    }, [followerList])
   );
 
   // console.log(followerInfo);

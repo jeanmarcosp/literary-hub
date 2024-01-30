@@ -645,26 +645,6 @@ app.delete("/delete-collection", async (req, res) => {
   }
 });
 
-//endpoint to return user that created collection of given ID
-app.get("/get-creator/:collectionId", async (req, res) => {
-  try {
-    const collectionId = req.params.collectionId;
-
-    const collection = await Collection.findById(collectionId);
-
-    if (!collection) {
-      return res.status(404).json({ error: "Collection not found" });
-    }
-
-    const creatorId = collection.user;
-
-    res.status(200).json({ creatorId });
-  } catch (error) {
-    console.error("Error getting creator:", error);
-    res.status(500).json({ error: "Error getting creator" });
-  }
-});
-
 //endpoint for getting list of liked poems
 app.get("/users/:userId/likedPoems", async (req, res) => {
   try {
