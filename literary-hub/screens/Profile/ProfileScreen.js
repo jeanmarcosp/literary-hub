@@ -6,6 +6,8 @@ import {
   Image,
   TouchableOpacity,
   FlatList,
+  ScrollView,
+  TouchableWithoutFeedback,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -157,14 +159,15 @@ const ProfileScreen = () => {
             </Text>
           </View>
         </TouchableOpacity>
-        <FlatList
-          data={collections}
-          renderItem={({ item }) => (
-            <CollectionCard collection={item} handleRefresh={fetchProfile} />
-          )}
-          keyExtractor={(item) => item._id}
-          style={styles.collections}
-        />
+          <FlatList
+            data={collections}
+            renderItem={({ item }) => (
+              <CollectionCard collection={item} handleRefresh={fetchProfile} />
+            )}
+            keyExtractor={(item) => item._id}
+            style={styles.collections}
+            contentInset= {{bottom: 80}}
+          />
       </View>
     );
   };
@@ -188,6 +191,8 @@ const ProfileScreen = () => {
             handleRefresh={fetchProfile}
           />
         )}
+        style={styles.collections}
+        contentInset= {{bottom: 40}}
       />
     );
   };
@@ -202,6 +207,7 @@ const ProfileScreen = () => {
           )}
           keyExtractor={(item) => item._id}
           style={styles.collections}
+          contentInset= {{bottom: 40}}
         />
       </View>
     );
@@ -495,6 +501,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
     paddingHorizontal: 18,
     paddingTop: 12,
+    height: 400,
   },
 
   collection: {
