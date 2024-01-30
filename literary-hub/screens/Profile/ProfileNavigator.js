@@ -2,8 +2,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import ProfileScreen from './ProfileScreen';
 import CreateCollection from './CreateCollection';
 import Settings from './Settings';
-import FollowersScreen from './FollowersScreen'
-import FollowingScreen from './FollowingScreen'
+import FollowersScreen from '../FollowersScreen'
+import FollowingScreen from '../FollowingScreen'
 
 const Stack = createStackNavigator();
 
