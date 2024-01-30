@@ -12,9 +12,12 @@ const Poem = ({ poem, poemId, onRead, onLike, onUnlike, userLikedPoems }) => {
   const [annotationMode, handleAnnotationMode] = useState(false);
   const [liked, handleLike] = useState(false);
   const bottomSheetRef = useRef(null);
+  const commentSectionRef = useRef(null);
   const READ_TIMER_DURATION = 5000;
   const [isRead, setIsRead] = useState(false);
   const isInitiallyLiked = userLikedPoems.includes(poemId);
+  const [openComments, setOpenComments] = useState(false);
+  const [newComment, setNewComment] = useState('');
 
   // if poem is already marked as read, do nothing
   // if it isn't, mark it as read
@@ -36,6 +39,16 @@ const Poem = ({ poem, poemId, onRead, onLike, onUnlike, userLikedPoems }) => {
   }
 	const handleOpenPress = () => {
     bottomSheetRef.current?.expand();
+  };
+
+  const handleCommentsOpen = () => {
+    commentSectionRef.current?.expand();
+    setOpenComments(true)
+  };
+
+  const handleCommentsClose = () => {
+    commentSectionRef.current?.close();
+    setOpenComments(false)
   };
 
   
@@ -103,7 +116,7 @@ const Poem = ({ poem, poemId, onRead, onLike, onUnlike, userLikedPoems }) => {
       </View>
 
       <View style={styles.commentIcon}>
-        <Pressable onPress={handleOpenPress} style={styles.icon}>
+        <Pressable onPress={handleCommentsOpen} style={styles.icon}>
           <Ionicons name="chatbox-outline" size={30} color="#644980" />
         </Pressable>
       </View>
@@ -113,6 +126,7 @@ const Poem = ({ poem, poemId, onRead, onLike, onUnlike, userLikedPoems }) => {
 
       
       <CollectionBottomSheet ref={bottomSheetRef} title="Add to Collection" poem={poem} />
+      <CommentSection ref={commentSectionRef} handleCommentsClose={handleCommentsClose} />
     </View>
     
   );
