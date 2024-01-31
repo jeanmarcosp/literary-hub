@@ -13,10 +13,9 @@ import getUserId from "../hooks/getUserId";
 import { useNavigation } from '@react-navigation/native';
 
 const Poem = ({ route }) => {
-  const {poem, poemId, userLikedPoems, fromHome, collection} = route.params || {};
+  const {poem, poemId, userLikedPoems, fromHome, collection, comments} = route.params || {};
   const navigation = useNavigation();
   const [annotationMode, handleAnnotationMode] = useState(false);
-  // const [liked, handleLike] = useState(false);
   const bottomSheetRef = useRef(null);
   const commentSectionRef = useRef(null);
   const READ_TIMER_DURATION = 5000;
@@ -151,21 +150,9 @@ const Poem = ({ route }) => {
 
       
       <CollectionBottomSheet ref={bottomSheetRef} title="Add to Collection" poem={poem} />
-      <CommentSection ref={commentSectionRef} handleCommentsClose={handleCommentsClose} />
+      <CommentSection ref={commentSectionRef} handleCommentsClose={handleCommentsClose} comments={comments} poemId={poemId}/>
 
-      {openComments && (
-        <InputAccessoryView>
-          <View style={styles.inputContainer}>
-              <TextInput 
-                  value={newComment}
-                  placeholder={'Add comment'}
-                  onChangeText={setNewComment}
-                  style={styles.commentInput}
-                  multiline={true}
-              />
-          </View>
-        </InputAccessoryView>
-      )}
+      {openComments}
     </View>
     </View>
     

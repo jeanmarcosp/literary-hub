@@ -825,3 +825,55 @@ app.get('/trending-collections', async (req,res) => {
   }
 });
 
+//endpoint for commenting
+app.post('/comment', async (req, res) => {
+  const { userId, poemId, content } = req.body;
+  console.log('Received request:', req.body);
+
+
+  try {
+    // Find the poem by ID
+    const poem = await Poem.findById(poemId);
+
+    // Create a new comment
+    const newComment = {
+      user: userId, // Assuming you have user information in the request
+      content: content,
+      likes: [],
+    };
+
+    const updatedPoem = await Poem.findByIdAndUpdate(
+      poemId,
+      { $addToSet: { comments: newComment } }, // Add user's ID to the likes array
+      { new: true } // To return the updated poem
+    );
+
+    if (!updatedPoem) {
+      return res.status(404).json({ message: "Poem not found" });
+    }
+
+
+    return res.status(201).json({ success: true, comment: newComment });
+  } catch (error) {
+    console.error('Error adding comment:', error);
+    res.status(500).json({ message: "Error making comment" });
+  }
+});
+
+//endpoint for getting single poem info
+app.get("/poem/:poemId", async (req, res) => {
+  try {
+    const poemId = req.params.poemId;
+
+    const poem = await Poem.findById(poemId);
+
+    if (!poem) {
+      return res.status(404).json({ message: "Poem not found" });
+    }
+
+    res.status(200).json({ poem });
+  } catch (error) {
+    console.error("Error while getting the poem:", error);
+    res.status(500).json({ message: "Error while getting the poem" });
+  }
+});

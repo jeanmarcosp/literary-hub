@@ -39,10 +39,11 @@ const UserDetailScreen = ({ route }) => {
       callbacks.handleFollow(); 
     }
     setFollowing(!following);
+    fetchOtherProfile();
   };
 
   // this gets the users information stored in user?.
-  const fetchProfile = async () => {
+  const fetchOtherProfile = async () => {
     try {
       const response = await axios.get(`${ROOT_URL}/profile/${otherUserId}`);
       const user = response.data.user;
@@ -55,7 +56,7 @@ const UserDetailScreen = ({ route }) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      fetchProfile();
+        fetchOtherProfile();
     }, [otherUserId])
   );
 
@@ -160,7 +161,7 @@ const UserDetailScreen = ({ route }) => {
       <FlatList
         data={collections}
         renderItem={({ item }) => (
-          <CollectionCard collection={item} handleRefresh={fetchProfile} />
+          <CollectionCard collection={item} handleRefresh={fetchOtherProfile} />
         )}
         keyExtractor={(item) => item._id}
         style={styles.collections}
@@ -184,7 +185,7 @@ const UserDetailScreen = ({ route }) => {
             onPress={() => handlePoemPress(item)}
             likes={item.likes.length}
             inLikes={item.likes.includes(userId)}
-            handleRefresh={fetchProfile}
+            handleRefresh={fetchOtherProfile}
           />
         )}
       />
@@ -197,7 +198,7 @@ const UserDetailScreen = ({ route }) => {
         <FlatList
           data={likedCollections}
           renderItem={({ item }) => (
-            <CollectionCard collection={item} handleRefresh={fetchProfile} />
+            <CollectionCard collection={item} handleRefresh={fetchOtherProfile} />
           )}
           keyExtractor={(item) => item._id}
           style={styles.collections}
