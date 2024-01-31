@@ -147,7 +147,7 @@ const PoemDetailScreen = ({ route }) => {
     }, [poem._id])
   );
 
-  console.log("moved poem", currentPoem.comments);
+  // console.log("moved poem", currentPoem.comments);
 
   return (
     <View style={styles.poemContainer}>

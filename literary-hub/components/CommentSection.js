@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
 
   inputContainer: {
     position: "absolute",
-    bottom: 0,
+    bottom: 70,
     left: 0,
     right: 0,
     backgroundColor: "white",
