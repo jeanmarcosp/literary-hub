@@ -15,7 +15,7 @@ import {
   useRoute,
   useFocusEffect,
 } from "@react-navigation/native";
-import Follower from "./../../components/Follower.js";
+import Follower from "../components/Follower.js";
 import axios from "axios";
 
 const FollowingScreen = () => {
@@ -51,7 +51,7 @@ const FollowingScreen = () => {
       };
 
       fetchFollowing();
-    }, [])
+    }, [followingList])
   );
 
   return (

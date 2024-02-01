@@ -110,6 +110,10 @@ const CreateCollection = () => {
         <View style={styles.coverPhotoSection}>
           <Text style={styles.header}>Cover photo</Text>
           <View style={styles.emptyCoverPhoto}>
+            {!coverArt && (
+              <Image source={require('./../../assets/collection-images/default-collection-cover1.jpeg')} style={styles.coverImage} />
+            )}
+
             {coverArt && (
               <Image source={{ uri: coverArt.uri }} style={styles.coverImage} />
             )}

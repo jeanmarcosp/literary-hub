@@ -1,19 +1,23 @@
 import React from "react";
 import { View, FlatList, Text, StyleSheet } from "react-native";
-import AuthorCard from "./AuthorCard"; 
 import axios from "axios";
 import { useEffect, useState } from 'react';
-
+import AuthorCard from "./AuthorCard";
 
 const AuthorList = () => {
 
-  const [authors, setAuthors] = useState(null);
+  const [collections, setCollections] = useState([]);
 
+  // gets authors with more than 10 poems in db
   useEffect(() => {
     const fetchAuthors = async() => {
       try {
-        const response = await axios.get("http://localhost:3000/trending-authors");
-        setAuthors(response.data);
+        // called at beginning to create author collections
+        // await axios.get("http://localhost:3000/create-author-collections");
+        
+        // grab 6 collections
+        const response = await axios.get("http://localhost:3000/explore-authors");
+        setCollections(response.data.extractedCollections)
       } catch (error) {
         console.error(error);
       }
@@ -21,19 +25,26 @@ const AuthorList = () => {
     fetchAuthors();
   }, [])
 
-  
+  const renderItem = ({ item }) => {
+    return (
+      <View>
+        <AuthorCard
+                collection={item}
+              />
+      </View>
+    );
+  }
 
   return (
     <View>
+    
       <FlatList
-        style={styles.authorList}
-        data={authors}
-        keyExtractor={(item) => item._id}
-        renderItem={({ item }) => (
-          <AuthorCard title={item._id} poemCount={item.poemCount}/>
-        )}
+        style={styles.container}
+        data={collections}
+        keyExtractor={(item) => item._id.toString()}
+        renderItem={renderItem}
         horizontal
-        showsHorizontalScrollIndicator={false}
+        showsHorizontalScrollIndicator={true}
       />
     </View>
   );
@@ -46,3 +57,5 @@ const styles = StyleSheet.create({
     overflow: 'visible'
   }
 })
+
+

@@ -61,16 +61,20 @@ const Settings = ({ navigation }) => {
             </View>
           </TouchableOpacity>
         </View>
-        <View style={styles.settingBox}>
-          <TouchableOpacity onPress={handleLogout}>
-            <Text style={styles.settingText}>Logout</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.settingBox}>
-          <TouchableOpacity onPress={handleDeleteAccount}>
-            <Text style={styles.settingText}>Delete Account</Text>
-          </TouchableOpacity>
-        </View>
+
+        <TouchableOpacity onPress={handleLogout}>
+          <View style={styles.settingBox}>
+              <Ionicons name="exit-outline" size={24} color="#464646" />
+              <Text style={styles.settingText}>Log out</Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={handleDeleteAccount}>
+          <View style={styles.settingBox}>
+              <Ionicons name="trash-outline" size={24} color="#FB4E4E" />
+              <Text style={styles.redSettingText}>Delete account</Text>
+          </View>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -81,40 +85,54 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
   },
+
   container: {
     paddingHorizontal: 25,
     paddingTop: 20,
   },
+
   main: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    marginBottom: 15,
   },
+
   closeCTA: {
     backgroundColor: "#F7EEFF",
     borderRadius: 100,
     padding: 4,
   },
+
   title: {
+    fontFamily: 'Sarabun-ExtraBold',
     fontSize: 24,
-    fontWeight: "bold",
     textAlign: "center",
   },
+
   settingBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    columnGap: 10,
     marginTop: 16,
-    rowGap: 10,
     paddingHorizontal: 12,
-    paddingVertical: 12,
-    backgroundColor: "white",
+    paddingVertical: 15,
+    backgroundColor: "#F7F7F7",
     borderRadius: 12,
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 7,
+    borderWidth: 1,
+    borderColor: '#DEDEDE',
   },
+
   settingText: {
     fontSize: 18,
-    fontFamily: "Sarabun-Medium",
-    color: "#373F41",
+    fontFamily: "Sarabun-Bold",
+    color: "#464646",
+  },
+
+  redSettingText: {
+    fontSize: 18,
+    fontFamily: "Sarabun-Bold",
+    color: "#FB4E4E",
   },
 });
 
