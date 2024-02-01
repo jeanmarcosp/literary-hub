@@ -1,28 +1,47 @@
 import React, { useState } from "react";
-import { View, TextInput, FlatList, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, TextInput, FlatList, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 
-const SearchResult = ({Poem}) => {
+const SearchResult = ({data, type}) => {
   const navigation = useNavigation();
-  const openPoem = () =>{
-    //event.persist();
-    //navigation.navigate("Poem", { title, author, content });
-    navigation.navigate('Poem', { title: Poem.title, author:Poem. author, content: Poem.content });
+  const openItem = () => {
+    if (type === 'poem') {
+      navigation.navigate('Poem', { poem: data });
+    } else  {
+      ;
+    }
 
-  }
+  }; 
+  
+    return (
+      <View style={styles.container}>
+        <TouchableOpacity onPress={openItem}>
+          {type === 'poem' && data && data.title? (
+            <>
+              <Text>{data.title}</Text>
+              <Text style={styles.author}> {data.author}</Text>
+            </>
+          ) : type === 'user' && data ? (
+            // Render user-specific content
+            <View style={styles.column}>
+            <Image
+            source={data.profilePicture ? { uri: data.profilePicture } : require('../assets/collection-images/defaultCover.jpeg')}
+            style={styles.image}
+          />
+            <Text>{data.username}   {data.name}</Text>
+            </View>
+          ) : (
+            // Add more conditions for other types
+            <Text></Text>
+          )}
+        </TouchableOpacity>
+      </View>
+    );
+  };
+  
 
-  return (
-    <View style={styles.container}>
-       <TouchableOpacity
-       onPress={openPoem}
-       >
-        <Text>{Poem.title}</Text><Text style={styles.author}>     {Poem.author}</Text>
-        </TouchableOpacity> 
-    </View>
-  );
-};
 
 const styles = StyleSheet.create({
   container: {
@@ -35,9 +54,18 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 7,
   },
+  column:{
+    flexDirection: 'row',
+  },
   author:{
     alignItems: "flex-end",
 
+  },
+  image:{
+    alignItems: 'center',
+    height: 20,
+    width: 20,
+    marginRight: 5,
   },
   icon: {
     marginRight: 10,
