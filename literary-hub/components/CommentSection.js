@@ -43,7 +43,7 @@ const CommentSection = forwardRef((props, ref) => {
     []
   );
 
-  // console.log("new props", props.comments.length);
+  // console.log("new props here", props);
 
   const handleComment = async () => {
     try {
@@ -107,6 +107,8 @@ const CommentSection = forwardRef((props, ref) => {
                 text={item.content}
                 likeCount={item.likes.length}
                 poemId={props.poemId}
+                commentId={item._id}
+                handleLikeRefresh={props.handleRefresh}
               />
             )}
           />

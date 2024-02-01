@@ -4,9 +4,11 @@ import { useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
 import Like from "./Like";
 
-const Comment = ({ user, text, likeCount }) => {
+const Comment = ({ user, text, likeCount, poemId, commentId, handleLikeRefresh }) => {
   const [commenter, setCommenter] = useState({});
+  const [liked, setLiked] = useState(false);
 
+//   console.log(handleLikeRefresh);
   const fetchProfile = async () => {
     try {
       const response = await axios.get(`${ROOT_URL}/profile/${user}`);
@@ -24,11 +26,41 @@ const Comment = ({ user, text, likeCount }) => {
     }, [user])
   );
 
+  const handleLikeComment = async () => {
+    try {
+      const response = await axios.put(
+        `http://localhost:3000/comments/${commentId}/${user}/${poemId}/like`
+      );
+
+      const updatedComment = response.data;
+
+      setLiked(true);
+      handleLikeRefresh();
+    } catch (error) {
+      console.error("Error liking collection:", error);
+    }
+  };
+
+  const handleUnlikeComment = async () => {
+    try {
+      const response = await axios.put(
+        `http://localhost:3000/comments/${commentId}/${user}/${poemId}/unlike`
+      );
+
+      const updatedComment = response.data;
+
+      setLiked(false);
+      handleLikeRefresh();
+    } catch (error) {
+      console.error("Error liking collection:", error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View>
         <Image
-          source={{uri: commenter?.profilePicture}}
+          source={{ uri: commenter?.profilePicture }}
           style={styles.userPic}
         />
       </View>
@@ -37,7 +69,11 @@ const Comment = ({ user, text, likeCount }) => {
         <Text style={styles.text}>{text}</Text>
       </View>
       <View style={styles.likeContainer}>
-        <Like />
+        <Like
+          inLikes={commenter?.likedComments?.includes(commentId)}
+          handleLike={handleLikeComment}
+          handleDislike={handleUnlikeComment}
+        />
         <Text style={styles.likeNumber}>{likeCount}</Text>
       </View>
     </View>
@@ -87,9 +123,9 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   textContainer: {
-    flexDirection:'column',
-    alignItems: 'center',
+    flexDirection: "column",
+    alignItems: "center",
     marginLeft: 15,
     marginRight: 100,
-  }
+  },
 });

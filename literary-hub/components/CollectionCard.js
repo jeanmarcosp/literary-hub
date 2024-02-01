@@ -26,7 +26,7 @@ const CollectionCard = ({ collection, handleRefresh }) => {
   const userIsCreator = collection.user === userId;
 
   const [liked, setLiked] = useState(false);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false); //prob cause of liking lag on profile
 
   const handleLikeCollection = async () => {
     try {
