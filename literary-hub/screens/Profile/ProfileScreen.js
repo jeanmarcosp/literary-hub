@@ -296,7 +296,7 @@ const ProfileScreen = () => {
                     : styles.segmentedControlUnselectedText
                 }
               >
-                My Collections
+                My collections
               </Text>
             </View>
           </TouchableOpacity>
@@ -340,7 +340,7 @@ const ProfileScreen = () => {
                     : styles.segmentedControlUnselectedText
                 }
               >
-                Liked Collections
+                Liked collections
               </Text>
             </View>
           </TouchableOpacity>
@@ -442,20 +442,18 @@ const styles = StyleSheet.create({
   segmentedControl: {
     flexDirection: "row",
     justifyContent: "space-around",
-    width: '90%',
+    width: '93%',
     marginTop: 20,
     marginBottom: 10,
-    borderWidth: 1,
     borderRadius: 100,
-    borderColor: "#E2E5E6",
-    paddingHorizontal: 2,
-    paddingVertical: 2,
+    paddingHorizontal: 4,
+    paddingVertical: 4,
     backgroundColor: "#E1DBE6",
   },
 
   segmentedControlSelected: {
     borderRadius: 100,
-    width: 140,
+    width: 120,
     paddingVertical: 10,
     backgroundColor: "white",
     alignItems: "center",
