@@ -104,10 +104,21 @@ const ExploreScreen = () => {
 
        {/* Overlay the SearchResult component below the search bar */}
        <View style={styles.overlayResultContainer}>
-        {searchResults.map((poem) => (
+        {searchResults['poems']?.map((poem) => (
           <SearchResult
+            type='poem'
+            data={poem}
             key={poem._id}
             Poem = {poem}
+            style={styles.overlayResult}
+          />
+        ))}
+        {searchResults['users']?.map((user) => (
+          <SearchResult
+            type='user'
+            data={user}
+            key={user._id}
+            User = {user}
             style={styles.overlayResult}
           />
         ))}
