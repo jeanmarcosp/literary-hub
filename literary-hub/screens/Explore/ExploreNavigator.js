@@ -14,6 +14,7 @@ export default function ExploreNavigator() {
       <Stack.Screen name="ExploreScreen" component={ExploreScreen} />
       <Stack.Screen name="CollectionScreen" component={CollectionScreen} />
       <Stack.Screen name="SinglePoem" component={Poem} />
+      <Stack.Screen name="Poem" component={PoemScreen} />
     </Stack.Navigator>
   );
 }

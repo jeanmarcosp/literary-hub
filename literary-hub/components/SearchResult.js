@@ -4,25 +4,39 @@ import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 
-const SearchResult = ({Poem}) => {
+const SearchResult = ({data, type}) => {
   const navigation = useNavigation();
-  const openPoem = () =>{
-    //event.persist();
-    //navigation.navigate("Poem", { title, author, content });
-    navigation.navigate('Poem', { poem: Poem });
+  const openItem = () => {
+    if (type === 'poem') {
+      navigation.navigate('Poem', { poem: data });
+    } else  {
+      ;
+    }
 
-  }
+  }; 
+  
+    return (
+      <View style={styles.container}>
+        <TouchableOpacity onPress={openItem}>
+          {type === 'poem' && data && data.title? (
+            <>
+              <Text>{data.title}</Text>
+              <Text style={styles.author}> {data.author}</Text>
+            </>
+          ) : type === 'user' && data ? (
+            // Render user-specific content
 
-  return (
-    <View style={styles.container}>
-       <TouchableOpacity
-       onPress={openPoem}
-       >
-        <Text>{Poem.title}</Text><Text style={styles.author}>     {Poem.author}</Text>
-        </TouchableOpacity> 
-    </View>
-  );
-};
+            <Text>{data.username}   {data.name}</Text>
+          ) : (
+            // Add more conditions for other types
+            <Text></Text>
+          )}
+        </TouchableOpacity>
+      </View>
+    );
+  };
+  
+
 
 const styles = StyleSheet.create({
   container: {

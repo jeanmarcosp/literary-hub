@@ -794,7 +794,29 @@ app.get('/search', async(req, res) => {
           }
         }
       ]);
-      res.json(poemResults);
+      const userResults = await User.aggregate([
+        {
+          $match: {
+            username: { $regex: query, $options: 'i' }
+          }
+        },
+        {
+          $sort: { name: -1 }
+        },
+        {
+          $limit: 10
+        },
+        // {
+        //   $project: {
+        //     likes: 0
+        //   }
+        // }
+      ]);
+      const results = {};
+      results['users'] = userResults;
+      results['poems'] = poemResults;
+      console.log(results);
+      res.json(results);
 
     }catch (error) {
       console.error('Error while getting poem query results ', error);
