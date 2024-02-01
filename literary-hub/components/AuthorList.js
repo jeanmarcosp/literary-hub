@@ -13,10 +13,10 @@ const AuthorList = () => {
     const fetchAuthors = async() => {
       try {
         // called at beginning to create author collections
-        // await axios.get("http://localhost:3000/create-author-collections");
+        // await axios.get(`${ROOT_URL}/create-author-collections`);
         
         // grab 6 collections
-        const response = await axios.get("http://localhost:3000/explore-authors");
+        const response = await axios.get(`${ROOT_URL}/explore-authors`);
         setCollections(response.data.extractedCollections)
       } catch (error) {
         console.error(error);

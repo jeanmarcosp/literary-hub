@@ -25,7 +25,7 @@ const CollectionScreen = ({ route }) => {
   useEffect(() => {
     const fetchPoems = async() => {
       try {
-        const response = await axios.get(`http://localhost:3000/poems-by-ids`, {
+        const response = await axios.get(`${ROOT_URL}/poems-by-ids`, {
           params: {
             poemIds: poemIds,
           },

@@ -52,7 +52,7 @@ const CollectionBottomSheet = forwardRef((props, ref) => {
 
   const getCollections = () => {
     axios
-      .get("http://localhost:3000/getcollections", {
+      .get(`${ROOT_URL}/getcollections`, {
         params: { id: props.userData._id },
       })
       .then((response) => {
@@ -95,7 +95,7 @@ const CollectionBottomSheet = forwardRef((props, ref) => {
 
   const addPoemToCollection = (poemId, collectionId) => {
     axios
-      .post("http://localhost:3000/addpoemtocollection", {
+      .post(`${ROOT_URL}/addpoemtocollection`, {
         poemId: poemId,
         collectionId: collectionId,
       })
