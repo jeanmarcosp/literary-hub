@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, TextInput, FlatList, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, TextInput, FlatList, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
@@ -25,8 +25,13 @@ const SearchResult = ({data, type}) => {
             </>
           ) : type === 'user' && data ? (
             // Render user-specific content
-
+            <View style={styles.column}>
+            <Image
+            source={data.profilePicture ? { uri: data.profilePicture } : require('../assets/collection-images/defaultCover.jpeg')}
+            style={styles.image}
+          />
             <Text>{data.username}   {data.name}</Text>
+            </View>
           ) : (
             // Add more conditions for other types
             <Text></Text>
@@ -49,9 +54,18 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 7,
   },
+  column:{
+    flexDirection: 'row',
+  },
   author:{
     alignItems: "flex-end",
 
+  },
+  image:{
+    alignItems: 'center',
+    height: 20,
+    width: 20,
+    marginRight: 5,
   },
   icon: {
     marginRight: 10,
