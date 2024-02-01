@@ -23,13 +23,12 @@ const ProfileScreen = () => {
   const [poems, setPoems] = useState([]);
   const [collections, setCollections] = useState([]);
   const [likedCollections, setLikedCollections] = useState([]);
-  const [segmentedControlView, setSegmentedControlView] =
-    useState("My Collections");
+  const [segmentedControlView, setSegmentedControlView] = useState("My Collections");
   const navigation = useNavigation();
 
   const handlePoemPress = (poem) => {
     console.log("pressed poem card");
-    navigation.navigate("PoemDetailScreen", { poem: poem, isLiked: true });
+    navigation.navigate("PoemDetailScreen", { poem: poem, isLiked: true, comments: poem.comments, handleRefresh: {fetchProfile} });
   };
 
   // this gets the users information stored in user?.

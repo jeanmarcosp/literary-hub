@@ -14,6 +14,7 @@ import PoemDetailScreen from './screens/Profile/PoemDetailScreen.js';
 import UserDetailScreen from "./screens/UserDetailScreen.js";
 import FollowersScreen from "./screens/FollowersScreen.js";
 import FollowingScreen from "./screens/FollowingScreen.js";
+import CollectionScreen from "./screens/CollectionScreen.js";
 
 const StackNavigator = () => {
   const Stack = createNativeStackNavigator();
@@ -89,6 +90,7 @@ const StackNavigator = () => {
         <Stack.Screen name="UserDetailScreen" component={UserDetailScreen} options={{ headerShown: false }}/>
         <Stack.Screen name="FollowersScreen" component={FollowersScreen} options={{ headerShown: false }}/>
         <Stack.Screen name="FollowingScreen" component={FollowingScreen} options={{ headerShown: false }}/>
+        <Stack.Screen name="CollectionScreen" component={CollectionScreen} options={{ headerShown: false }}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
