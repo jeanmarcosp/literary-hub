@@ -27,6 +27,7 @@ const userSchema = new mongoose.Schema({
   verificationToken: String,
   likedPoems: [{ type: mongoose.Schema.Types.ObjectId, ref: "Poem" }],
   likedCollections: [{ type: mongoose.Schema.Types.ObjectId, ref: "Collection" }],
+  likedComments: [{ type: mongoose.Schema.Types.ObjectId }],
   createdCollections: [{ type: mongoose.Schema.Types.ObjectId, ref: "Collection" }],
   readPoems: [{ type: mongoose.Schema.Types.ObjectId, ref: "Poem" }],
 });
