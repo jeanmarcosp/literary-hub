@@ -11,7 +11,7 @@ const TrendingCollections = () => {
   useEffect(() => {
     const fetchCollections = async() => {
       try {
-        const response = await axios.get("http://localhost:3000/trending-collections");
+        const response = await axios.get(`${ROOT_URL}/trending-collections`);
         setCollections(response.data);
       } catch (error) {
         console.error(error);

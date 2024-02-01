@@ -2,12 +2,12 @@ import React from 'react';
 import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, FlatList } from 'react-native';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import Like from '../../components/Like';
+import Like from '../components/Like';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from '@react-navigation/native';
 import axios from "axios";
-import getUserId from '../../hooks/getUserId';
-import { poemToPage } from '../../hooks/poemActions';
+import getUserId from '../hooks/getUserId';
+import { poemToPage } from '../hooks/poemActions';
 
 // const CollectionScreen = ({poems, title, showAuthor = true, showCreator = true}) => {
 const CollectionScreen = ({ route }) => {
@@ -25,7 +25,7 @@ const CollectionScreen = ({ route }) => {
   useEffect(() => {
     const fetchPoems = async() => {
       try {
-        const response = await axios.get(`http://localhost:3000/poems-by-ids`, {
+        const response = await axios.get(`${ROOT_URL}/poems-by-ids`, {
           params: {
             poemIds: poemIds,
           },
@@ -91,13 +91,13 @@ const CollectionScreen = ({ route }) => {
   return (
     <View style={styles.container}>
       <ImageBackground
-        source={collection.coverArt ? { uri: collection.coverArt } : require('../../assets/collection-images/defaultCover.jpeg')}
+        source={collection.coverArt ? { uri: collection.coverArt } : require('literary-hub/assets/collection-images/defaultCover.jpeg')}
         style={styles.image}
         resizeMode="cover"
       >
         <TouchableOpacity onPress={() => {navigation.goBack()}}>
           <View style={styles.backButton}>
-            <Ionicons name="chevron-back" size={23} color="#fff" />
+            <Ionicons name="chevron-back" size={23} color="white" />
           </View>
         </TouchableOpacity>
 
@@ -127,7 +127,7 @@ const CollectionScreen = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff', // Set the background color here
+    backgroundColor: '#fff', 
   },
 
   image: {

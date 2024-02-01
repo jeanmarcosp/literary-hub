@@ -252,7 +252,7 @@ app.put("/poems/:poemId/:userId/unlike", async (req, res) => {
 //endpoint for liking a collection, updates collection's likes array and also adds collection to users likedCollections array
 app.put("/collections/:collectionId/:userId/like", async (req, res) => {
   const collectionId = req.params.collectionId;
-  const userId = req.params.userId; // Assuming you have a way to get the logged-in user's ID
+  const userId = req.params.userId;
 
   try {
     const collection = await Collection.findById(collectionId);
@@ -393,7 +393,7 @@ app.get("/profile/:userId", async (req, res) => {
 app.get("/poems-by-ids", async (req, res) => {
   try {
     const poemIds = req.query.poemIds; // Retrieve poem IDs from the query parameters
-    
+
     // Fetch poems by their IDs
     const poems = await Poem.find({ _id: { $in: poemIds } });
 
@@ -501,7 +501,7 @@ app.delete("/delete-account/:userId", async (req, res) => {
 app.get("/create-author-collections", async (req, res) => {
   try {
     // get the authors
-    console.log("im in create author collections")
+    console.log("im in create author collections");
     const authors = await Poem.aggregate([
       {
         $group: {
@@ -512,31 +512,31 @@ app.get("/create-author-collections", async (req, res) => {
     ]);
 
     for (const author of authors) {
-
       const userId = author._id;
 
       // Check if a collection already exists for the author
       const existingCollection = await Collection.findOne({ title: userId });
 
       if (!existingCollection) {
-          // Create a collection for the author
+        // Create a collection for the author
 
-          const newCollection = new Collection({
-              title: userId,
-              user: "6552982f84f4459fad7d9a7f" // emily's
-          });
+        const newCollection = new Collection({
+          title: userId,
+          user: "6552982f84f4459fad7d9a7f", // emily's
+        });
 
-          // Fetch poems by the author
-          const poems = await Poem.find({ author: userId });
+        // Fetch poems by the author
+        const poems = await Poem.find({ author: userId });
 
-          // Add fetched poems to the collection
-          newCollection.poemsInCollection = poems.map(poem => poem._id);
+        // Add fetched poems to the collection
+        newCollection.poemsInCollection = poems.map((poem) => poem._id);
 
-          await newCollection.save();
+        await newCollection.save();
       }
-  }
-  res.status(200).json({ message: "Author collections created successfully" });
-
+    }
+    res
+      .status(200)
+      .json({ message: "Author collections created successfully" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error fetching trending authors" });
@@ -546,44 +546,46 @@ app.get("/create-author-collections", async (req, res) => {
 // authors that show up on the explore page
 app.get("/explore-authors", async (req, res) => {
   try {
-      // Query authors with 10 or more poems
-      const authors = await Poem.aggregate([
-          {
-              $group: {
-                  _id: "$author",
-                  poemCount: { $sum: 1 },
-              },
-          },
-          {
-              $match: {
-                  poemCount: { $gte: 10 },
-              },
-          },
-          {
-            $limit: 6 // Limit the number of authors to 6
+    // Query authors with 10 or more poems
+    const authors = await Poem.aggregate([
+      {
+        $group: {
+          _id: "$author",
+          poemCount: { $sum: 1 },
         },
-      ]);
+      },
+      {
+        $match: {
+          poemCount: { $gte: 10 },
+        },
+      },
+      {
+        $limit: 6, // Limit the number of authors to 6
+      },
+    ]);
 
-      const cols = [];
+    const cols = [];
 
-      // Loop through authors and fetch their associated collections
-      for (const author of authors) {
-          const userId = author._id;
+    // Loop through authors and fetch their associated collections
+    for (const author of authors) {
+      const userId = author._id;
 
-          // Fetch collections for the author
-          const col = await Collection.find({ title: userId });
+      // Fetch collections for the author
+      const col = await Collection.find({ title: userId });
 
-          // Push author and collections to the result array
-          cols.push(...col);
-      }
-      // Extract collections from the collections array
-      const extractedCollections = cols.map(col => ({
-      ...col.toObject(), 
+      // Push author and collections to the result array
+      cols.push(...col);
+    }
+    // Extract collections from the collections array
+    const extractedCollections = cols.map((col) => ({
+      ...col.toObject(),
     }));
-      res.json({ extractedCollections });
+    res.json({ extractedCollections });
   } catch (error) {
-      console.error("Error fetching trending authors:", error);
-      res.status(500).json({ error: "An error occurred while fetching trending authors." });
+    console.error("Error fetching trending authors:", error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while fetching trending authors." });
   }
 });
 
@@ -762,37 +764,36 @@ app.post("/unfollow-user", async (req, res) => {
   }
 });
 
-
-//endpoint for searching 
-app.get('/search', async(req, res) => {
+//endpoint for searching
+app.get("/search", async (req, res) => {
   console.log("in search");
-  try{
+  try {
     const { query } = req.query;
-    console.log('Query is ', query);
-    try{
-     // const poemResults = await Poem.find({ title: {$regex: query} }).limit(10).sort('author');
+    console.log("Query is ", query);
+    try {
+      // const poemResults = await Poem.find({ title: {$regex: query} }).limit(10).sort('author');
       const poemResults = await Poem.aggregate([
         {
           $match: {
-            title: { $regex: query, $options: 'i' }
-          }
+            title: { $regex: query, $options: "i" },
+          },
         },
         {
           $addFields: {
-            likeCount: { $size: "$likes" }
-          }
+            likeCount: { $size: "$likes" },
+          },
         },
         {
-          $sort: { likeCount: -1 }
+          $sort: { likeCount: -1 },
         },
         {
-          $limit: 10
+          $limit: 10,
         },
         {
           $project: {
-            likes: 0
-          }
-        }
+            likes: 0,
+          },
+        },
       ]);
       const userResults = await User.aggregate([
         {
@@ -817,32 +818,171 @@ app.get('/search', async(req, res) => {
       results['poems'] = poemResults;
       console.log(results);
       res.json(results);
-
-    }catch (error) {
-      console.error('Error while getting poem query results ', error);
-      res.status(500).json({ message: "Error while getting user query results" });
+    } catch (error) {
+      console.error("Error while getting poem query results ", error);
+      res
+        .status(500)
+        .json({ message: "Error while getting user query results" });
     }
-  }catch (error) {
-    console.error('Error getting search query ', error);
-    res.status(500).json({ message: "Error getting search query" });
-  
+  } catch (error) {
+    console.error("Error getting search query ", error);
+    res.status(500).json({ message: "Error gettign search query" });
   }
-  
-})
+});
 
-
-app.get('/trending-collections', async (req,res) => {
-
+app.get("/trending-collections", async (req, res) => {
   try {
     const collections = await Collection.aggregate([
       { $match: { poemsInCollection: { $exists: true, $not: { $size: 0 } } } },
       { $match: { username: { $ne: null } } },
-      { $sample: { size: 5 } } 
+      { $sample: { size: 5 } },
     ]);
     res.json(collections);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error fetching trending collections' });
+    res.status(500).json({ error: "Error fetching trending collections" });
   }
 });
 
+//endpoint for commenting
+app.post("/comment", async (req, res) => {
+  const { userId, poemId, content } = req.body;
+  console.log("Received request:", req.body);
+
+  try {
+    // Find the poem by ID
+    const poem = await Poem.findById(poemId);
+
+    // Create a new comment
+    const newComment = {
+      user: userId, // Assuming you have user information in the request
+      content: content,
+      likes: [],
+    };
+
+    const updatedPoem = await Poem.findByIdAndUpdate(
+      poemId,
+      { $addToSet: { comments: newComment } }, // Add user's ID to the likes array
+      { new: true } // To return the updated poem
+    );
+
+    if (!updatedPoem) {
+      return res.status(404).json({ message: "Poem not found" });
+    }
+
+    return res.status(201).json({ success: true, comment: newComment });
+  } catch (error) {
+    console.error("Error adding comment:", error);
+    res.status(500).json({ message: "Error making comment" });
+  }
+});
+
+//endpoint for getting single poem info
+app.get("/poem/:poemId", async (req, res) => {
+  try {
+    const poemId = req.params.poemId;
+
+    const poem = await Poem.findById(poemId);
+
+    if (!poem) {
+      return res.status(404).json({ message: "Poem not found" });
+    }
+
+    res.status(200).json({ poem });
+  } catch (error) {
+    console.error("Error while getting the poem:", error);
+    res.status(500).json({ message: "Error while getting the poem" });
+  }
+});
+
+//endpoint for liking a comment
+app.put("/comments/:commentId/:userId/:poemId/like", async (req, res) => {
+  const commentId = req.params.commentId;
+  const userId = req.params.userId;
+  const poemId = req.params.poemId;
+
+  try {
+    // Find the poem by its ID
+    const poem = await Poem.findById(poemId);
+
+    if (!poem) {
+      return res.status(404).json({ message: "Poem not found" });
+    }
+
+    // Find the comment by its ID within the poem
+    const comment = poem.comments.find((c) => c._id.toString() === commentId);
+
+    if (!comment) {
+      return res.status(404).json({ message: "Comment not found" });
+    }
+
+    // Check if the user has already liked the comment
+    if (comment.likes.includes(userId)) {
+      return res
+        .status(400)
+        .json({ message: "User already liked the comment" });
+    }
+
+    // Update the comment's likes array
+    comment.likes.push(userId);
+    await poem.save();
+
+    // Update the user's likedComments array
+    await User.findByIdAndUpdate(userId, {
+      $addToSet: { likedComments: commentId },
+    });
+
+    res.status(200).json({ message: "Comment liked successfully" });
+  } catch (error) {
+    console.error("Error liking comment:", error);
+    res
+      .status(500)
+      .json({ message: "An error occurred while liking the comment" });
+  }
+});
+
+//endpoint for unlking a comment
+app.put("/comments/:commentId/:userId/:poemId/unlike", async (req, res) => {
+  const commentId = req.params.commentId;
+  const userId = req.params.userId;
+  const poemId = req.params.poemId;
+
+  try {
+    // Find the poem by its ID
+    const poem = await Poem.findById(poemId);
+
+    if (!poem) {
+      return res.status(404).json({ message: "Poem not found" });
+    }
+
+    // Find the comment by its ID within the poem
+    const comment = poem.comments.find((c) => c._id.toString() === commentId);
+
+    if (!comment) {
+      return res.status(404).json({ message: "Comment not found" });
+    }
+
+    // Check if the user has liked the comment
+    if (!comment.likes.includes(userId)) {
+      return res
+        .status(400)
+        .json({ message: "User has not liked the comment" });
+    }
+
+    // Remove the user from the comment's likes array
+    comment.likes.pull(userId);
+    await poem.save();
+
+    // Remove the comment from the user's likedComments array
+    await User.findByIdAndUpdate(userId, {
+      $pull: { likedComments: commentId },
+    });
+
+    res.status(200).json({ message: "Comment unliked successfully" });
+  } catch (error) {
+    console.error("Error unliking comment:", error);
+    res
+      .status(500)
+      .json({ message: "An error occurred while unliking the comment" });
+  }
+});
