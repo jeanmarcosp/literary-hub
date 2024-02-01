@@ -131,9 +131,7 @@ const PoemDetailScreen = ({ route }) => {
 
   const fetchPoem = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:3000/poem/${poem._id}`
-      );
+      const response = await axios.get(`${ROOT_URL}/poem/${poem._id}`);
       const fetchedpoem = response.data.poem;
       setCurrentPoem(fetchedpoem);
     } catch (error) {

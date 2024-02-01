@@ -60,7 +60,6 @@ const RegisterScreen = () => {
       };
 
       const response = await axios.post(`${ROOT_URL}/register`, user);
-      // const response = await axios.post(`http://localhost:3000/register`, user);
 
       if (response.data.success) {
         Alert.alert(

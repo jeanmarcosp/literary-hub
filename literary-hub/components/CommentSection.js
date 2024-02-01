@@ -43,8 +43,6 @@ const CommentSection = forwardRef((props, ref) => {
     []
   );
 
-  // console.log("new props here", props);
-
   const handleComment = async () => {
     try {
       const postedComment = {
@@ -53,9 +51,7 @@ const CommentSection = forwardRef((props, ref) => {
         content: newComment,
       };
 
-      // console.log("new comment here", postedComment);
-
-      const response = await axios.post(`http://localhost:3000/comment`,postedComment);
+      const response = await axios.post(`${ROOT_URL}/comment`,postedComment);
 
       console.log("Created Comment successfully", response.data.comment.content);
 

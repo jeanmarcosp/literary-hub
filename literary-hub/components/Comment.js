@@ -29,7 +29,7 @@ const Comment = ({ user, text, likeCount, poemId, commentId, handleLikeRefresh }
   const handleLikeComment = async () => {
     try {
       const response = await axios.put(
-        `http://localhost:3000/comments/${commentId}/${user}/${poemId}/like`
+        `${ROOT_URL}/comments/${commentId}/${user}/${poemId}/like`
       );
 
       const updatedComment = response.data;
@@ -44,7 +44,7 @@ const Comment = ({ user, text, likeCount, poemId, commentId, handleLikeRefresh }
   const handleUnlikeComment = async () => {
     try {
       const response = await axios.put(
-        `http://localhost:3000/comments/${commentId}/${user}/${poemId}/unlike`
+        `${ROOT_URL}/comments/${commentId}/${user}/${poemId}/unlike`
       );
 
       const updatedComment = response.data;

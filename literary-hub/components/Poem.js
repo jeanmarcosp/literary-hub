@@ -46,7 +46,6 @@ const Poem = ({ route }) => {
   const [isRead, setIsRead] = useState(false);
   const isInitiallyLiked = userLikedPoems.includes(poemId);
   const [openComments, setOpenComments] = useState(false);
-  // const [newComment, setNewComment] = useState('');
   const userId = getUserId();
   const [currentPoem, setCurrentPoem] = useState({});
 
@@ -84,7 +83,7 @@ const Poem = ({ route }) => {
 
   const fetchPoem = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/poem/${poemId}`);
+      const response = await axios.get(`${ROOT_URL}/poem/${poemId}`);
       const fetchedpoem = response.data.poem;
       setCurrentPoem(fetchedpoem);
     } catch (error) {
@@ -97,8 +96,6 @@ const Poem = ({ route }) => {
       fetchPoem();
     }, [poemId])
   );
-
-  // console.log("moved poem", currentPoem);
 
   return (
     <View>
