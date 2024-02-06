@@ -13,10 +13,10 @@ const SearchBar = ({onSearch}) => {
     setSearchText(text);
     getResults();
   };
-
+  `${ROOT_URL}/`
   const getResults = () => {
     axios
-      .get("http://localhost:3000/search", {
+      .get(`${ROOT_URL}/search`, { 
         params: { query: searchText },
       })
       .then((response) => {
