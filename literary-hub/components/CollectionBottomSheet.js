@@ -45,15 +45,15 @@ const CollectionBottomSheet = forwardRef((props, ref) => {
   };
 
   useEffect(() => {
-    if (props.userData) {
-      getCollections(props.userData._id);
+    if (props.userId) {
+      getCollections(props.userId);
     }
-  }, [props.userData]);
+  }, [props.userId]);
 
   const getCollections = () => {
     axios
       .get(`${ROOT_URL}/getcollections`, {
-        params: { id: props.userData._id },
+        params: { id: props.userId },
       })
       .then((response) => {
         setCollections(response.data);
@@ -69,12 +69,12 @@ const CollectionBottomSheet = forwardRef((props, ref) => {
   };
   const handleSubmitNewCollection = (inputText) => {
     const newCollection = {
-      user: props.userData,
+      user: props.userId,
       title: inputText,
     };
 
     axios
-      .post("http://localhost:3000/collection/new", newCollection)
+      .post(`${ROOT_URL}/collection/new`, newCollection)
       .then((response) => {
         console.log(response);
         addPoemToCollection(props.poem._id, response.data.collection._id);
@@ -101,6 +101,7 @@ const CollectionBottomSheet = forwardRef((props, ref) => {
       })
       .then((response) => {
         console.log("Poem added to collection:", response.data);
+        getCollections();
       })
       .catch((error) => {
         console.log("Error adding poem to collection:", error);

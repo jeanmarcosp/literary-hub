@@ -203,6 +203,7 @@ const Poem = ({ route }) => {
           ref={bottomSheetRef}
           title="Add to Collection"
           poem={poem}
+          userId = {userId}
         />
 
         <CommentSection
