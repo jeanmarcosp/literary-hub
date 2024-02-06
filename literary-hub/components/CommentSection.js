@@ -40,6 +40,7 @@ const CommentSection = forwardRef((props, ref) => {
         {...props}
         disappearsOnIndex={1}
         appearsOnIndex={2}
+        onPress={props.handleCommentsClose}
       />
     ),
     []
@@ -78,11 +79,11 @@ const CommentSection = forwardRef((props, ref) => {
         }
       }}
       index={-1}
-      snapPoints={["25%", "50%", "75%"]}
+      snapPoints={["50%", "75%"]}
       enablePanDownToClose={false}
       handleIndicatorStyle={{ backgroundColor: "#F4F5F4" }}
       backgroundStyle={{ backgroundColor: "#F4F5F4" }}
-      backdropComponent={renderBackdrop}
+      // backdropComponent={renderBackdrop}
     >
       <View style={styles.contentContainer}>
         <View style={styles.commentsTopRow}>
