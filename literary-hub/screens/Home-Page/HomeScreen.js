@@ -6,6 +6,7 @@ import {
   Pressable,
   ScrollView,
   Dimensions,
+  LogBox
 } from "react-native";
 import React, {
   useState,
@@ -26,6 +27,8 @@ import BottomSheet, { BottomSheetBackdrop } from "@gorhom/bottom-sheet";
 import CollectionBottomSheet from "../../components/CollectionBottomSheet";
 import { setUser } from "../../state/actions/userActions";
 import { poemToPage } from "../../hooks/poemActions";
+
+LogBox.ignoreLogs(['VirtualizedLists should never be nested inside plain ScrollViews with the same orientation because it can break windowing and other functionality - use another VirtualizedList-backed container instead.']);
 
 const HomeScreen = () => {
   const [poems, setPoems] = useState([]);
