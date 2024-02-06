@@ -152,40 +152,54 @@ const CollectionCard = ({ collection, handleRefresh }) => {
       <ShareMenu isVisible={isModalVisible} onClose={onModalClose}>
         {userIsCreator ? (
           <>
+            <View style={styles.actions}>
+              <TouchableOpacity>
+                <View style={styles.listItems}>
+                  <View style={styles.iconContainer}>
+                    <Ionicons name="share-outline" size={24} color="#434344" />
+                  </View>
+                  <Text style={styles.listText}>Share</Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity>
+                <View style={styles.listItems}>
+                  <View style={styles.iconContainer}>
+                    <Ionicons name="create-outline" size={24} color="#434344" />
+                  </View>
+                  <Text style={styles.listText}>Edit</Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={handleDeleteCollection}>
+                <View style={styles.listItems}>
+                  <View style={styles.iconContainer}>
+                    <Ionicons name="trash-outline" size={24} color="red" />
+                  </View>
+                  <Text
+                    style={{
+                      color: "red",
+                      fontSize: 16,
+                      fontFamily: "Sarabun-Medium",
+                    }}
+                  >
+                    Delete
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </>
+        ) : (
+          <View style={styles.actions}>
             <TouchableOpacity>
               <View style={styles.listItems}>
-                <Ionicons name="share-outline" size={24} color="black" />
+                <View style={styles.iconContainer}>
+                  <Ionicons name="share-outline" size={24} color="black" />
+                </View>
                 <Text style={styles.listText}>Share</Text>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity>
-              <View style={styles.listItems}>
-                <Ionicons name="create-outline" size={24} color="black" />
-                <Text style={styles.listText}>Edit</Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={handleDeleteCollection}>
-              <View style={styles.listItems}>
-                <Ionicons name="trash-outline" size={24} color="red" />
-                <Text
-                  style={{
-                    color: "red",
-                    fontSize: 18,
-                    fontFamily: "Sarabun-Regular",
-                  }}
-                >
-                  Delete
-                </Text>
-              </View>
-            </TouchableOpacity>
-          </>
-        ) : (
-          <TouchableOpacity>
-            <View style={styles.listItems}>
-              <Ionicons name="share-outline" size={24} color="black" />
-              <Text style={styles.listText}>Share</Text>
-            </View>
-          </TouchableOpacity>
+          </View>
         )}
       </ShareMenu>
     </TouchableOpacity>
@@ -271,6 +285,7 @@ const styles = StyleSheet.create({
     fontFamily: "Sarabun-SemiBold",
     color: "#774BA3",
   },
+
   modalContent: {
     height: "25%",
     width: "100%",
@@ -279,22 +294,33 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 18,
     position: "absolute",
     bottom: 0,
+    shadowColor: 'black',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 10,
   },
+
   modalTitleContainer: {
-    height: "16%",
+    marginTop: 20,
+    marginBottom: 10,
+    marginHorizontal: 20,
     backgroundColor: "white",
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10,
-    paddingHorizontal: 20,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
   },
+
   modalTitle: {
     color: "black",
     fontSize: 18,
     fontFamily: "HammersmithOne",
   },
+
   pickerContainer: {
     flexDirection: "row",
     justifyContent: "center",
@@ -304,17 +330,30 @@ const styles = StyleSheet.create({
     backgroundColor: "red",
   },
 
+  actions: {
+    flexDirection: 'row',
+    columnGap: 20,
+    marginLeft: 20,
+    marginTop: 10,
+  },
+
   listItems: {
-    flexDirection: "row",
-    justifyContent: "flex-start",
+    flexDirection: "column",
+    justifyContent: "center",
     alignItems: "center",
-    padding: 10,
+    rowGap: 5,
+  },
+
+  iconContainer: {
+    padding: 15,
+    backgroundColor: '#F1EEF3',
+    borderRadius: 100,
   },
 
   listText: {
-    color: "black",
-    fontSize: 18,
-    fontFamily: "Sarabun-Regular",
+    color: "#434344",
+    fontSize: 16,
+    fontFamily: "Sarabun-Medium",
   },
 });
 

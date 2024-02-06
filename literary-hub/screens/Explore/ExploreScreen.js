@@ -5,6 +5,8 @@ import {
   SafeAreaView,
   ScrollView,
   TouchableOpacity,
+  ImageBackground,
+  Image
 } from "react-native";
 import PoemCard from "../../components/PoemCard.js";
 import { React, useState} from "react";
@@ -28,7 +30,17 @@ const ExploreScreen = () => {
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
         <SearchBar onSearch={handleSearch}/>
-          
+
+        <View style={styles.poemOfTheDayContainer}>
+          <ImageBackground
+            source={require('../../assets/collection-images/default-collection-cover1.jpeg')}
+            resizeMode="cover"
+            style={styles.poemOfTheDay}
+            imageStyle={{ borderRadius: 10 }}>
+            <Text style={styles.poemOfTheDayText}>Poem of the Day</Text>
+          </ImageBackground>
+        </View>
+
         <Text style={styles.text}>Author Collections</Text>
         <AuthorList />
 
@@ -138,6 +150,21 @@ const styles = StyleSheet.create({
   scrollView: {
     paddingTop: 15,
     paddingHorizontal: 20,
+  },
+
+  poemOfTheDay: {
+    height: 130,
+    marginTop: 20,
+    position: 'relative',
+  },
+
+  poemOfTheDayText: {
+    color: '#fff',
+    fontFamily: 'Sarabun-ExtraBold',
+    fontSize: 25,
+    position: 'absolute',
+    bottom: 20,
+    left: 20,
   },
 
   text: {
