@@ -116,21 +116,26 @@ app.post("/addpoemtocollection", async (req, res) => {
 //endpoint to create new collection
 app.post("/collection/new", async (req, res) => {
   try {
-    const { user, title } = req.body;
+    const { userId, title } = req.body; // Change 'user' to 'userId'
+
     if (!title) {
       return res.status(400).json({ message: "Title is required" });
     }
-    const existingCollection = await Collection.findOne({ user, title });
+
+    const existingCollection = await Collection.findOne({ user: userId, title }); // Change 'user' to 'userId'
+
     if (existingCollection) {
       return res.status(400).json({ message: "Collection already exists" });
     }
 
     // create new collection
-    const newCollection = new Collection({ user, title });
+    const newCollection = new Collection({ user: userId, title }); // Change 'user' to 'userId'
+
     // Save the new collection to the database
     await newCollection.save();
+
     await User.updateOne(
-      { _id: user },
+      { _id: userId }, // Change '_id' to 'userId'
       { $push: { createdCollections: newCollection._id } }
     );
 
@@ -140,9 +145,39 @@ app.post("/collection/new", async (req, res) => {
     });
   } catch (error) {
     console.log("error", error);
-    res.status(500).json({ message: "Error creatng collecton" });
+    res.status(500).json({ message: "Error creating collection" });
   }
 });
+
+// app.post("/collection/new", async (req, res) => {
+//   try {
+//     const { userId, title } = req.body;
+//     if (!title) {
+//       return res.status(400).json({ message: "Title is required" });
+//     }
+//     const existingCollection = await Collection.findOne({ userId, title });
+//     if (existingCollection) {
+//       return res.status(400).json({ message: "Collection already exists" });
+//     }
+
+//     // create new collection
+//     const newCollection = new Collection({ user, title });
+//     // Save the new collection to the database
+//     await newCollection.save();
+//     await User.updateOne(
+//       { _id: user },
+//       { $push: { createdCollections: newCollection._id } }
+//     );
+
+//     res.status(201).json({
+//       message: "Collection created successfully",
+//       collection: newCollection,
+//     });
+//   } catch (error) {
+//     console.log("error", error);
+//     res.status(500).json({ message: "Error creatng collecton" });
+//   }
+// });
 
 // endpoint to get userdata
 app.get("/getuser", async (req, res) => {
