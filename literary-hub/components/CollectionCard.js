@@ -171,7 +171,8 @@ const CollectionCard = ({ collection, handleRefresh }) => {
                   style={{
                     color: "red",
                     fontSize: 18,
-                    fontFamily: "Sarabun-Regular",
+                    fontFamily: "Sarabun-Medium",
+                    marginLeft: 10,
                   }}
                 >
                   Delete
@@ -272,7 +273,7 @@ const styles = StyleSheet.create({
     color: "#774BA3",
   },
   modalContent: {
-    height: "25%",
+    height: "30%",
     width: "100%",
     backgroundColor: "white",
     borderTopRightRadius: 18,
@@ -281,11 +282,12 @@ const styles = StyleSheet.create({
     bottom: 0,
   },
   modalTitleContainer: {
-    height: "16%",
+    marginTop: 20,
+    marginBottom: 10,
     backgroundColor: "white",
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -305,16 +307,15 @@ const styles = StyleSheet.create({
   },
 
   listItems: {
-    flexDirection: "row",
-    justifyContent: "flex-start",
+    flexDirection: "column",
+    justifyContent: "center",
     alignItems: "center",
-    padding: 10,
   },
 
   listText: {
     color: "black",
     fontSize: 18,
-    fontFamily: "Sarabun-Regular",
+    fontFamily: "Sarabun-Medium",
   },
 });
 
