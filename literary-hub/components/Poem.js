@@ -211,6 +211,7 @@ const Poem = ({ route }) => {
           comments={currentPoem.comments}
           poemId={poem._id}
           handleRefresh={fetchPoem}
+          state={openComments}
         />
 
         {openComments}

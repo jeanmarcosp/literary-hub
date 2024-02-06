@@ -16,6 +16,8 @@ import axios from "axios";
 import * as ImagePicker from "expo-image-picker";
 import { firebase } from "../../firebaseConfig";
 import * as FileSystem from "expo-file-system";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+
 
 const CreateCollection = () => {
   const userId = getUserId();
@@ -92,7 +94,8 @@ const CreateCollection = () => {
   };
 
   return (
-    <SafeAreaView style={styles.mainContainer}>
+    <KeyboardAwareScrollView>
+    <View style={styles.mainContainer}>
       <View style={styles.container}>
         <View style={styles.main}>
           <Text style={styles.title}>Create new collection</Text>
@@ -168,7 +171,8 @@ const CreateCollection = () => {
           </View>
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+    </View>
+    </KeyboardAwareScrollView>
   );
 };
 
@@ -183,6 +187,7 @@ const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 25,
     paddingTop: 20,
+    marginTop: 70,
   },
 
   main: {

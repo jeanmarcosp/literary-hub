@@ -15,6 +15,8 @@ import {
   FlatList,
   InputAccessoryView,
   TextInput,
+  KeyboardAvoidingView,
+  SafeAreaView,
 } from "react-native";
 import BottomSheet, {
   BottomSheetScrollView,
@@ -43,6 +45,8 @@ const CommentSection = forwardRef((props, ref) => {
     []
   );
 
+  // console.log("here", props.state)
+
   const handleComment = async () => {
     try {
       const postedComment = {
@@ -51,9 +55,12 @@ const CommentSection = forwardRef((props, ref) => {
         content: newComment,
       };
 
-      const response = await axios.post(`${ROOT_URL}/comment`,postedComment);
+      const response = await axios.post(`${ROOT_URL}/comment`, postedComment);
 
-      console.log("Created Comment successfully", response.data.comment.content);
+      console.log(
+        "Created Comment successfully",
+        response.data.comment.content
+      );
 
       setNewComment("");
       props.handleRefresh();
@@ -61,7 +68,6 @@ const CommentSection = forwardRef((props, ref) => {
       console.error("Error commenting:", error);
     }
   };
-
 
   return (
     <BottomSheet
@@ -81,7 +87,7 @@ const CommentSection = forwardRef((props, ref) => {
       <View style={styles.contentContainer}>
         <View style={styles.commentsTopRow}>
           <Text style={styles.commentsNumber}>
-          {props.comments?.length ?? 0} Comments
+            {props.comments?.length ?? 0} Comments
           </Text>
           <TouchableOpacity onPress={props.handleCommentsClose}>
             <View style={styles.closeComments}>
@@ -108,22 +114,31 @@ const CommentSection = forwardRef((props, ref) => {
               />
             )}
           />
+          
         </BottomSheetScrollView>
-        <View style={styles.inputContainer}>
-          <TextInput
-            value={newComment}
-            onChangeText={(text) => setNewComment(text)}
-            placeholder={"Add comment"}
-            style={styles.commentInput}
-            multiline={true}
-          />
-          <Ionicons
-            name="add-circle"
-            size={24}
-            color="black"
-            onPress={handleComment}
-          />
-        </View>
+
+        {props.state && ( 
+          <InputAccessoryView>
+            <View style={styles.inputContainer}>
+              <TextInput
+                value={newComment}
+                onChangeText={(text) => setNewComment(text)}
+                placeholder={"Add comment"}
+                style={styles.commentInput}
+                multiline={true}
+              />
+              <Ionicons
+                name="add-circle"
+                size={24}
+                color="black"
+                onPress={handleComment}
+              />
+            </View>
+          </InputAccessoryView>
+        )}
+        
+        
+
       </View>
     </BottomSheet>
   );
@@ -224,10 +239,10 @@ const styles = StyleSheet.create({
   },
 
   inputContainer: {
-    position: "absolute",
-    bottom: 70,
-    left: 0,
-    right: 0,
+    // position: "absolute",
+    // bottom: 70,
+    // left: 0,
+    // right: 0,
     backgroundColor: "white",
     padding: 10,
     borderTopWidth: 1,
