@@ -236,7 +236,7 @@ const PoemDetailScreen = ({ route }) => {
 
       <CollectionBottomSheet
         ref={bottomSheetRef}
-        title="Add to Collection"
+        title="Add to your collections"
         poem={poem}
       />
 
