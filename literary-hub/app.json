@@ -3,9 +3,10 @@
     "name": "literary-hub",
     "slug": "literary-hub",
     "plugins": [
+        "@react-native-firebase/app",
+
       [
         "expo-image-picker",
-        "@react-native-firebase/app",
         {
           "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
