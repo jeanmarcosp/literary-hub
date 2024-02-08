@@ -35,7 +35,7 @@
     "expo-font": "~11.4.0",
     "expo-image-picker": "~14.3.2",
     "expo-status-bar": "~1.6.0",
-    "firebase": "^10.7.2",
+    "firebase": "^10.8.0",
     "ionicons": "^7.2.2",
     "jwt-decode": "^4.0.0",
     "react": "18.2.0",
