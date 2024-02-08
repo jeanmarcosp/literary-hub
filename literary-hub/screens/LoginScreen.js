@@ -15,7 +15,7 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSelector, useDispatch } from "react-redux";
 import { setUser } from "../state/actions/userActions";
-// import { set } from "mongoose";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState();
@@ -65,7 +65,8 @@ const LoginScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <KeyboardAwareScrollView>
+    <View style={styles.container}>
       <KeyboardAvoidingView>
         <Text style={styles.loginHeader1}>Sign in to</Text>
         <Text style={styles.loginHeader2}>Literary Hub</Text>
@@ -122,7 +123,8 @@ const LoginScreen = () => {
           </Pressable>
         </View>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </View>
+    </KeyboardAwareScrollView>
   );
 };
 
@@ -148,7 +150,7 @@ const styles = StyleSheet.create({
   loginHeader1: {
     fontFamily: "Sarabun-ExtraBold",
     fontSize: 40,
-    marginTop: 30,
+    marginTop: 70,
   },
 
   loginHeader2: {
@@ -227,6 +229,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Sarabun-Bold',
     fontSize: 17,
     color: '#9B59D1',
-    textDecorationLine: 'underline'
+    textDecorationLine: 'underline',
+    marginBottom: 250,
   }
 });

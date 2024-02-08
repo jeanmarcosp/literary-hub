@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Pressable,
   TouchableOpacity,
+  InputAccessoryView,
 } from "react-native";
 import React, {
   useState,
@@ -33,7 +34,7 @@ import CommentSection from "../../components/CommentSection";
 const PoemDetailScreen = ({ route }) => {
   const navigation = useNavigation();
   const [annotationMode, handleAnnotationMode] = useState(false);
-  const { poem, isLiked, comments, handleRefresh } = route.params;
+  const { poem, isLiked } = route.params;
   const [liked, setLiked] = useState(isLiked);
   const bottomSheetRef = useRef(null);
   const [userLikedPoems, setUserLikedPoems] = useState([]);
@@ -182,8 +183,6 @@ const PoemDetailScreen = ({ route }) => {
         <Text>Loading poem...</Text>
       )}
 
-      
-
       <HomePageLike
         inLikes={liked}
         handleLike={() => {
@@ -240,14 +239,15 @@ const PoemDetailScreen = ({ route }) => {
         title="Add to Collection"
         poem={poem}
       />
+
       <CommentSection
         ref={commentSectionRef}
         handleCommentsClose={handleCommentsClose}
         comments={currentPoem.comments}
         poemId={poem._id}
         handleRefresh={fetchPoem}
+        state={openComments}
       />
-
       {openComments}
     </View>
   );
