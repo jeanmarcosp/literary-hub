@@ -3813,7 +3813,7 @@ ajv@^6.12.4, ajv@^6.12.5:
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
-ajv@^8.0.0, ajv@^8.9.0:
+ajv@^8.0.0, ajv@^8.11.0, ajv@^8.9.0:
   version "8.12.0"
   resolved "https://registry.npmjs.org/ajv/-/ajv-8.12.0.tgz"
   integrity sha512-sRu1kpcO9yLtYxBKvqfTeh9KzZEwO3STyX1HT+4CaDzC6HpTGYhIhPIzj9XuKU7KYDwnaeh5hcOwjy1QuJzBPA==
@@ -5884,6 +5884,14 @@ expo-asset@~8.10.1:
     md5-file "^3.2.3"
     path-browserify "^1.0.0"
     url-parse "^1.5.9"
+
+expo-build-properties@^0.11.1:
+  version "0.11.1"
+  resolved "https://registry.yarnpkg.com/expo-build-properties/-/expo-build-properties-0.11.1.tgz#dc9ab9fb1ac989b97da500b3ec75139c961d8b26"
+  integrity sha512-m4j4aEjFaDuBE6KWYMxDhWgLzzSmpE7uHKAwtvXyNmRK+6JKF0gjiXi0sXgI5ngNppDQpsyPFMvqG7uQpRuCuw==
+  dependencies:
+    ajv "^8.11.0"
+    semver "^7.5.3"
 
 expo-clipboard@~4.3.1:
   version "4.3.1"
