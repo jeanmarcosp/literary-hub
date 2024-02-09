@@ -11,6 +11,7 @@ import {
   Button,
   TouchableOpacity,
   InputAccessoryView,
+  SafeAreaView
 } from "react-native";
 import React, {
   useState,
@@ -34,6 +35,7 @@ import {
 import getUserId from "../hooks/getUserId";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
+import OpenAI from "openai";
 
 const Poem = ({ route }) => {
   const { poem, poemId, userLikedPoems, fromHome, collection, comments } =
@@ -49,6 +51,7 @@ const Poem = ({ route }) => {
   const userId = getUserId();
   const [currentPoem, setCurrentPoem] = useState({});
 
+  const [prompt, setPrompt]=useState("cat, low detail");
   // if poem is already marked as read, do nothing
   // if it isn't, mark it as read
   useEffect(() => {
@@ -86,6 +89,9 @@ const Poem = ({ route }) => {
       const response = await axios.get(`${ROOT_URL}/poem/${poemId}`);
       const fetchedpoem = response.data.poem;
       setCurrentPoem(fetchedpoem);
+      if(currentPoem.content){
+        setPrompt(currentPoem.content);
+      }
     } catch (error) {
       console.log("error", error);
     }
@@ -96,126 +102,165 @@ const Poem = ({ route }) => {
       fetchPoem();
     }, [poemId])
   );
+  const openai = new OpenAI({
+    apiKey: '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',
+  })
+  // const { Configuration, OpenAIApi } = require("openai");
+  // const configuration = new Configuration({
+  //   apiKey: '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',
+  // });
+  // const openai = new OpenAIApi(configuration);
+  const [image, setImage] = useState(null);
+  const generateImage = async(prompt) => {
+    console.log("i am generating image");
+    try {
+      const response = await openai.images.generate({
+        model: "dall-e-2",
+        prompt: prompt.replace(/\n/g, ' '),
+        n: 1,
+        size: "256x256",
+        response_format: "url",
+      });
+      console.log("POOPY", response.data);
+      setImage(response.data)
+
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const handleGenerateImage = () => {
+    generateImage(poem.content); // Pass poem content as the prompt
+  };
 
   return (
-    <View>
-      {collection && (
-        <ImageBackground
-          source={
-            collection.coverArt
-              ? { uri: collection.coverArt }
-              : require("../assets/collection-images/defaultCover.jpeg")
-          }
-          style={styles.image}
-          resizeMode="cover"
-        >
-          {!fromHome && (
-            <TouchableOpacity
-              style={styles.bannerContainer}
-              onPress={() => navigation.goBack()}
-            >
-              <Ionicons name="chevron-back" size={24} color="white" />
-              <Text style={styles.collectionTitle}>{collection.title}</Text>
-            </TouchableOpacity>
-          )}
-        </ImageBackground>
+    <SafeAreaView style={styles.dummyContainer}>
+      <Text style={styles.dummyText}>Hello</Text>
+      <TouchableOpacity onPress={handleGenerateImage}>
+        <Text>Generate image</Text>
+      </TouchableOpacity>
+      {image && (
+        <Image source={{ uri: image }} style={styles.image} />
       )}
-      <View
-        style={[
-          styles.poemContainer,
-          {
-            height: collection
-              ? Dimensions.get("window").height - 100
-              : Dimensions.get("window").height,
-          },
-        ]}
-      >
-        <ScrollView
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          decelerationRate="fast"
-          snapToInterval={Dimensions.get("window").width}
-        >
-          {poem.pages.map((page, index) => (
-            <View
-              key={index}
-              style={[styles.page, { paddingTop: collection ? 20 : 50 }]}
-            >
-              {index === 0 && (
-                <React.Fragment>
-                  <Text style={styles.title}>{poem.title}</Text>
-                  <Text style={styles.author}>Author: {poem.author}</Text>
-                </React.Fragment>
-              )}
-              <Text style={styles.pageContent}>{page}</Text>
-            </View>
-          ))}
-        </ScrollView>
+    </SafeAreaView>
+    // <View>
+    //   {collection && (
+    //     <ImageBackground
+    //       source={
+    //         collection.coverArt
+    //           ? { uri: collection.coverArt }
+    //           : require("../assets/collection-images/defaultCover.jpeg")
+    //       }
+    //       style={styles.image}
+    //       resizeMode="cover"
+    //     >
+    //       {!fromHome && (
+    //         <TouchableOpacity
+    //           style={styles.bannerContainer}
+    //           onPress={() => navigation.goBack()}
+    //         >
+    //           <Ionicons name="chevron-back" size={24} color="white" />
+    //           <Text style={styles.collectionTitle}>{collection.title}</Text>
+    //         </TouchableOpacity>
+    //       )}
+    //     </ImageBackground>
+    //   )}
+    //   <View
+    //     style={[
+    //       styles.poemContainer,
+    //       {
+    //         height: collection
+    //           ? Dimensions.get("window").height - 100
+    //           : Dimensions.get("window").height,
+    //       },
+    //     ]}
+    //   >
+    //     <ScrollView
+    //       horizontal
+    //       pagingEnabled
+    //       showsHorizontalScrollIndicator={false}
+    //       decelerationRate="fast"
+    //       snapToInterval={Dimensions.get("window").width}
+    //     >
+    //       {poem.pages.map((page, index) => (
+    //         <View
+    //           key={index}
+    //           style={[styles.page, { paddingTop: collection ? 20 : 50 }]}
+    //         >
+    //           {index === 0 && (
+    //             <React.Fragment>
+    //               <Text style={styles.title}>{poem.title}</Text>
+    //               <Text style={styles.author}>Author: {poem.author}</Text>
+    //             </React.Fragment>
+    //           )}
+    //           <Text style={styles.pageContent}>{page}</Text>
+    //         </View>
+    //       ))}
+    //     </ScrollView>
 
-        <HomePageLike
-          inLikes={isInitiallyLiked}
-          handleLike={() => handleLike(userId, poemId)}
-          handleDislike={() => handleDislike(userId, poemId)}
-        />
+    //     <HomePageLike
+    //       inLikes={isInitiallyLiked}
+    //       handleLike={() => handleLike(userId, poemId)}
+    //       handleDislike={() => handleDislike(userId, poemId)}
+    //     />
 
-        <View style={styles.toggle}>
-          {annotationMode ? (
-            <Pressable
-              onPress={() => {
-                handleAnnotationMode(false);
-              }}
-            >
-              <MaterialCommunityIcons
-                name="toggle-switch"
-                size={35}
-                color="#644980"
-              />
-            </Pressable>
-          ) : (
-            <Pressable
-              onPress={() => {
-                handleAnnotationMode(true);
-              }}
-            >
-              <MaterialCommunityIcons
-                name="toggle-switch-off-outline"
-                size={35}
-                color="#644980"
-              />
-            </Pressable>
-          )}
-        </View>
+    //     <View style={styles.toggle}>
+    //       {annotationMode ? (
+    //         <Pressable
+    //           onPress={() => {
+    //             handleAnnotationMode(false);
+    //           }}
+    //         >
+    //           <MaterialCommunityIcons
+    //             name="toggle-switch"
+    //             size={35}
+    //             color="#644980"
+    //           />
+    //         </Pressable>
+    //       ) : (
+    //         <Pressable
+    //           onPress={() => {
+    //             handleAnnotationMode(true);
+    //           }}
+    //         >
+    //           <MaterialCommunityIcons
+    //             name="toggle-switch-off-outline"
+    //             size={35}
+    //             color="#644980"
+    //           />
+    //         </Pressable>
+    //       )}
+    //     </View>
 
-        <View style={styles.plus}>
-          <Pressable onPress={handleOpenPress} style={styles.icon}>
-            <Feather name="plus" size={30} color="#644980" />
-          </Pressable>
-        </View>
+    //     <View style={styles.plus}>
+    //       <Pressable onPress={handleOpenPress} style={styles.icon}>
+    //         <Feather name="plus" size={30} color="#644980" />
+    //       </Pressable>
+    //     </View>
 
-        <View style={styles.commentIcon}>
-          <Pressable onPress={handleCommentsOpen} style={styles.icon}>
-            <Ionicons name="chatbox-outline" size={30} color="#644980" />
-          </Pressable>
-        </View>
+    //     <View style={styles.commentIcon}>
+    //       <Pressable onPress={handleCommentsOpen} style={styles.icon}>
+    //         <Ionicons name="chatbox-outline" size={30} color="#644980" />
+    //       </Pressable>
+    //     </View>
 
-        <CollectionBottomSheet
-          ref={bottomSheetRef}
-          title="Add to Collection"
-          poem={poem}
-        />
+    //     <CollectionBottomSheet
+    //       ref={bottomSheetRef}
+    //       title="Add to Collection"
+    //       poem={poem}
+    //     />
 
-        <CommentSection
-          ref={commentSectionRef}
-          handleCommentsClose={handleCommentsClose}
-          comments={currentPoem.comments}
-          poemId={poem._id}
-          handleRefresh={fetchPoem}
-        />
+    //     <CommentSection
+    //       ref={commentSectionRef}
+    //       handleCommentsClose={handleCommentsClose}
+    //       comments={currentPoem.comments}
+    //       poemId={poem._id}
+    //       handleRefresh={fetchPoem}
+    //     />
 
-        {openComments}
-      </View>
-    </View>
+    //     {openComments}
+    //   </View>
+    // </View>
   );
 };
 
@@ -324,6 +369,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20, // Adjust as needed
     paddingVertical: 10, // Adjust as needed
     top: 60,
+  },
+  dummyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  dummyText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });
 
