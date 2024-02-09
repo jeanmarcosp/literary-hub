@@ -102,27 +102,30 @@ const Poem = ({ route }) => {
       fetchPoem();
     }, [poemId])
   );
-  const openai = new OpenAI({
-    apiKey: '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',
-  })
-  // const { Configuration, OpenAIApi } = require("openai");
-  // const configuration = new Configuration({
-  //   apiKey: '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',
-  // });
-  // const openai = new OpenAIApi(configuration);
+  // const process = require('process');
+  // require('dotenv').config()
+  
+  
+
   const [image, setImage] = useState(null);
   const generateImage = async(prompt) => {
+    const openai = new OpenAI({
+      apiKey: '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',
+    })
+
     console.log("i am generating image");
+    console.log("HIYA", prompt.replace(/\n/g, ' '));
     try {
       const response = await openai.images.generate({
-        model: "dall-e-2",
-        prompt: prompt.replace(/\n/g, ' '),
-        n: 1,
-        size: "256x256",
-        response_format: "url",
+        "model": "dall-e-2",
+        "prompt": "a cute cartoon of two girls in the field in the summer",
+        "n": 1,
+        "size": "256x256",
+        "response_format": "url",
       });
-      console.log("POOPY", response.data);
-      setImage(response.data)
+      console.log("done");
+      console.log("POOPY", response.data[0].url);
+      setImage(response.data[0].url)
 
     } catch (error) {
       console.error('Error:', error);
@@ -130,7 +133,7 @@ const Poem = ({ route }) => {
   };
 
   const handleGenerateImage = () => {
-    generateImage(poem.content); // Pass poem content as the prompt
+    generateImage(poem.content); 
   };
 
   return (
