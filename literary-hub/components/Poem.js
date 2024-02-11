@@ -201,7 +201,7 @@ const Poem = ({ route }) => {
 
         <CollectionBottomSheet
           ref={bottomSheetRef}
-          title="Add to Collection"
+          title="Add to your collections"
           poem={poem}
           userId = {userId}
         />
@@ -212,6 +212,7 @@ const Poem = ({ route }) => {
           comments={currentPoem.comments}
           poemId={poem._id}
           handleRefresh={fetchPoem}
+          state={openComments}
         />
 
         {openComments}

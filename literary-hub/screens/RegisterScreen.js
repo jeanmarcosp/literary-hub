@@ -7,10 +7,10 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Alert,
-  Image, 
+  Image,
   TouchableOpacity,
 } from "react-native";
-import React, { useState, useEffect,  } from "react";
+import React, { useState, useEffect } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
@@ -18,7 +18,7 @@ import { useDispatch } from "react-redux";
 import { setUser } from "../state/actions/userActions";
 import * as ImagePicker from "expo-image-picker";
 import { firebase } from "../firebaseConfig";
-// import * as filesystem from filesystem
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const RegisterScreen = () => {
   const [name, setName] = useState("");
@@ -77,7 +77,7 @@ const RegisterScreen = () => {
       setEmail("");
       setUsername("");
       setPassword("");
-      setProfilePicture(null)
+      setProfilePicture(null);
     } catch (error) {
       console.error("Error during registration:", error);
       Alert.alert(
@@ -111,7 +111,9 @@ const RegisterScreen = () => {
     setUploading(true);
     const response = await fetch(profilePicture.uri);
     const blob = await response.blob();
-    const filename = profilePicture.uri.substring(profilePicture.uri.lastIndexOf("/") + 1);
+    const filename = profilePicture.uri.substring(
+      profilePicture.uri.lastIndexOf("/") + 1
+    );
     var ref = firebase.storage().ref().child(filename);
 
     try {
@@ -127,112 +129,121 @@ const RegisterScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView>
-        <Text style={styles.loginHeader1}>Create an account</Text>
-        {/* <Text style={styles.loginHeader2}>Literary Hub</Text> */}
+    <KeyboardAwareScrollView>
+      <View style={styles.container}>
+        <KeyboardAvoidingView>
+          <Text style={styles.loginHeader1}>Create an account</Text>
+          {/* <Text style={styles.loginHeader2}>Literary Hub</Text> */}
 
-        <View style={styles.coverPhotoSection}>
-          <View style={styles.emptyCoverPhoto}>
-            {profilePicture && (
-              <Image source={{ uri: profilePicture.uri }} style={styles.coverImage} />
-            )}
-          </View>
-          <TouchableOpacity onPress={handlePickImage}>
-            <View style={styles.editPhotoCTA}>
-              <Text style={styles.editPhotoText}>Choose Profile Picture</Text>
+          <View style={styles.coverPhotoSection}>
+            <View style={styles.emptyCoverPhoto}>
+              {profilePicture && (
+                <Image
+                  source={{ uri: profilePicture.uri }}
+                  style={styles.coverImage}
+                />
+              )}
             </View>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.inputOuterContainer}>
-          <Text style={styles.sectionHeader}>Name</Text>
-          <View style={styles.inputInnerContainer}>
-            <MaterialIcons
-              style={{ marginLeft: 16 }}
-              name="person-outline"
-              size={24}
-              color="gray"
-            />
-            <TextInput
-              value={name}
-              onChangeText={(text) => setName(text)}
-              placeholderTextColor={"gray"}
-              style={styles.textInput}
-              placeholder="Enter name"
-            />
+            <TouchableOpacity onPress={handlePickImage}>
+              <View style={styles.editPhotoCTA}>
+                <Text style={styles.editPhotoText}>Choose Profile Picture</Text>
+              </View>
+            </TouchableOpacity>
           </View>
-        </View>
 
-        <View style={styles.inputOuterContainer}>
-          <Text style={styles.sectionHeader}>Email</Text>
-          <View style={styles.inputInnerContainer}>
-            <MaterialIcons
-              style={{ marginLeft: 16 }}
-              name="email"
-              size={24}
-              color="gray"
-            />
-            <TextInput
-              value={email}
-              onChangeText={(text) => setEmail(text)}
-              placeholderTextColor={"gray"}
-              style={styles.textInput}
-              placeholder="Enter email"
-            />
+          <View style={styles.inputOuterContainer}>
+            <Text style={styles.sectionHeader}>Name</Text>
+            <View style={styles.inputInnerContainer}>
+              <MaterialIcons
+                style={{ marginLeft: 16 }}
+                name="person-outline"
+                size={24}
+                color="gray"
+              />
+              <TextInput
+                value={name}
+                onChangeText={(text) => setName(text)}
+                placeholderTextColor={"gray"}
+                style={styles.textInput}
+                placeholder="Enter name"
+              />
+            </View>
           </View>
-        </View>
 
-        <View style={styles.inputOuterContainer}>
-          <Text style={styles.sectionHeader}>Username</Text>
-          <View style={styles.inputInnerContainer}>
-            <MaterialIcons
-              style={{ marginLeft: 16 }}
-              name="alternate-email"
-              size={24}
-              color="gray"
-            />
-            <TextInput
-              value={username}
-              onChangeText={(text) => setUsername(text)}
-              placeholderTextColor={"gray"}
-              style={styles.textInput}
-              placeholder="Enter username"
-            />
+          <View style={styles.inputOuterContainer}>
+            <Text style={styles.sectionHeader}>Email</Text>
+            <View style={styles.inputInnerContainer}>
+              <MaterialIcons
+                style={{ marginLeft: 16 }}
+                name="email"
+                size={24}
+                color="gray"
+              />
+              <TextInput
+                value={email}
+                onChangeText={(text) => setEmail(text)}
+                placeholderTextColor={"gray"}
+                style={styles.textInput}
+                placeholder="Enter email"
+              />
+            </View>
           </View>
-        </View>
 
-        <View style={styles.inputOuterContainer}>
-          <Text style={styles.sectionHeader}>Password</Text>
-          <View style={styles.inputInnerContainer}>
-            <MaterialIcons
-              style={{ marginLeft: 16 }}
-              name="lock-outline"
-              size={24}
-              color="gray"
-            />
-            <TextInput
-              secureTextEntry={true}
-              value={password}
-              onChangeText={(text) => setPassword(text)}
-              placeholderTextColor={"gray"}
-              style={styles.textInput}
-              placeholder="Enter password"
-            />
+          <View style={styles.inputOuterContainer}>
+            <Text style={styles.sectionHeader}>Username</Text>
+            <View style={styles.inputInnerContainer}>
+              <MaterialIcons
+                style={{ marginLeft: 16 }}
+                name="alternate-email"
+                size={24}
+                color="gray"
+              />
+              <TextInput
+                value={username}
+                onChangeText={(text) => setUsername(text)}
+                placeholderTextColor={"gray"}
+                style={styles.textInput}
+                placeholder="Enter username"
+              />
+            </View>
           </View>
-        </View>
 
-        <Pressable onPress={handleRegister} style={styles.registerButton}>
-          <Text style={styles.registerButtonText}>Register</Text>
-        </Pressable>
+          <View style={styles.inputOuterContainer}>
+            <Text style={styles.sectionHeader}>Password</Text>
+            <View style={styles.inputInnerContainer}>
+              <MaterialIcons
+                style={{ marginLeft: 16 }}
+                name="lock-outline"
+                size={24}
+                color="gray"
+              />
+              <TextInput
+                secureTextEntry={true}
+                value={password}
+                onChangeText={(text) => setPassword(text)}
+                placeholderTextColor={"gray"}
+                style={styles.textInput}
+                placeholder="Enter password"
+              />
+            </View>
+          </View>
 
-        <Pressable onPress={() => navigation.goBack()} style={styles.registerCTA}>
-          <Text style={styles.registerCTAText1}>Already have an account?</Text>
-          <Text style={styles.registerCTAText2}>Log in</Text>
-        </Pressable>
+          <Pressable onPress={handleRegister} style={styles.registerButton}>
+            <Text style={styles.registerButtonText}>Register</Text>
+          </Pressable>
 
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+          <Pressable
+            onPress={() => navigation.goBack()}
+            style={styles.registerCTA}
+          >
+            <Text style={styles.registerCTAText1}>
+              Already have an account?
+            </Text>
+            <Text style={styles.registerCTAText2}>Log in</Text>
+          </Pressable>
+        </KeyboardAvoidingView>
+      </View>
+    </KeyboardAwareScrollView>
   );
 };
 
@@ -248,21 +259,20 @@ const styles = StyleSheet.create({
   loginHeader1: {
     fontFamily: "Sarabun-ExtraBold",
     fontSize: 40,
-    marginTop: 30,
+    marginTop: 70,
   },
 
   loginHeader2: {
     fontFamily: "Sarabun-ExtraBold",
     fontSize: 40,
-    marginBottom: 0,
   },
 
   headerContainer: {
-    marginTop: 20,
+    // marginTop: 20,
     alignItems: "center",
     justifyContent: "center",
   },
-  
+
   headerText: {
     fontFamily: "HammersmithOne",
     fontSize: 25,
@@ -271,11 +281,11 @@ const styles = StyleSheet.create({
   },
 
   inputOuterContainer: {
-    marginTop: 15,
+    marginTop: 20,
   },
 
   sectionHeader: {
-    fontFamily: 'Sarabun-Bold',
+    fontFamily: "Sarabun-Bold",
     fontSize: 17,
     marginBottom: 7,
   },
@@ -310,7 +320,7 @@ const styles = StyleSheet.create({
   },
 
   registerButtonText: {
-    fontFamily: 'Sarabun-Bold',
+    fontFamily: "Sarabun-Bold",
     textAlign: "center",
     fontWeight: "bold",
     fontSize: 18,
@@ -324,24 +334,25 @@ const styles = StyleSheet.create({
   },
 
   registerCTA: {
-    flexDirection: 'row',
+    flexDirection: "row",
     columnGap: 3,
-    alignItems: 'baseline',
-    alignSelf: 'center',
-    marginTop: 10
+    alignItems: "baseline",
+    alignSelf: "center",
+    marginTop: 10,
   },
 
   registerCTAText1: {
-    fontFamily: 'Sarabun-Regular',
+    fontFamily: "Sarabun-Regular",
     fontSize: 17,
-    color: '#9B59D1',
+    color: "#9B59D1",
   },
 
   registerCTAText2: {
-    fontFamily: 'Sarabun-Bold',
+    fontFamily: "Sarabun-Bold",
     fontSize: 17,
-    color: '#9B59D1',
-    textDecorationLine: 'underline'
+    color: "#9B59D1",
+    textDecorationLine: "underline",
+    marginBottom: 90,
   },
   coverPhotoSection: {
     rowGap: 10,

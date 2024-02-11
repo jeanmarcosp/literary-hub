@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Pressable,
   TouchableOpacity,
+  InputAccessoryView,
 } from "react-native";
 import React, {
   useState,
@@ -33,7 +34,7 @@ import CommentSection from "../../components/CommentSection";
 const PoemDetailScreen = ({ route }) => {
   const navigation = useNavigation();
   const [annotationMode, handleAnnotationMode] = useState(false);
-  const { poem, isLiked, comments, handleRefresh } = route.params;
+  const { poem, isLiked } = route.params;
   const [liked, setLiked] = useState(isLiked);
   const bottomSheetRef = useRef(null);
   const [userLikedPoems, setUserLikedPoems] = useState([]);
@@ -127,8 +128,6 @@ const PoemDetailScreen = ({ route }) => {
 
   const isInitiallyLiked = userLikedPoems.includes(poem._id);
 
-  // console.log("testing", poem._id)
-
   const fetchPoem = async () => {
     try {
       const response = await axios.get(`${ROOT_URL}/poem/${poem._id}`);
@@ -145,7 +144,6 @@ const PoemDetailScreen = ({ route }) => {
     }, [poem._id])
   );
 
-  // console.log("moved poem", currentPoem.comments);
 
   return (
     <View style={styles.poemContainer}>
@@ -181,8 +179,6 @@ const PoemDetailScreen = ({ route }) => {
       ) : (
         <Text>Loading poem...</Text>
       )}
-
-      
 
       <HomePageLike
         inLikes={liked}
@@ -237,17 +233,18 @@ const PoemDetailScreen = ({ route }) => {
 
       <CollectionBottomSheet
         ref={bottomSheetRef}
-        title="Add to Collection"
+        title="Add to your collections"
         poem={poem}
       />
+
       <CommentSection
         ref={commentSectionRef}
         handleCommentsClose={handleCommentsClose}
         comments={currentPoem.comments}
         poemId={poem._id}
         handleRefresh={fetchPoem}
+        state={openComments}
       />
-
       {openComments}
     </View>
   );
