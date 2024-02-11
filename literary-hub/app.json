@@ -19,7 +19,7 @@
       ]
       
     ],
-    "version": "1.0.2",
+    "version": "2.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -33,7 +33,8 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.literaryhub.literaryhub"
+      "bundleIdentifier": "com.literaryhub.literaryhub",
+      "buildNumber": 3
     },
     "android": {
       "adaptiveIcon": {
