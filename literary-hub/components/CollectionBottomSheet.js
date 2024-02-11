@@ -265,7 +265,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     width: Dimensions.get("window").width * 0.35,
     marginLeft: 10,
-    marginRight: 35,
+    marginRight: 30,
   },
   collectionTitle: {
     fontFamily: "HammersmithOne",
