@@ -38,6 +38,7 @@
     "expo-font": "~11.4.0",
     "expo-image-picker": "~14.3.2",
     "expo-router": "2.0.15",
+    "expo-splash-screen": "~0.20.5",
     "expo-status-bar": "~1.6.0",
     "firebase": "^10.8.0",
     "i": "^0.3.7",
@@ -62,8 +63,6 @@
     "react-search-box": "^3.0.0",
     "redux": "^4.2.1",
     "release-it": "^17.0.3",
-    "styled-components": "^6.1.0",
-    "expo-splash-screen": "~0.20.5"
     "rn-keyboard-sticky-view": "^1.0.4",
     "styled-components": "^6.1.0"
   },
