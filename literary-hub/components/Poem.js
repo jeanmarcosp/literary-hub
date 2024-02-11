@@ -201,7 +201,7 @@ const Poem = ({ route }) => {
 
         <CollectionBottomSheet
           ref={bottomSheetRef}
-          title="Add to Collection"
+          title="Add to your collections"
           poem={poem}
           userId = {userId}
         />
