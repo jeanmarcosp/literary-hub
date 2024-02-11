@@ -35,6 +35,7 @@ const LoginScreen = () => {
   });
 
   const handleLogin = () => {
+    console.log("log in button pressed");
     const user = {
       email: email,
       password: password,
