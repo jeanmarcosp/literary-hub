@@ -10169,6 +10169,11 @@ react-native-get-random-values@~1.9.0:
   dependencies:
     fast-base64-decode "^1.0.0"
 
+react-native-openai@^0.6.1:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/react-native-openai/-/react-native-openai-0.6.1.tgz#336724b39ce13a94be6a2a7eb9a3eb8d8c03fc63"
+  integrity sha512-KG9exGI3cKl8BoNJByvac8d/INa8hfXGtmS8ChSU9QAkn95+hks3ZlxyWbaba47WoEbsewo/1qpUbRI/0sQDbA==
+
 react-native-reanimated@~3.3.0:
   version "3.3.0"
   resolved "https://registry.npmjs.org/react-native-reanimated/-/react-native-reanimated-3.3.0.tgz"

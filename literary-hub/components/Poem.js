@@ -11,7 +11,8 @@ import {
   Button,
   TouchableOpacity,
   InputAccessoryView,
-  SafeAreaView
+  SafeAreaView,
+  Image
 } from "react-native";
 import React, {
   useState,
@@ -113,12 +114,14 @@ const Poem = ({ route }) => {
       apiKey: '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',
     })
 
+    openai.baseURL = 'https://api.openai.com/v1';
+    openai.buildURL = (path) => `${openai.baseURL}${path}`;
     console.log("i am generating image");
-    console.log("HIYA", prompt.replace(/\n/g, ' '));
+    console.log("HIYA" + prompt.replace(/\n/g, ' ').substring(0,750));
     try {
       const response = await openai.images.generate({
         "model": "dall-e-2",
-        "prompt": "a cute cartoon of two girls in the field in the summer",
+        "prompt": "use classicism style to illustrate this poem: " + prompt.replace(/\n/g, ' ').substring(0,900),
         "n": 1,
         "size": "256x256",
         "response_format": "url",
@@ -356,8 +359,7 @@ const styles = StyleSheet.create({
   image: {
     position: "relative",
     width: "100%",
-    height: 100,
-    alignItems: "left",
+    height: 500,
   },
   collectionTitle: {
     color: "white",
