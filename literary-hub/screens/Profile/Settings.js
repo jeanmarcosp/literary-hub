@@ -23,15 +23,30 @@ const Settings = ({ navigation }) => {
   };
 
   const handleDeleteAccount = async () => {
+    Alert.alert(
+      "Delete Account",
+      "Are you sure you want to delete your account? This action cannot be undone.",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        { text: "Delete", onPress: deleteConfirmed }
+      ]
+    );
+  };
+  
+  const deleteConfirmed = async () => {
     try {
       const response = await axios.delete(`${ROOT_URL}/delete-account/${userId}`);
-
+  
       if (response.data.success) {
         Alert.alert(
           "Deletion Successful",
           "Your account has been deleted successfully"
         );
-
+  
         dispatch(resetUser());
         navigation.navigate("Login");
       }
@@ -43,6 +58,7 @@ const Settings = ({ navigation }) => {
       );
     }
   };
+  
 
   console.log(userId);
 
