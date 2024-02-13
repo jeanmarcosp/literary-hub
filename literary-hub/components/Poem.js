@@ -118,7 +118,7 @@ const Poem = ({ route }) => {
       if(prompt.length < 800){
         prompt = "Illustration representing this poem: " + prompt;
       } else {
-        prompt = "Illustration of this poem title: " + currentPoem.title
+        prompt = "Illustration representing a poem by this title: " + currentPoem.title
       }
     }
 

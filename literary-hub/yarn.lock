@@ -10203,10 +10203,6 @@ react-native-get-random-values@~1.9.0:
   dependencies:
     fast-base64-decode "^1.0.0"
 
-react-native-openai@^0.6.1:
-  version "0.6.1"
-  resolved "https://registry.npmjs.org/react-native-openai/-/react-native-openai-0.6.1.tgz"
-  integrity sha512-KG9exGI3cKl8BoNJByvac8d/INa8hfXGtmS8ChSU9QAkn95+hks3ZlxyWbaba47WoEbsewo/1qpUbRI/0sQDbA==
 react-native-iphone-x-helper@^1.0.3:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/react-native-iphone-x-helper/-/react-native-iphone-x-helper-1.3.1.tgz#20c603e9a0e765fd6f97396638bdeb0e5a60b010"
@@ -10224,6 +10220,11 @@ react-native-keyboard-sticky-view@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/react-native-keyboard-sticky-view/-/react-native-keyboard-sticky-view-1.0.1.tgz#e748370710692aad302c51141d7bbe5a4ceb63cc"
   integrity sha512-whdXmU5os6TP8GgR2F9YJqBqeeZYiSf56b9acIHk0T+uJsSjZZLTlCnX+cF5cY9Oc+wcfNe2IXa6DyC+9je53Q==
+
+react-native-openai@^0.6.1:
+  version "0.6.1"
+  resolved "https://registry.npmjs.org/react-native-openai/-/react-native-openai-0.6.1.tgz"
+  integrity sha512-KG9exGI3cKl8BoNJByvac8d/INa8hfXGtmS8ChSU9QAkn95+hks3ZlxyWbaba47WoEbsewo/1qpUbRI/0sQDbA==
 
 react-native-reanimated@~3.3.0:
   version "3.3.0"
@@ -10612,20 +10613,7 @@ resolve-from@^5.0.0:
   resolved "https://registry.npmjs.org/resolve-from/-/resolve-from-5.0.0.tgz"
   integrity sha512-qYg9KP24dD5qka9J47d0aVky0N+b4fTU89LN9iDnjB5waksiC49rvMB0PrUJQGoTmH50XPiqOvAjDfaijGxYZw==
 
-<<<<<<< HEAD
-resolve@^1.1.6:
-  version "1.22.8"
-  resolved "https://registry.npmjs.org/resolve/-/resolve-1.22.8.tgz"
-  integrity sha512-oKWePCxqpd6FlLvGV1VU0x7bkPmmCNolxzjMf4NczoDnQcIWrAF+cPtZn5i6n+RfD2d9i0tzpKnG6Yk168yIyw==
-  dependencies:
-    is-core-module "^2.13.0"
-    path-parse "^1.0.7"
-    supports-preserve-symlinks-flag "^1.0.0"
-
-resolve@^1.14.2, resolve@^1.22.1:
-=======
 resolve@^1.1.6, resolve@^1.14.2, resolve@^1.22.1:
->>>>>>> main
   version "1.22.6"
   resolved "https://registry.npmjs.org/resolve/-/resolve-1.22.6.tgz"
   integrity sha512-njhxM7mV12JfufShqGy3Rz8j11RPdLy4xi15UurGJeoHLfJpVXKdh3ueuOqbYUcDZnffr6X739JBo5LzyahEsw==
