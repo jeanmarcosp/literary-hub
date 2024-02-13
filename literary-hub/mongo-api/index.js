@@ -1022,3 +1022,34 @@ app.put("/comments/:commentId/:userId/:poemId/unlike", async (req, res) => {
   }
 });
 
+app.get('/get-recs/:userId', async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const user = await User.findById(userId);
+    console.log("trying to find user");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    let recommendedPoems = [];
+
+    for (let poemId of user.likedPoems) {
+      let poem = await Poem.findById(poemId);
+      for (let otherUserId of poem.likes) {
+        if (otherUserId !== userId) {
+          let otherUser = await User.findById(otherUserId);
+          recommendedPoems = [...recommendedPoems, ...otherUser.likedPoems];
+        }
+      }
+    }
+
+    recommendedPoems = [...new Set(recommendedPoems)]; // Remove duplicates
+    recommendedPoems = recommendedPoems.filter(p => !user.readPoems.includes(p)); // Filter out already read poems
+    // // Further logic to select and order these poems
+    // // ...
+
+    res.json(recommendedPoems);
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching recommendations' });
+  }
+});

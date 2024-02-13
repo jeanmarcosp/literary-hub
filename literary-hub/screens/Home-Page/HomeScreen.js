@@ -106,6 +106,22 @@ const HomeScreen = () => {
   }, [userId]);
 
   useEffect(() => {
+    const testRecs = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:3000/get-recs/${userId}`
+        );
+        console.log("fetched recced poems");
+      } catch (error) {
+        console.error("Error fetching recced poems:", error);
+      }
+    };
+
+    testRecs();
+  }, [userId]);
+
+
+  useEffect(() => {
     loadMorePoems();
   }, [poems]);
 
