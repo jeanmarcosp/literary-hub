@@ -23,12 +23,18 @@ const ProfileScreen = () => {
   const [poems, setPoems] = useState([]);
   const [collections, setCollections] = useState([]);
   const [likedCollections, setLikedCollections] = useState([]);
-  const [segmentedControlView, setSegmentedControlView] = useState("My Collections");
+  const [segmentedControlView, setSegmentedControlView] =
+    useState("My Collections");
   const navigation = useNavigation();
 
   const handlePoemPress = (poem) => {
     console.log("pressed poem card");
-    navigation.navigate("PoemDetailScreen", { poem: poem, isLiked: true, comments: poem.comments, handleRefresh: {fetchProfile} });
+    navigation.navigate("PoemDetailScreen", {
+      poem: poem,
+      isLiked: true,
+      comments: poem.comments,
+      handleRefresh: { fetchProfile },
+    });
   };
 
   // this gets the users information stored in user?.
@@ -113,7 +119,7 @@ const ProfileScreen = () => {
     fetchCreatedCollections();
   }, [user]);
 
-// fetch liked collections
+  // fetch liked collections
   useEffect(() => {
     // Fetch collections based on user's createdCollections
     const fetchLikedCollections = async () => {
@@ -149,7 +155,11 @@ const ProfileScreen = () => {
     return (
       <View>
         <TouchableOpacity
-          onPress={() => navigation.navigate("CreateCollectionScreen")}
+          onPress={() =>
+            navigation.navigate("CreateCollectionScreen", {
+              username: user.username,
+            })
+          }
         >
           <View style={styles.createCollectionCTA}>
             <Ionicons name="add" size={22} color="#373F41" />
@@ -158,15 +168,15 @@ const ProfileScreen = () => {
             </Text>
           </View>
         </TouchableOpacity>
-          <FlatList
-            data={collections}
-            renderItem={({ item }) => (
-              <CollectionCard collection={item} handleRefresh={fetchProfile} />
-            )}
-            keyExtractor={(item) => item._id}
-            style={styles.collections}
-            contentInset= {{bottom: 80}}
-          />
+        <FlatList
+          data={collections}
+          renderItem={({ item }) => (
+            <CollectionCard collection={item} handleRefresh={fetchProfile} />
+          )}
+          keyExtractor={(item) => item._id}
+          style={styles.collections}
+          contentInset={{ bottom: 80 }}
+        />
       </View>
     );
   };
@@ -191,7 +201,7 @@ const ProfileScreen = () => {
           />
         )}
         style={styles.collections}
-        contentInset= {{bottom: 40}}
+        contentInset={{ bottom: 40 }}
       />
     );
   };
@@ -206,7 +216,7 @@ const ProfileScreen = () => {
           )}
           keyExtractor={(item) => item._id}
           style={styles.collections}
-          contentInset= {{bottom: 40}}
+          contentInset={{ bottom: 40 }}
         />
       </View>
     );
@@ -372,7 +382,7 @@ const styles = StyleSheet.create({
   centerAligned: {
     alignItems: "center",
   },
-  
+
   profilePic: {
     width: 100,
     height: 100,
@@ -441,7 +451,7 @@ const styles = StyleSheet.create({
   segmentedControl: {
     flexDirection: "row",
     justifyContent: "space-around",
-    width: '93%',
+    width: "93%",
     marginTop: 20,
     marginBottom: 10,
     borderRadius: 100,
@@ -477,8 +487,7 @@ const styles = StyleSheet.create({
     color: "#373F41",
   },
 
-  leftAligned: {
-  },
+  leftAligned: {},
 
   createCollectionCTA: {
     flexDirection: "row",
@@ -513,7 +522,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     columnGap: 20,
   },
-  
+
   collectionPic: {
     width: 70,
     height: 70,

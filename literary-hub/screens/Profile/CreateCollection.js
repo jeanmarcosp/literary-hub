@@ -19,7 +19,7 @@ import * as FileSystem from "expo-file-system";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 
-const CreateCollection = () => {
+const CreateCollection = ({ route }) => {
   const userId = getUserId();
   const navigation = useNavigation();
   const [title, setTitle] = useState("");
@@ -28,6 +28,9 @@ const CreateCollection = () => {
   const [coverArt, setCoverArt] = useState(null);
   const [uploading, setUploading] = useState("");
 
+  const { username } = route.params;
+  console.log("here", username)
+
   const handleCreateCollection = async () => {
     try {
       const newCollection = {
@@ -35,6 +38,7 @@ const CreateCollection = () => {
         title: title,
         caption: caption,
         coverArt: coverArt,
+        username: username,
       };
 
       console.log(newCollection);
@@ -43,6 +47,11 @@ const CreateCollection = () => {
         `${ROOT_URL}/create-collection`,
         newCollection
       );
+
+      // const response = await axios.post(
+      //   `http://localhost:3000/create-collection`,
+      //   newCollection
+      // );
 
       const createdCollection = response.data;
       console.log("Created Collection:", createdCollection);
