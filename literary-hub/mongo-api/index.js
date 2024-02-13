@@ -987,5 +987,16 @@ app.put("/comments/:commentId/:userId/:poemId/unlike", async (req, res) => {
   }
 });
 
-// api request for dall-e
+// // api request for dall-e
+// app.post("/generate-image", async (req, res) => {
+  
+//   try {
+//     const { prompt } = req.body;
+//     const response = await axios.post()
+    
+//     res.status(200).json({ token, userId: user._id });
+//   } catch (error) {
+//     console.log("error", error);
+//   }
+// });
 

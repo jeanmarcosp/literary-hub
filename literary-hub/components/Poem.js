@@ -39,7 +39,7 @@ import getUserId from "../hooks/getUserId";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
 import OpenAI from "openai";
-require('dotenv').config();
+
 
 const Poem = ({ route }) => {
   const { poem, poemId, userLikedPoems, fromHome, collection, comments } =
