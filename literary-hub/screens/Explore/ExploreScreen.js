@@ -17,6 +17,8 @@ import TrendingPoems from "../../components/TrendingPoems";
 import TrendingCollections from "../../components/TrendingCollections";
 import Quote from "../../components/Quote";
 import SearchResult from "../../components/SearchResult.js";
+import DailyPoem from "./DailyPoem.js";
+
 const ExploreScreen = () => {
   const [segmentedControlView, setSegmentedControlView] =
     useState("Collections");
@@ -30,16 +32,8 @@ const ExploreScreen = () => {
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
         <SearchBar onSearch={handleSearch}/>
-
-        <View style={styles.poemOfTheDayContainer}>
-          <ImageBackground
-            source={require('../../assets/collection-images/default-collection-cover1.jpeg')}
-            resizeMode="cover"
-            style={styles.poemOfTheDay}
-            imageStyle={{ borderRadius: 10 }}>
-            <Text style={styles.poemOfTheDayText}>Poem of the Day</Text>
-          </ImageBackground>
-        </View>
+        
+        <DailyPoem/>
 
         <Text style={styles.text}>Author Collections</Text>
         <AuthorList />

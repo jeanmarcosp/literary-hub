@@ -11,6 +11,10 @@ import {
   Button,
   TouchableOpacity,
   InputAccessoryView,
+  SafeAreaView,
+  Image,
+  ImageBackground,
+  Modal
 } from "react-native";
 import React, {
   useState,
@@ -34,6 +38,7 @@ import {
 import getUserId from "../hooks/getUserId";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
+import OpenAI from "openai";
 
 const Poem = ({ route }) => {
   const { poem, poemId, userLikedPoems, fromHome, collection, comments } =
@@ -116,6 +121,42 @@ const Poem = ({ route }) => {
     }, [poemId])
   );
 
+  const [image, setImage] = useState(null);
+  const generateImage = async(prompt) => {
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_KEY,
+    })
+
+    openai.baseURL = 'https://api.openai.com/v1';
+    openai.buildURL = (path) => `${openai.baseURL}${path}`;
+
+    if(prompt){
+      if(prompt.length < 800){
+        prompt = "Illustration representing this poem: " + prompt;
+      } else {
+        prompt = "Illustration representing a poem by this title: " + currentPoem.title
+      }
+    }
+
+    try {
+      const response = await openai.images.generate({
+        "model": "dall-e-2",
+        "prompt": prompt.replace(/\n/g, ' '),
+        "n": 1,
+        "size": "256x256",
+        "response_format": "url",
+      });
+      setImage(response.data[0].url)
+
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const handleGenerateImage = () => {
+    generateImage(poem.content); 
+  };
+
   return (
     <View>
       {collection && (
@@ -125,7 +166,7 @@ const Poem = ({ route }) => {
               ? { uri: collection.coverArt }
               : require("../assets/collection-images/defaultCover.jpeg")
           }
-          style={styles.image}
+          style={styles.collectionCover}
           resizeMode="cover"
         >
           {!fromHome && (
@@ -139,6 +180,7 @@ const Poem = ({ route }) => {
           )}
         </ImageBackground>
       )}
+      
       <View
         style={[
           styles.poemContainer,
@@ -149,6 +191,13 @@ const Poem = ({ route }) => {
           },
         ]}
       >
+        <Image
+            source={image ? { uri: image } : require('../assets/collection-images/defaultCover.jpeg')}
+            style={styles.image}
+        />
+        <TouchableOpacity onPress={handleGenerateImage}>
+          <Text>Generate image</Text>
+        </TouchableOpacity>
         <ScrollView
           horizontal
           pagingEnabled
@@ -156,10 +205,12 @@ const Poem = ({ route }) => {
           decelerationRate="fast"
           snapToInterval={Dimensions.get("window").width}
         >
+        
+        
           {poem.pages.map((page, index) => (
             <View
               key={index}
-              style={[styles.page, { paddingTop: collection ? 20 : 50 }]}
+              style={[styles.page, { paddingTop: collection ? 20 : 10 }]}
             >
               {index === 0 && (
                 <React.Fragment>
@@ -224,7 +275,7 @@ const Poem = ({ route }) => {
 
         <CollectionBottomSheet
           ref={bottomSheetRef}
-          title="Add to Collection"
+          title="Add to your collections"
           poem={poem}
           userId = {userId}
         />
@@ -251,7 +302,7 @@ const styles = StyleSheet.create({
   poemContainer: {
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: 16,
+    // paddingHorizontal: 16,
     paddingBottom: 0,
     position: "relative",
     backgroundColor: "#fff",
@@ -289,6 +340,7 @@ const styles = StyleSheet.create({
 
   page: {
     width: Dimensions.get("window").width,
+    paddingHorizontal: 16,
   },
 
   pageContent: {
@@ -351,8 +403,12 @@ const styles = StyleSheet.create({
   image: {
     position: "relative",
     width: "100%",
+    height: 150,
+  },
+  collectionCover: {
+    position: "relative",
+    width: "100%",
     height: 100,
-    alignItems: "left",
   },
   collectionTitle: {
     color: "white",
@@ -362,11 +418,21 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   bannerContainer: {
-    flexDirection: "row", // Align items in a row
-    alignItems: "center", // Center items vertically
-    paddingHorizontal: 20, // Adjust as needed
-    paddingVertical: 10, // Adjust as needed
+    flexDirection: "row", 
+    alignItems: "center", 
+    paddingHorizontal: 20,
+    paddingVertical: 10,
     top: 60,
+  },
+  dummyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  dummyText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });
 

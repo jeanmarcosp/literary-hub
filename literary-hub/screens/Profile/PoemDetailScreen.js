@@ -40,7 +40,7 @@ const PoemDetailScreen = ({ route }) => {
   const [userLikedPoems, setUserLikedPoems] = useState([]);
   const userId = getUserId();
   const [processedPoem, setProcessedPoem] = useState(null);
-  const linesPerPage = 20;
+  const linesPerPage = 17;
 
   const [openComments, setOpenComments] = useState(false);
   const [newComment, setNewComment] = useState("");
@@ -128,8 +128,6 @@ const PoemDetailScreen = ({ route }) => {
 
   const isInitiallyLiked = userLikedPoems.includes(poem._id);
 
-  // console.log("testing", poem._id)
-
   const fetchPoem = async () => {
     try {
       const response = await axios.get(`${ROOT_URL}/poem/${poem._id}`);
@@ -146,7 +144,6 @@ const PoemDetailScreen = ({ route }) => {
     }, [poem._id])
   );
 
-  // console.log("moved poem", currentPoem.comments);
 
   return (
     <View style={styles.poemContainer}>
@@ -236,7 +233,7 @@ const PoemDetailScreen = ({ route }) => {
 
       <CollectionBottomSheet
         ref={bottomSheetRef}
-        title="Add to Collection"
+        title="Add to your collections"
         poem={poem}
       />
 
