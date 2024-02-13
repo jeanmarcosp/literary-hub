@@ -13,6 +13,7 @@ import {
   TouchableOpacity,
   Alert,
   Dimensions,
+  Image,
 } from "react-native";
 import BottomSheet, {
   BottomSheetScrollView,
@@ -20,6 +21,7 @@ import BottomSheet, {
 } from "@gorhom/bottom-sheet";
 import axios from "axios";
 import DialogInput from "react-native-dialog-input";
+import { Ionicons } from "@expo/vector-icons";
 
 const CollectionBottomSheet = forwardRef((props, ref) => {
   const sheetRef = useRef(null);
@@ -45,15 +47,15 @@ const CollectionBottomSheet = forwardRef((props, ref) => {
   };
 
   useEffect(() => {
-    if (props.userData) {
-      getCollections(props.userData._id);
+    if (props.userId) {
+      getCollections(props.userId);
     }
-  }, [props.userData]);
+  }, [props.userId]);
 
   const getCollections = () => {
     axios
       .get(`${ROOT_URL}/getcollections`, {
-        params: { id: props.userData._id },
+        params: { id: props.userId },
       })
       .then((response) => {
         setCollections(response.data);
@@ -69,12 +71,12 @@ const CollectionBottomSheet = forwardRef((props, ref) => {
   };
   const handleSubmitNewCollection = (inputText) => {
     const newCollection = {
-      user: props.userData,
+      user: props.userId,
       title: inputText,
     };
 
     axios
-      .post("http://localhost:3000/collection/new", newCollection)
+      .post(`${ROOT_URL}/collection/new`, newCollection)
       .then((response) => {
         console.log(response);
         addPoemToCollection(props.poem._id, response.data.collection._id);
@@ -101,11 +103,14 @@ const CollectionBottomSheet = forwardRef((props, ref) => {
       })
       .then((response) => {
         console.log("Poem added to collection:", response.data);
+        getCollections();
       })
       .catch((error) => {
         console.log("Error adding poem to collection:", error);
       });
   };
+
+  console.log(collections);
 
   return (
     <BottomSheet
@@ -118,8 +123,8 @@ const CollectionBottomSheet = forwardRef((props, ref) => {
       index={-1}
       snapPoints={["25%", "50%", "75%"]}
       enablePanDownToClose={true}
-      handleIndicatorStyle={{ backgroundColor: "#fff" }}
-      backgroundStyle={{ backgroundColor: "#222" }}
+      handleIndicatorStyle={{ backgroundColor: "#373F41" }}
+      backgroundStyle={{ backgroundColor: "white" }}
       backdropComponent={renderBackdrop}
     >
       <View style={styles.contentContainer}>
@@ -130,8 +135,8 @@ const CollectionBottomSheet = forwardRef((props, ref) => {
             width: Dimensions.get("screen").width,
           }}
         >
-          <TouchableOpacity style={styles.button} onPress={showDialog}>
-            <Text style={styles.buttonText}>Add to New Collection</Text>
+          <TouchableOpacity style={styles.addToNewbutton} onPress={showDialog}>
+            <Text style={styles.addToNewbuttonText}>New Collection</Text>
           </TouchableOpacity>
 
           <DialogInput
@@ -144,35 +149,54 @@ const CollectionBottomSheet = forwardRef((props, ref) => {
 
           {collections.map((collection) => (
             <View key={collection._id} style={styles.collectionRow}>
-              <View style={{ justifyContent: "center", gap: 5 }}>
-                <Text style={styles.collectionTitle}>{collection.title}</Text>
-                <Text style={styles.collectionLength}>
-                  {collection.poemsInCollection.length}{" "}
-                  {collection.poemsInCollection.length === 1 ? "poem" : "poems"}
-                </Text>
-              </View>
-              <TouchableOpacity
-                style={styles.collectionButton}
-                onPress={() => {
-                  addPoemToCollection(props.poem._id, collection._id);
-                }}
-              >
-                {props.poem &&
-                collection &&
-                props.poem._id &&
-                collection._id ? (
-                  <Text style={styles.buttonText}>
-                    {isPoeminCollection(
-                      props.poem._id,
-                      collection.poemsInCollection
-                    )
-                      ? "Added"
-                      : "Add"}
+              <View style={styles.collectionRow}>
+                <Image
+                  source={{ uri: collection?.coverArt }}
+                  style={styles.coverArt}
+                />
+                <View style={styles.collectionInfo}>
+                  <Text style={styles.collectionTitle}>{collection.title}</Text>
+                  <Text style={styles.collectionLength}>
+                    {collection.poemsInCollection.length}{" "}
+                    {collection.poemsInCollection.length === 1
+                      ? "poem"
+                      : "poems"}
                   </Text>
+                </View>
+                {isPoeminCollection(
+                  props.poem._id,
+                  collection.poemsInCollection
+                ) ? (
+                  <TouchableOpacity style={styles.addedButton}>
+                    <Ionicons name="checkmark" size={24} color="white" />
+                    {props.poem &&
+                    collection &&
+                    props.poem._id &&
+                    collection._id ? (
+                      <Text style={styles.addedText}>Added</Text>
+                    ) : (
+                      <Text style={styles.addedText}>Invalid IDs</Text>
+                    )}
+                  </TouchableOpacity>
                 ) : (
-                  <Text style={styles.buttonText}>Invalid IDs</Text>
+                  <TouchableOpacity
+                    style={styles.addButton}
+                    onPress={() => {
+                      addPoemToCollection(props.poem._id, collection._id);
+                    }}
+                  >
+                    <Ionicons name="add" size={24} color="#644980" />
+                    {props.poem &&
+                    collection &&
+                    props.poem._id &&
+                    collection._id ? (
+                      <Text style={styles.addText}>Add</Text>
+                    ) : (
+                      <Text style={styles.addText}>Invalid IDs</Text>
+                    )}
+                  </TouchableOpacity>
                 )}
-              </TouchableOpacity>
+              </View>
             </View>
           ))}
         </BottomSheetScrollView>
@@ -187,55 +211,95 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   containerHeadline: {
+    fontFamily: "HammersmithOne",
     fontSize: 24,
     fontWeight: "600",
     padding: 20,
-    color: "#fff",
+    color: "#373F41",
   },
-  button: {
+  addToNewbutton: {
     backgroundColor: "#644980",
     padding: 10,
-    borderRadius: 5,
-    margin: 10,
-    width: Dimensions.get("window").width * 0.5,
+    borderRadius: 200,
+    width: Dimensions.get("window").width * .4,
+    height: 50,
     alignSelf: "center",
     alignItems: "center",
+    justifyContent: 'center',
+    borderWidth:1,
+    borderColor:"#644980",
   },
-  buttonText: {
+  addToNewbuttonText: {
     color: "white",
     fontWeight: "bold",
   },
+  buttonContainer: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent:'center',
+  },
+  coverArt: {
+    width: 75,
+    height: 75,
+    borderRadius: 12,
+  },
+  addText: {
+    color: "#644980",
+    fontWeight: "bold",
+    marginLeft: 5,
+  },
+  addedText: {
+    color: "white",
+    fontWeight: "bold",
+    marginLeft: 5,
+  },
   collectionRow: {
     flexDirection: "row",
-    width: Dimensions.get("window").width * 0.7,
-    justifyContent: "space-between",
+    width: Dimensions.get("window").width * 1,
     alignItems: "center",
-    alignSelf: "center",
     padding: 10,
-    margin: 3,
-    backgroundColor: "#f6f5f5",
-    borderRadius: 5,
+    backgroundColor: "white",
   },
   collectionInfo: {
     flexDirection: "column",
+    width: Dimensions.get("window").width * 0.35,
+    marginLeft: 10,
+    marginRight: 30,
   },
   collectionTitle: {
-    fontSize: 16,
+    fontFamily: "HammersmithOne",
+    fontSize: 18,
     fontWeight: "bold",
     padding: 5,
   },
   collectionLength: {
+    fontFamily: "Sarabun-ExtraLight",
     fontSize: 16,
-    fontWeight: 100,
     padding: 5,
   },
   collectionPoems: {
     fontSize: 10,
   },
-  collectionButton: {
+  addButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "white",
+    paddingVertical: 5,
+    paddingHorizontal: 30,
+    borderRadius: 20,
+    borderColor: "#644980",
+    borderWidth: 1,
+  },
+  addedButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     backgroundColor: "#644980",
-    padding: 10,
-    borderRadius: 5,
+    paddingVertical: 5,
+    paddingHorizontal: 25,
+    borderRadius: 20,
   },
 });
 
