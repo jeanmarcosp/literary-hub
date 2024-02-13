@@ -232,10 +232,11 @@ const PoemDetailScreen = ({ route }) => {
       </View>
 
       <CollectionBottomSheet
-        ref={bottomSheetRef}
-        title="Add to your collections"
-        poem={poem}
-      />
+          ref={bottomSheetRef}
+          title="Add to your collections"
+          poem={poem}
+          userId = {userId}
+        />
 
       <CommentSection
         ref={commentSectionRef}

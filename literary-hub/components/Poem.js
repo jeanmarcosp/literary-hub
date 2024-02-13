@@ -327,6 +327,7 @@ const styles = StyleSheet.create({
   },
 
   title: {
+    flexDirection: 'column',
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 10,
