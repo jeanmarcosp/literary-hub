@@ -40,7 +40,7 @@ const PoemDetailScreen = ({ route }) => {
   const [userLikedPoems, setUserLikedPoems] = useState([]);
   const userId = getUserId();
   const [processedPoem, setProcessedPoem] = useState(null);
-  const linesPerPage = 20;
+  const linesPerPage = 17;
 
   const [openComments, setOpenComments] = useState(false);
   const [newComment, setNewComment] = useState("");

@@ -35,7 +35,7 @@ const HomeScreen = () => {
   const [loading, setLoading] = useState(false);
   const [userLikedPoems, setUserLikedPoems] = useState([]);
   const userId = getUserId();
-  const linesPerPage = 20;
+  const linesPerPage = 17;
   const [readPoems, setReadPoems] = useState([]);
 
   const loadMorePoems = async () => {
