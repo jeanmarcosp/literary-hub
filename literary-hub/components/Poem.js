@@ -115,7 +115,6 @@ const Poem = ({ route }) => {
     openai.buildURL = (path) => `${openai.baseURL}${path}`;
 
     if(prompt){
-      console.log("LENGTH: ", prompt.length, prompt.length<800)
       if(prompt.length < 800){
         prompt = "Illustration representing this poem: " + prompt;
       } else {
