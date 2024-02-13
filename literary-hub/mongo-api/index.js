@@ -363,7 +363,7 @@ app.put("/collections/:collectionId/:userId/unlike", async (req, res) => {
 //endpoint for creating a collection
 app.post("/create-collection", async (req, res) => {
   try {
-    const { userId, title, caption, coverArt } = req.body;
+    const { userId, title, caption, coverArt, username } = req.body;
 
     if (!userId) {
       return res.status(400).json({ error: "User is a required field" });
@@ -386,6 +386,7 @@ app.post("/create-collection", async (req, res) => {
       likes: [],
       poemsInCollection: [],
       caption: collectionCaption,
+      username: username,
     });
 
     const savedCollection = await newCollection.save();

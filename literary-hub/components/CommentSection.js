@@ -46,7 +46,6 @@ const CommentSection = forwardRef((props, ref) => {
     []
   );
 
-  // console.log("here", props.state)
 
   const handleComment = async () => {
     try {
