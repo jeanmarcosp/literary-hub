@@ -986,3 +986,6 @@ app.put("/comments/:commentId/:userId/:poemId/unlike", async (req, res) => {
       .json({ message: "An error occurred while unliking the comment" });
   }
 });
+
+// api request for dall-e
+

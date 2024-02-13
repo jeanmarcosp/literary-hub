@@ -8,7 +8,7 @@ const PoemScreen = ({ route, navigation}) => {
   const { poem } = route.params;
 
    // split the poem into pages
-   const linesPerPage = 20;
+   const linesPerPage = 17;
    const lines = poem.content.split("\n");
    const pages = [];
    let currentPage = "";

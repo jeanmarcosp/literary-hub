@@ -12,7 +12,9 @@ import {
   TouchableOpacity,
   InputAccessoryView,
   SafeAreaView,
-  Image
+  Image,
+  ImageBackground,
+  Modal
 } from "react-native";
 import React, {
   useState,
@@ -37,6 +39,7 @@ import getUserId from "../hooks/getUserId";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
 import OpenAI from "openai";
+require('dotenv').config();
 
 const Poem = ({ route }) => {
   const { poem, poemId, userLikedPoems, fromHome, collection, comments } =
@@ -52,7 +55,6 @@ const Poem = ({ route }) => {
   const userId = getUserId();
   const [currentPoem, setCurrentPoem] = useState({});
 
-  const [prompt, setPrompt]=useState("cat, low detail");
   // if poem is already marked as read, do nothing
   // if it isn't, mark it as read
   useEffect(() => {
@@ -90,9 +92,6 @@ const Poem = ({ route }) => {
       const response = await axios.get(`${ROOT_URL}/poem/${poemId}`);
       const fetchedpoem = response.data.poem;
       setCurrentPoem(fetchedpoem);
-      if(currentPoem.content){
-        setPrompt(currentPoem.content);
-      }
     } catch (error) {
       console.log("error", error);
     }
@@ -103,31 +102,34 @@ const Poem = ({ route }) => {
       fetchPoem();
     }, [poemId])
   );
-  // const process = require('process');
-  // require('dotenv').config()
-  
-  
 
   const [image, setImage] = useState(null);
   const generateImage = async(prompt) => {
     const openai = new OpenAI({
-      apiKey: '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',
+      // apiKey: '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',
+      apiKey: process.env.OPENAI_KEY,
     })
 
     openai.baseURL = 'https://api.openai.com/v1';
     openai.buildURL = (path) => `${openai.baseURL}${path}`;
-    console.log("i am generating image");
-    console.log("HIYA" + prompt.replace(/\n/g, ' ').substring(0,750));
+
+    if(prompt){
+      console.log("LENGTH: ", prompt.length, prompt.length<800)
+      if(prompt.length < 800){
+        prompt = "Illustration representing this poem: " + prompt;
+      } else {
+        prompt = "Illustration of this poem title: " + currentPoem.title
+      }
+    }
+
     try {
       const response = await openai.images.generate({
         "model": "dall-e-2",
-        "prompt": "use classicism style to illustrate this poem: " + prompt.replace(/\n/g, ' ').substring(0,900),
+        "prompt": prompt.replace(/\n/g, ' '),
         "n": 1,
         "size": "256x256",
         "response_format": "url",
       });
-      console.log("done");
-      console.log("POOPY", response.data[0].url);
       setImage(response.data[0].url)
 
     } catch (error) {
@@ -140,133 +142,134 @@ const Poem = ({ route }) => {
   };
 
   return (
-    <SafeAreaView style={styles.dummyContainer}>
-      <Text style={styles.dummyText}>Hello</Text>
-      <TouchableOpacity onPress={handleGenerateImage}>
-        <Text>Generate image</Text>
-      </TouchableOpacity>
-      {image && (
-        <Image source={{ uri: image }} style={styles.image} />
+    <View>
+      {collection && (
+        <ImageBackground
+          source={
+            collection.coverArt
+              ? { uri: collection.coverArt }
+              : require("../assets/collection-images/defaultCover.jpeg")
+          }
+          style={styles.collectionCover}
+          resizeMode="cover"
+        >
+          {!fromHome && (
+            <TouchableOpacity
+              style={styles.bannerContainer}
+              onPress={() => navigation.goBack()}
+            >
+              <Ionicons name="chevron-back" size={24} color="white" />
+              <Text style={styles.collectionTitle}>{collection.title}</Text>
+            </TouchableOpacity>
+          )}
+        </ImageBackground>
       )}
-    </SafeAreaView>
-    // <View>
-    //   {collection && (
-    //     <ImageBackground
-    //       source={
-    //         collection.coverArt
-    //           ? { uri: collection.coverArt }
-    //           : require("../assets/collection-images/defaultCover.jpeg")
-    //       }
-    //       style={styles.image}
-    //       resizeMode="cover"
-    //     >
-    //       {!fromHome && (
-    //         <TouchableOpacity
-    //           style={styles.bannerContainer}
-    //           onPress={() => navigation.goBack()}
-    //         >
-    //           <Ionicons name="chevron-back" size={24} color="white" />
-    //           <Text style={styles.collectionTitle}>{collection.title}</Text>
-    //         </TouchableOpacity>
-    //       )}
-    //     </ImageBackground>
-    //   )}
-    //   <View
-    //     style={[
-    //       styles.poemContainer,
-    //       {
-    //         height: collection
-    //           ? Dimensions.get("window").height - 100
-    //           : Dimensions.get("window").height,
-    //       },
-    //     ]}
-    //   >
-    //     <ScrollView
-    //       horizontal
-    //       pagingEnabled
-    //       showsHorizontalScrollIndicator={false}
-    //       decelerationRate="fast"
-    //       snapToInterval={Dimensions.get("window").width}
-    //     >
-    //       {poem.pages.map((page, index) => (
-    //         <View
-    //           key={index}
-    //           style={[styles.page, { paddingTop: collection ? 20 : 50 }]}
-    //         >
-    //           {index === 0 && (
-    //             <React.Fragment>
-    //               <Text style={styles.title}>{poem.title}</Text>
-    //               <Text style={styles.author}>Author: {poem.author}</Text>
-    //             </React.Fragment>
-    //           )}
-    //           <Text style={styles.pageContent}>{page}</Text>
-    //         </View>
-    //       ))}
-    //     </ScrollView>
+      
+      <View
+        style={[
+          styles.poemContainer,
+          {
+            height: collection
+              ? Dimensions.get("window").height - 100
+              : Dimensions.get("window").height,
+          },
+        ]}
+      >
+        <Image
+            source={image ? { uri: image } : require('../assets/collection-images/defaultCover.jpeg')}
+            style={styles.image}
+        />
+        <TouchableOpacity onPress={handleGenerateImage}>
+          <Text>Generate image</Text>
+        </TouchableOpacity>
+        <ScrollView
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          decelerationRate="fast"
+          snapToInterval={Dimensions.get("window").width}
+        >
+        
+        
+          {poem.pages.map((page, index) => (
+            <View
+              key={index}
+              style={[styles.page, { paddingTop: collection ? 20 : 10 }]}
+            >
+              {index === 0 && (
+                <React.Fragment>
+                  <Text style={styles.title}>{poem.title}</Text>
+                  <Text style={styles.author}>Author: {poem.author}</Text>
+                </React.Fragment>
+              )}
+              <Text style={styles.pageContent}>{page}</Text>
+            </View>
+          ))}
+        </ScrollView>
 
-    //     <HomePageLike
-    //       inLikes={isInitiallyLiked}
-    //       handleLike={() => handleLike(userId, poemId)}
-    //       handleDislike={() => handleDislike(userId, poemId)}
-    //     />
+        <HomePageLike
+          inLikes={isInitiallyLiked}
+          handleLike={() => handleLike(userId, poemId)}
+          handleDislike={() => handleDislike(userId, poemId)}
+        />
 
-    //     <View style={styles.toggle}>
-    //       {annotationMode ? (
-    //         <Pressable
-    //           onPress={() => {
-    //             handleAnnotationMode(false);
-    //           }}
-    //         >
-    //           <MaterialCommunityIcons
-    //             name="toggle-switch"
-    //             size={35}
-    //             color="#644980"
-    //           />
-    //         </Pressable>
-    //       ) : (
-    //         <Pressable
-    //           onPress={() => {
-    //             handleAnnotationMode(true);
-    //           }}
-    //         >
-    //           <MaterialCommunityIcons
-    //             name="toggle-switch-off-outline"
-    //             size={35}
-    //             color="#644980"
-    //           />
-    //         </Pressable>
-    //       )}
-    //     </View>
+        <View style={styles.toggle}>
+          {annotationMode ? (
+            <Pressable
+              onPress={() => {
+                handleAnnotationMode(false);
+              }}
+            >
+              <MaterialCommunityIcons
+                name="toggle-switch"
+                size={35}
+                color="#644980"
+              />
+            </Pressable>
+          ) : (
+            <Pressable
+              onPress={() => {
+                handleAnnotationMode(true);
+              }}
+            >
+              <MaterialCommunityIcons
+                name="toggle-switch-off-outline"
+                size={35}
+                color="#644980"
+              />
+            </Pressable>
+          )}
+        </View>
 
-    //     <View style={styles.plus}>
-    //       <Pressable onPress={handleOpenPress} style={styles.icon}>
-    //         <Feather name="plus" size={30} color="#644980" />
-    //       </Pressable>
-    //     </View>
+        <View style={styles.plus}>
+          <Pressable onPress={handleOpenPress} style={styles.icon}>
+            <Feather name="plus" size={30} color="#644980" />
+          </Pressable>
+        </View>
 
-    //     <View style={styles.commentIcon}>
-    //       <Pressable onPress={handleCommentsOpen} style={styles.icon}>
-    //         <Ionicons name="chatbox-outline" size={30} color="#644980" />
-    //       </Pressable>
-    //     </View>
+        <View style={styles.commentIcon}>
+          <Pressable onPress={handleCommentsOpen} style={styles.icon}>
+            <Ionicons name="chatbox-outline" size={30} color="#644980" />
+          </Pressable>
+        </View>
 
-    //     <CollectionBottomSheet
-    //       ref={bottomSheetRef}
-    //       title="Add to Collection"
-    //       poem={poem}
-    //     />
+        <CollectionBottomSheet
+          ref={bottomSheetRef}
+          title="Add to Collection"
+          poem={poem}
+        />
 
-    //     <CommentSection
-    //       ref={commentSectionRef}
-    //       handleCommentsClose={handleCommentsClose}
-    //       comments={currentPoem.comments}
-    //       poemId={poem._id}
-    //       handleRefresh={fetchPoem}
-    //     />
+        <CommentSection
+          ref={commentSectionRef}
+          handleCommentsClose={handleCommentsClose}
+          comments={currentPoem.comments}
+          poemId={poem._id}
+          handleRefresh={fetchPoem}
+        />
 
-    //     {openComments}
-    //   </View>
-    // </View>
+        {openComments}
+      </View>
+    </View>
   );
 };
 
@@ -277,7 +280,7 @@ const styles = StyleSheet.create({
   poemContainer: {
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: 16,
+    // paddingHorizontal: 16,
     paddingBottom: 0,
     position: "relative",
     backgroundColor: "#fff",
@@ -297,6 +300,7 @@ const styles = StyleSheet.create({
 
   page: {
     width: Dimensions.get("window").width,
+    paddingHorizontal: 16,
   },
 
   pageContent: {
@@ -359,7 +363,12 @@ const styles = StyleSheet.create({
   image: {
     position: "relative",
     width: "100%",
-    height: 500,
+    height: 150,
+  },
+  collectionCover: {
+    position: "relative",
+    width: "100%",
+    height: 100,
   },
   collectionTitle: {
     color: "white",
@@ -369,10 +378,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   bannerContainer: {
-    flexDirection: "row", // Align items in a row
-    alignItems: "center", // Center items vertically
-    paddingHorizontal: 20, // Adjust as needed
-    paddingVertical: 10, // Adjust as needed
+    flexDirection: "row", 
+    alignItems: "center", 
+    paddingHorizontal: 20,
+    paddingVertical: 10,
     top: 60,
   },
   dummyContainer: {
