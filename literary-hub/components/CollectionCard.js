@@ -83,6 +83,11 @@ const CollectionCard = ({ collection, handleRefresh }) => {
     }
   };
 
+  const handleEditCollection = () => {
+    setIsModalVisible(false);
+    navigation.navigate("EditCollectionScreen", { collection })
+  }
+
   const ShareMenu = ({ isVisible, children, onClose }) => {
     return (
       <Modal animationType="slide" transparent={true} visible={isVisible}>
@@ -162,7 +167,7 @@ const CollectionCard = ({ collection, handleRefresh }) => {
                 </View>
               </TouchableOpacity>
 
-              <TouchableOpacity>
+              <TouchableOpacity onPress={handleEditCollection}>
                 <View style={styles.listItems}>
                   <View style={styles.iconContainer}>
                     <Ionicons name="create-outline" size={24} color="#434344" />

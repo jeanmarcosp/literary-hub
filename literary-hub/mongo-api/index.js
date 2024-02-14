@@ -868,11 +868,18 @@ app.get("/search", async (req, res) => {
 app.get("/trending-collections", async (req, res) => {
   try {
     const collections = await Collection.aggregate([
-      { $match: { poemsInCollection: { $exists: true, $not: { $size: 0 } } } },
+      { $match: { poemsInCollection: { $not: { $size: 0 } } } },
       { $match: { username: { $ne: null } } },
+      {
+        $addFields: {
+          likesCount: {$size: "$likes"}
+        }
+      },
+      { $sort: { likesCount: -1 } },
       { $sample: { size: 5 } },
     ]);
     res.json(collections);
+    console.log("these are the trending collections", collections)
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error fetching trending collections" });
@@ -1019,6 +1026,21 @@ app.put("/comments/:commentId/:userId/:poemId/unlike", async (req, res) => {
     res
       .status(500)
       .json({ message: "An error occurred while unliking the comment" });
+  }
+});
+
+// Deletion of a poem from the collection
+app.delete("/collections/:collectionId/poems/:poemId", async (req, res) => {
+  const { collectionId, poemId } = req.params;
+
+  try {
+    await Collection.findByIdAndUpdate(collectionId, {
+      $pull: { poemsInCollection: poemId }
+    });
+    res.status(200).json({ message: "Poem deleted from collection successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to delete poem from collection" });
   }
 });
 

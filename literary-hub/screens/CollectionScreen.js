@@ -8,10 +8,12 @@ import { useNavigation } from '@react-navigation/native';
 import axios from "axios";
 import getUserId from '../hooks/getUserId';
 import { poemToPage } from '../hooks/poemActions';
+import PoemList from '../components/PoemList';
 
 // const CollectionScreen = ({poems, title, showAuthor = true, showCreator = true}) => {
 const CollectionScreen = ({ route }) => {
   const { collection } = route.params;
+  console.log("FANTAAAAA", collection);
   const navigation = useNavigation();
   const isAuthor = !collection.username;
   const userId = getUserId();
@@ -119,7 +121,7 @@ const CollectionScreen = ({ route }) => {
         </TouchableOpacity>
       </ImageBackground>
 
-      <PoemList userLikedPoems={userLikedPoems}/>
+      <PoemList userLikedPoems={collection.userLikedPoems}/>
     </View>
   );
 };
