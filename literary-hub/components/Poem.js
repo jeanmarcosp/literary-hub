@@ -63,11 +63,11 @@ const Poem = ({ route }) => {
   var unit;
   
   if (estimatedTime < 1) {
-    estimatedTime = '<' + String(1);
-    unit = 'minute';
+    estimatedTime = '< ' + String(1);
+    unit = 'min';
   } else {
     estimatedTime = String(Math.round(estimatedTime));
-    unit = 'minutes';
+    unit = 'min';
   }
   
   console.log(estimatedTime + ' ' + unit);
@@ -215,11 +215,14 @@ const Poem = ({ route }) => {
               {index === 0 && (
                 <React.Fragment>
                   <View style={styles.titleBox}>
-                  <Text style={styles.title}>{poem.title} </Text>
-                  <View style={styles.estimatedTime}><Text>{estimatedTime} {unit}</Text> 
+                    <Text style={styles.title}>{poem.title}</Text>
+                    <View style={styles.estimatedTime}>
+                      <Text style={styles.estimatedTimeText}>
+                        {estimatedTime} {unit}
+                      </Text> 
+                    </View>
                   </View>
-                  </View>
-                  <Text style={styles.author}>Author: {poem.author}</Text>
+                  <Text style={styles.author}>by {poem.author}</Text>
                 </React.Fragment>
               )}
               <Text style={styles.pageContent}>{page}</Text>
@@ -307,36 +310,40 @@ const styles = StyleSheet.create({
     position: "relative",
     backgroundColor: "#fff",
   },
+
   titleBox: {
-    flexDirection:'row',
+    flexDirection: 'row',
+    columnGap: 10,
   },
+
   estimatedTime: {
-    backgroundColor: '#644990',
-    borderRadius:'10',
-    alignContent:'center',
-    paddingLeft: 16, 
-    paddingRight: 16, 
-    paddingTop: 4, 
-    paddingBottom: 4, 
-    backgroundColor: 'rgba(100, 73, 128, 0.20)', 
+    borderRadius: 10,
+    backgroundColor: '#F9F3FF', 
     borderRadius: 33, 
+    borderWidth: 1,
+    borderColor: '#D6CEDF',
     justifyContent: 'center', 
-    alignItems: 'center', 
-    gap: 16, 
-    display: 'flex'
+    paddingHorizontal: 10,
+    height: 25,
+  },
+
+  estimatedTimeText: {
+    fontFamily: 'Sarabun-Bold',
+    color: '#774BA3'
   },
 
   title: {
     flexDirection: 'column',
     fontSize: 24,
-    fontWeight: "bold",
+    fontFamily: 'HammersmithOne',
     marginBottom: 10,
+    maxWidth: '80%',
   },
 
   author: {
     fontSize: 16,
     fontStyle: "italic",
-    marginBottom: 10,
+    marginBottom: 20,
   },
 
   page: {
