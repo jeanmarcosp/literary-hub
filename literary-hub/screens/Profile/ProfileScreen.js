@@ -640,7 +640,7 @@ const styles = StyleSheet.create({
 
   settingsButton: {
     alignItems: "flex-end",
-    marginRight: 24,
-    marginTop: 16,
+    marginRight: 20,
+    marginTop: 5,
   },
 });
