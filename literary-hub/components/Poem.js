@@ -54,6 +54,25 @@ const Poem = ({ route }) => {
   const userId = getUserId();
   const [currentPoem, setCurrentPoem] = useState({});
 
+  
+  const wordCount = poem.content.split(' ').length;
+  var estimatedTime = parseInt(wordCount) / 200;
+  console.log(estimatedTime);
+  console.log(Math.round(estimatedTime));
+  
+  var unit;
+  
+  if (estimatedTime < 1) {
+    estimatedTime = '<' + String(1);
+    unit = 'minute';
+  } else {
+    estimatedTime = String(Math.round(estimatedTime));
+    unit = 'minutes';
+  }
+  
+  console.log(estimatedTime + ' ' + unit);
+
+
   // if poem is already marked as read, do nothing
   // if it isn't, mark it as read
   useEffect(() => {
@@ -195,7 +214,11 @@ const Poem = ({ route }) => {
             >
               {index === 0 && (
                 <React.Fragment>
-                  <Text style={styles.title}>{poem.title}</Text>
+                  <View style={styles.titleBox}>
+                  <Text style={styles.title}>{poem.title} </Text>
+                  <View style={styles.estimatedTime}><Text>{estimatedTime} {unit}</Text> 
+                  </View>
+                  </View>
                   <Text style={styles.author}>Author: {poem.author}</Text>
                 </React.Fragment>
               )}
@@ -284,8 +307,27 @@ const styles = StyleSheet.create({
     position: "relative",
     backgroundColor: "#fff",
   },
+  titleBox: {
+    flexDirection:'row',
+  },
+  estimatedTime: {
+    backgroundColor: '#644990',
+    borderRadius:'10',
+    alignContent:'center',
+    paddingLeft: 16, 
+    paddingRight: 16, 
+    paddingTop: 4, 
+    paddingBottom: 4, 
+    backgroundColor: 'rgba(100, 73, 128, 0.20)', 
+    borderRadius: 33, 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    gap: 16, 
+    display: 'flex'
+  },
 
   title: {
+    flexDirection: 'column',
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 10,
