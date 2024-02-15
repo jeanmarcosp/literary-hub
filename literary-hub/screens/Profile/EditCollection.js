@@ -26,14 +26,15 @@ const EditCollectionScreen = ({route}) => {
   const navigation = useNavigation();
   const [title, setTitle] = useState(collection.title);
   const [caption, setCaption] = useState(collection.caption);
-  console.log("poop", collection.poemsInCollection);
 
   const [coverArt, setCoverArt] = useState(collection.coverArt);
   const [uploading, setUploading] = useState("");
   const [poems, setPoems] = useState([])
+  // const [newPoems, setNewPoems] = useState([])
   const [userLikedPoems, setUserLikedPoems] = useState([]);
   const poemIds = collection.poemsInCollection;
   const isAuthor = !collection.username;
+  
 
   useEffect(() => {
     const fetchPoems = async() => {
@@ -44,6 +45,7 @@ const EditCollectionScreen = ({route}) => {
           },
         });
         setPoems(response.data);
+        console.log('polar', poems);
       } catch (error) {
         console.error(error);
       }
@@ -109,12 +111,39 @@ const EditCollectionScreen = ({route}) => {
     Alert.alert("Photo uploaded!");
   };
 
+  const handleSave = async() => {
+
+    // save changes to the title
+    // save changes to the description
+    // save changes to the image
+    // save changes to the poems
+    console.log("I AM IN SAVE EDITS");
+    console.log('coll id: ', collection._id);
+    console.log('new poems: ', poems);
+    updatePoems(poems);
+    navigation.goBack();
+  }
+
+  const updatePoems = async(newPoems) => {
+    try {
+      const response = await axios.put(`http://localhost:3000/edit/collections/${collection._id}/poems`, {
+        newPoems: newPoems.map(poem => poem._id)
+      })
+      console.log(response.data);
+      return response.data
+    } catch (error) {
+      console.error('Error editing collection poems: ', error);
+    }
+  }
+
   const deletePoem = async(poemId) => {
     console.log("this is hte collection id: ", collection._id);
     console.log("this is hte poem id: ", poemId);
     try {
-      await axios.delete(`http://localhost:3000/collections/${collection._id}/poems/${poemId}`)
-      setPoems(poems.filter(poem => poem._id !==poemId))
+      updatedPoems = poems.filter(poem => poem._id !== poemId);
+      setPoems(updatedPoems);      
+      // await axios.delete(`http://localhost:3000/collections/${collection._id}/poems/${poemId}`)
+      // setPoems(poems.filter(poem => poem._id !==poemId))
     } catch (error) {
       console.log("Error deleting the poem: ", error);
     }
@@ -163,7 +192,7 @@ const EditCollectionScreen = ({route}) => {
       <Text style={styles.cancelSaveText}>Cancel</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity>
+      <TouchableOpacity onPress={handleSave}>
       <Text style={styles.cancelSaveText}>Save</Text>
       </TouchableOpacity>
     </View>

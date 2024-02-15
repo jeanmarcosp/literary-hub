@@ -879,7 +879,7 @@ app.get("/trending-collections", async (req, res) => {
       { $sample: { size: 5 } },
     ]);
     res.json(collections);
-    console.log("these are the trending collections", collections)
+    // console.log("these are the trending collections", collections)
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error fetching trending collections" });
@@ -1044,3 +1044,21 @@ app.delete("/collections/:collectionId/poems/:poemId", async (req, res) => {
   }
 });
 
+// Edit poems in a collection
+app.put("/edit/collections/:collectionId/poems", async (req, res) => {
+  const collectionId = req.params.collectionId
+  console.log('THIS IS MY COLLECTION ID: ', collectionId)
+  const newPoems = req.body.newPoems
+  console.log('THIS IS MY NEW POEM IDS: ', newPoems)
+
+  try {
+    const updatedCollection = await Collection.findByIdAndUpdate(collectionId, {
+      $set: { poemsInCollection: newPoems }
+    });
+    console.log("UPDATED COLLECTION: ", updatedCollection);
+    res.status(200).json({ message: "Edited collection poems successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to update poems in collection" });
+  }
+});
