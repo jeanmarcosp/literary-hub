@@ -191,13 +191,19 @@ const Poem = ({ route }) => {
           },
         ]}
       >
-        <Image
+        <ImageBackground
             source={image ? { uri: image } : require('../assets/collection-images/defaultCover.jpeg')}
             style={styles.image}
-        />
+        >
+          <View style={styles.reloadButton}>
+            <Ionicons name="reload-outline" size={20} color="#000" />
+          </View>
+        </ImageBackground>
+
         <TouchableOpacity onPress={handleGenerateImage}>
           <Text>Generate image</Text>
         </TouchableOpacity>
+
         <ScrollView
           horizontal
           pagingEnabled
@@ -408,16 +414,29 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     padding: 5,
   },
+
   image: {
     position: "relative",
     width: "100%",
     height: 150,
   },
+
+  reloadButton: {
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    alignSelf: 'baseline',
+    padding: 7,
+    borderRadius: 100,
+    position: 'absolute',
+    bottom: 15,
+    right: 15,
+  },
+
   collectionCover: {
     position: "relative",
     width: "100%",
     height: 100,
   },
+
   collectionTitle: {
     color: "white",
     fontFamily: "HammersmithOne",
@@ -425,6 +444,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
   },
+
   bannerContainer: {
     flexDirection: "row", 
     alignItems: "center", 
@@ -432,11 +452,13 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     top: 60,
   },
+
   dummyContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
+
   dummyText: {
     fontSize: 24,
     fontWeight: 'bold',
