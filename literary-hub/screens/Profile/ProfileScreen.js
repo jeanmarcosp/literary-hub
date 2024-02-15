@@ -103,7 +103,7 @@ const ProfileScreen = () => {
           });
 
           const fetchedCollections = response.data;
-          // console.log("collections render");
+
           setCollections(fetchedCollections);
         }
       } catch (error) {
@@ -135,7 +135,7 @@ const ProfileScreen = () => {
           });
 
           const fetchedLikedCollections = response.data;
-          // console.log("collections render");
+          
           setLikedCollections(fetchedLikedCollections);
         }
       } catch (error) {
