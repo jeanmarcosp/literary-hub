@@ -4,6 +4,7 @@ import {
   View,
   KeyboardAvoidingView,
   TextInput,
+  Alert,
   Pressable,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -14,35 +15,34 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSelector, useDispatch } from "react-redux";
 import { setUser } from "../state/actions/userActions";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import getUserId from "../hooks/getUserId";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const navigation = useNavigation();
 
-  const user = useSelector((state) => state.user);
-  const userId = user ? user.id : null;
+  const userId = getUserId();
+
+  console.log("log in page", userId)
 
   const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   const checkLoginStatus = async () => {
-  //     try {
-  //       const token = await AsyncStorage.getItem("authToken");
-  //       console.log("token", userId);
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      try {
+        const token = await AsyncStorage.getItem("authToken");
 
-  //       if (token && userId) {
-  //         setTimeout(() => {
-  //           navigation.navigate("Main");
-  //         }, 400);
-  //       }
-  //     } catch (error) {
-  //       console.log("error", error);
-  //     }
-  //   };
+        if (token) {
+          navigation.navigate("Main");
+        }
+      } catch (error) {
+        console.log("error", error);
+      }
+    };
 
-  //   checkLoginStatus();
-  // }, []);
+    checkLoginStatus();
+  }, []);
 
   const handleLogin = async () => {
     console.log("log in button pressed");
@@ -67,6 +67,7 @@ const LoginScreen = () => {
       setPassword("");
 
     } catch (error) {
+      Alert.alert("Login error");
       console.log("error", error);
     }
   };

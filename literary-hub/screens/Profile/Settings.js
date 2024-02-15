@@ -12,12 +12,23 @@ import { useDispatch } from "react-redux";
 import { resetUser } from "../../state/actions/userActions";
 import getUserId from "../../hooks/getUserId";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Settings = ({ navigation }) => {
   const userId = getUserId();
   const dispatch = useDispatch();
 
+  const clearAuthToken = async () => {
+    try {
+      await AsyncStorage.removeItem("authToken");
+      console.log("Authentication token cleared successfully");
+    } catch (error) {
+      console.error("Error clearing authentication token:", error);
+    }
+  };
+
   const handleLogout = () => {
+    clearAuthToken();
     dispatch(resetUser());
     navigation.navigate("Login");
   };
