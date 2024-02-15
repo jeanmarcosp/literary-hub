@@ -282,6 +282,24 @@ const ProfileScreen = () => {
           <Text style={styles.name}>{user?.name}</Text>
           <Text style={styles.username}>@{user?.username}</Text>
         </View>
+
+        <View style={styles.stats}>
+          <View style={styles.stat}>
+            <Ionicons name="flame-outline" size={22} color="#658049" />
+            <Text style={styles.statText}>12 PoTDs</Text>
+          </View>
+
+          <View style={styles.stat}>
+            <Ionicons name="book-outline" size={22} color="#658049" />
+            <Text style={styles.statText}>132 poems</Text>
+          </View>
+
+          <View style={styles.stat}>
+            <Ionicons name="globe-outline" size={22} color="#658049" />
+            <Text style={styles.statText}>22 contributions</Text>
+          </View>
+        </View>
+
       </View>
 
         {/* <TouchableOpacity>
@@ -384,15 +402,14 @@ const styles = StyleSheet.create({
   },
 
   innerContainer: {
-    borderWidth: 1,
-    borderColor: 'black',
-    paddingLeft: 25,
+    marginTop: 10,
+    paddingLeft: 20,
   },
 
   topSection: {
     flexDirection: 'row',
     alignItems: 'center',
-    columnGap: 30,
+    columnGap: 40,
   },
 
   profilePic: {
@@ -403,8 +420,7 @@ const styles = StyleSheet.create({
 
   names: {
     marginTop: 10,
-    flexDirection: "row",
-    alignItems: 'center',
+    flexDirection: "column",
     columnGap: 10,
   },
 
@@ -418,8 +434,25 @@ const styles = StyleSheet.create({
 
   username: {
     fontSize: 15,
-    fontFamily: "HammersmithOne",
+    fontFamily: "Sarabun-Regular",
     color: "#6C7476",
+  },
+
+  stats: {
+    marginTop: 20,
+    flexDirection: 'row',
+    columnGap: 28,
+  },
+
+  stat: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    columnGap: 5,
+  },
+
+  statText: {
+    fontFamily: 'Sarabun-Medium',
+    fontSize: 15,
   },
 
   metrics: {
@@ -463,7 +496,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     width: "93%",
-    marginTop: 20,
+    marginTop: 60,
     marginBottom: 10,
     borderRadius: 100,
     paddingHorizontal: 4,
@@ -505,7 +538,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     columnGap: 7,
-    marginTop: 15,
+    marginTop: 10,
     paddingLeft: 18,
   },
 
