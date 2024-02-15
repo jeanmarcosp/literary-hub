@@ -229,56 +229,60 @@ const ProfileScreen = () => {
           <Ionicons name="settings-outline" size={26} color="#373F41" />
         </View>
       </TouchableOpacity>
-      <View style={styles.centerAligned}>
-        <Image
-          source={{
-            uri: user?.profilePicture,
-          }}
-          style={styles.profilePic}
-        />
+      <View style={styles.innerContainer}>
+
+        <View style={styles.topSection}>
+          <Image
+            source={{
+              uri: user?.profilePicture,
+            }}
+            style={styles.profilePic}
+          />
+
+          <View style={styles.metrics}>
+            <View style={styles.metric}>
+              <Text style={styles.metricNumber}>
+                {user?.createdCollections?.length}
+              </Text>
+              <Text style={styles.metricName}>Collections</Text>
+            </View>
+
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate("FollowersScreen", {
+                  followerList: user?.followers,
+                  loggedInUser: userId,
+                  followingList: user?.following,
+                })
+              }
+            >
+              <View style={styles.metric}>
+                <Text style={styles.metricNumber}>{user?.followers?.length}</Text>
+                <Text style={styles.metricName}>Followers</Text>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate("FollowingScreen", {
+                  followingList: user?.following,
+                  loggedInUser: userId,
+                })
+              }
+            >
+              <View style={styles.metric}>
+                <Text style={styles.metricNumber}>{user?.following?.length}</Text>
+                <Text style={styles.metricName}>Following</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </View>
 
         <View style={styles.names}>
           <Text style={styles.name}>{user?.name}</Text>
           <Text style={styles.username}>@{user?.username}</Text>
         </View>
-
-        <View style={styles.metrics}>
-          <View style={styles.metric}>
-            <Text style={styles.metricNumber}>
-              {user?.createdCollections?.length}
-            </Text>
-            <Text style={styles.metricName}>Collections</Text>
-          </View>
-
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate("FollowersScreen", {
-                followerList: user?.followers,
-                loggedInUser: userId,
-                followingList: user?.following,
-              })
-            }
-          >
-            <View style={styles.metric}>
-              <Text style={styles.metricNumber}>{user?.followers?.length}</Text>
-              <Text style={styles.metricName}>Followers</Text>
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate("FollowingScreen", {
-                followingList: user?.following,
-                loggedInUser: userId,
-              })
-            }
-          >
-            <View style={styles.metric}>
-              <Text style={styles.metricNumber}>{user?.following?.length}</Text>
-              <Text style={styles.metricName}>Following</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
+      </View>
 
         {/* <TouchableOpacity>
           <View style={styles.followButton}>
@@ -354,7 +358,7 @@ const ProfileScreen = () => {
             </View>
           </TouchableOpacity>
         </View>
-      </View>
+      
 
       <View style={styles.leftAligned}>
         {segmentedControlView === "My Collections" && (
@@ -379,25 +383,33 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
 
-  centerAligned: {
-    alignItems: "center",
+  innerContainer: {
+    borderWidth: 1,
+    borderColor: 'black',
+    paddingLeft: 25,
+  },
+
+  topSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    columnGap: 30,
   },
 
   profilePic: {
-    width: 100,
-    height: 100,
+    width: 80,
+    height: 80,
     borderRadius: 50,
-    marginTop: 20,
   },
 
   names: {
     marginTop: 10,
-    flexDirection: "column",
-    alignItems: "center",
+    flexDirection: "row",
+    alignItems: 'center',
+    columnGap: 10,
   },
 
   name: {
-    fontSize: 20,
+    fontSize: 18,
     fontFamily: "HammersmithOne",
     color: "#373F41",
     flexDirection: "column",
@@ -407,13 +419,12 @@ const styles = StyleSheet.create({
   username: {
     fontSize: 15,
     fontFamily: "HammersmithOne",
-    color: "#373F41",
+    color: "#6C7476",
   },
 
   metrics: {
     flexDirection: "row",
     columnGap: 20,
-    marginTop: 10,
   },
 
   metric: {
@@ -458,6 +469,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
     paddingVertical: 4,
     backgroundColor: "#E1DBE6",
+    alignSelf: 'center'
   },
 
   segmentedControlSelected: {
