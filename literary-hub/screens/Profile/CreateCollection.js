@@ -40,8 +40,6 @@ const CreateCollection = ({ route }) => {
         username: username,
       };
 
-      // console.log(newCollection);
-
       const response = await axios.post(
         `${ROOT_URL}/create-collection`,
         newCollection

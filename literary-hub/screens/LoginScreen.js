@@ -2,11 +2,9 @@ import {
   StyleSheet,
   Text,
   View,
-  SafeAreaView,
   KeyboardAvoidingView,
   TextInput,
   Pressable,
-  Alert,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import React, { useState, useEffect } from "react";
@@ -22,109 +20,122 @@ const LoginScreen = () => {
   const [password, setPassword] = useState();
   const navigation = useNavigation();
 
-  const user = useSelector((state) => state.user); // Use the useSelector hook to access the user data
-  const userId = user ? user.id : null; // Extract the user ID
+  const user = useSelector((state) => state.user);
+  const userId = user ? user.id : null;
+
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    const checkLoginStatus = async () => {
-      try {
-        const token = await AsyncStorage.getItem("authToken");
-      } catch {}
-    };
-  });
+  // useEffect(() => {
+  //   const checkLoginStatus = async () => {
+  //     try {
+  //       const token = await AsyncStorage.getItem("authToken");
+  //       console.log("token", userId);
 
-  const handleLogin = () => {
+  //       if (token && userId) {
+  //         setTimeout(() => {
+  //           navigation.navigate("Main");
+  //         }, 400);
+  //       }
+  //     } catch (error) {
+  //       console.log("error", error);
+  //     }
+  //   };
+
+  //   checkLoginStatus();
+  // }, []);
+
+  const handleLogin = async () => {
     console.log("log in button pressed");
+
     const user = {
       email: email,
       password: password,
     };
-    axios
-      .post(`${ROOT_URL}/login`, {
-        ...user,
-      })
-      .then((response) => {
-        console.log(response);
-        const token = response.data.token;
-        AsyncStorage.setItem("authToken", token);
 
-        // Dispatch the action to store user information
-        dispatch(setUser({ id: response.data.userId, username: null }));
-        navigation.navigate("Main");
-        setEmail("");
-        setPassword("");
-      })
-      .catch((error) => {
-        if (error.response && error.response.data) {
-          Alert.alert("Login error", error.response.data.message);
-        } else {
-          Alert.alert("Login error", "An error occurred while logging in.");
-        }
-        console.log("error", error);
-      });
+    try {
+      const response = await axios.post(`${ROOT_URL}/login`, user);
+
+      console.log(response.data);
+
+      const token = response.data.token;
+      AsyncStorage.setItem("authToken", token);
+
+      dispatch(setUser({ id: response.data.userId }));
+
+      navigation.navigate("Main");
+      setEmail("");
+      setPassword("");
+
+    } catch (error) {
+      console.log("error", error);
+    }
   };
 
   return (
     <KeyboardAwareScrollView>
-    <View style={styles.container}>
-      <KeyboardAvoidingView>
-        <Text style={styles.loginHeader1}>Sign in to</Text>
-        <Text style={styles.loginHeader2}>Literary Hub</Text>
-        <View>
-          <Text style={styles.sectionHeader}>Email</Text>
-          <View style={styles.inputView}>
-            <MaterialCommunityIcons
-              style={{ marginLeft: 16 }}
-              name="email-outline"
-              size={24}
-              color="gray"
-            />
-            <TextInput
-              autoCapitalize="none"
-              value={email}
-              onChangeText={(text) => setEmail(text)}
-              placeholderTextColor={"gray"}
-              style={styles.textBox}
-              placeholder="Enter your Email"
-            />
+      <View style={styles.container}>
+        <KeyboardAvoidingView>
+          <Text style={styles.loginHeader1}>Sign in to</Text>
+          <Text style={styles.loginHeader2}>Literary Hub</Text>
+          <View>
+            <Text style={styles.sectionHeader}>Email</Text>
+            <View style={styles.inputView}>
+              <MaterialCommunityIcons
+                style={{ marginLeft: 16 }}
+                name="email-outline"
+                size={24}
+                color="gray"
+              />
+              <TextInput
+                autoCapitalize="none"
+                value={email}
+                onChangeText={(text) => setEmail(text)}
+                placeholderTextColor={"gray"}
+                style={styles.textBox}
+                placeholder="Enter your Email"
+              />
+            </View>
+
+            <Text style={styles.sectionHeader}>Password</Text>
+            <View style={styles.inputView}>
+              <MaterialCommunityIcons
+                style={{ marginLeft: 16 }}
+                name="lock-outline"
+                size={24}
+                color="gray"
+              />
+              <TextInput
+                secureTextEntry={true}
+                value={password}
+                onChangeText={(text) => setPassword(text)}
+                placeholderTextColor={"gray"}
+                style={styles.textBox}
+                placeholder="Enter your Password"
+              />
+            </View>
+
+            <View style={styles.forgotPasswordContainer}>
+              <Text style={styles.forgotPasswordText}>Forgot password</Text>
+            </View>
           </View>
 
-          <Text style={styles.sectionHeader}>Password</Text>
-          <View style={styles.inputView}>
-            <MaterialCommunityIcons
-              style={{ marginLeft: 16 }}
-              name="lock-outline"
-              size={24}
-              color="gray"
-            />
-            <TextInput
-              secureTextEntry={true}
-              value={password}
-              onChangeText={(text) => setPassword(text)}
-              placeholderTextColor={"gray"}
-              style={styles.textBox}
-              placeholder="Enter your Password"
-            />
+          <View>
+            <Pressable onPress={handleLogin} style={styles.loginContainer}>
+              <Text style={styles.loginText}>Log in</Text>
+            </Pressable>
+
+            <Pressable
+              onPress={() => navigation.navigate("Register")}
+              style={styles.registerCTA}
+            >
+              <Text style={styles.registerCTAText1}>
+                Don't have an account?
+              </Text>
+              <Text style={styles.registerCTAText2}>Register</Text>
+            </Pressable>
           </View>
-
-          <View style={styles.forgotPasswordContainer}>
-            <Text style={styles.forgotPasswordText}>Forgot password</Text>
-          </View>
-        </View>
-
-        <View>
-          <Pressable onPress={handleLogin} style={styles.loginContainer}>
-            <Text style={styles.loginText}>Log in</Text>
-          </Pressable>
-
-          <Pressable onPress={() => navigation.navigate("Register")} style={styles.registerCTA}>
-            <Text style={styles.registerCTAText1}>Don't have an account?</Text>
-            <Text style={styles.registerCTAText2}>Register</Text>
-          </Pressable>
-        </View>
-      </KeyboardAvoidingView>
-    </View>
+        </KeyboardAvoidingView>
+      </View>
     </KeyboardAwareScrollView>
   );
 };
@@ -161,7 +172,7 @@ const styles = StyleSheet.create({
   },
 
   sectionHeader: {
-    fontFamily: 'Sarabun-Bold',
+    fontFamily: "Sarabun-Bold",
     fontSize: 17,
     marginBottom: 7,
     marginTop: 20,
@@ -179,7 +190,7 @@ const styles = StyleSheet.create({
 
   loginText: {
     textAlign: "center",
-    fontFamily: 'Sarabun-Bold',
+    fontFamily: "Sarabun-Bold",
     fontSize: 18,
     color: "white",
   },
@@ -188,8 +199,8 @@ const styles = StyleSheet.create({
     marginVertical: 13,
     width: 280,
     fontSize: 16,
-    fontFamily: 'Sarabun-Regular',
-    color: '#A6A6A6'
+    fontFamily: "Sarabun-Regular",
+    color: "#A6A6A6",
   },
 
   forgotPasswordContainer: {
@@ -201,10 +212,10 @@ const styles = StyleSheet.create({
   },
 
   forgotPasswordText: {
-    fontFamily: 'Sarabun-Bold',
+    fontFamily: "Sarabun-Bold",
     fontSize: 15,
     color: "#9B59D1",
-    textDecorationLine: 'underline'
+    textDecorationLine: "underline",
   },
 
   signUpText: {
@@ -213,24 +224,24 @@ const styles = StyleSheet.create({
   },
 
   registerCTA: {
-    flexDirection: 'row',
+    flexDirection: "row",
     columnGap: 3,
-    alignItems: 'baseline',
-    alignSelf: 'center',
-    marginTop: 10
+    alignItems: "baseline",
+    alignSelf: "center",
+    marginTop: 10,
   },
 
   registerCTAText1: {
-    fontFamily: 'Sarabun-Regular',
+    fontFamily: "Sarabun-Regular",
     fontSize: 17,
-    color: '#9B59D1',
+    color: "#9B59D1",
   },
 
   registerCTAText2: {
-    fontFamily: 'Sarabun-Bold',
+    fontFamily: "Sarabun-Bold",
     fontSize: 17,
-    color: '#9B59D1',
-    textDecorationLine: 'underline',
+    color: "#9B59D1",
+    textDecorationLine: "underline",
     marginBottom: 250,
-  }
+  },
 });

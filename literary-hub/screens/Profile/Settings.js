@@ -60,7 +60,7 @@ const Settings = ({ navigation }) => {
   };
   
 
-  console.log(userId);
+  // console.log(userId);
 
   return (
     <SafeAreaView style={styles.mainContainer}>
