@@ -1049,11 +1049,17 @@ app.put("/edit/collections/:collectionId/poems", async (req, res) => {
   const collectionId = req.params.collectionId
   console.log('THIS IS MY COLLECTION ID: ', collectionId)
   const newPoems = req.body.newPoems
-  console.log('THIS IS MY NEW POEM IDS: ', newPoems)
+  const title = req.body.title
+  const caption = req.body.caption
+  console.log('THIS IS MY NEW POEM IDS: ', newPoems, title, caption)
 
   try {
     const updatedCollection = await Collection.findByIdAndUpdate(collectionId, {
-      $set: { poemsInCollection: newPoems }
+      $set: { 
+        poemsInCollection: newPoems, 
+        title: title,
+        caption: caption,
+      },
     });
     console.log("UPDATED COLLECTION: ", updatedCollection);
     res.status(200).json({ message: "Edited collection poems successfully" });

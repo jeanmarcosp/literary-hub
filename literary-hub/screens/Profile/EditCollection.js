@@ -118,16 +118,20 @@ const EditCollectionScreen = ({route}) => {
     // save changes to the image
     // save changes to the poems
     console.log("I AM IN SAVE EDITS");
-    console.log('coll id: ', collection._id);
-    console.log('new poems: ', poems);
+    console.log('title', title);
+    console.log('caption', caption);
     updatePoems(poems);
     navigation.goBack();
   }
 
+  
   const updatePoems = async(newPoems) => {
     try {
       const response = await axios.put(`http://localhost:3000/edit/collections/${collection._id}/poems`, {
-        newPoems: newPoems.map(poem => poem._id)
+        newPoems: newPoems.map(poem => poem._id),
+        title,
+        caption,
+
       })
       console.log(response.data);
       return response.data
