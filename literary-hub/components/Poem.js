@@ -25,6 +25,7 @@ import React, {
   useRef,
 } from "react";
 import { TextInput } from "react-native-gesture-handler";
+import { BlurView } from "@react-native-community/blur";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
@@ -195,14 +196,19 @@ const Poem = ({ route }) => {
             source={image ? { uri: image } : require('../assets/collection-images/defaultCover.jpeg')}
             style={styles.image}
         >
-          <View style={styles.reloadButton}>
-            <Ionicons name="reload-outline" size={20} color="#000" />
-          </View>
+          
+          <TouchableOpacity onPress={handleGenerateImage} style={styles.reloadContainer}>
+            <View style={styles.reloadButton}>
+              <Ionicons name="reload-outline" size={20} color="#000" />
+              {/* <BlurView
+                style={styles.absolute}
+                blurType="light"
+                blurAmount={10}
+                reducedTransparencyFallbackColor="white"
+              /> */}
+            </View>
+          </TouchableOpacity>
         </ImageBackground>
-
-        <TouchableOpacity onPress={handleGenerateImage}>
-          <Text>Generate image</Text>
-        </TouchableOpacity>
 
         <ScrollView
           horizontal
@@ -320,6 +326,8 @@ const styles = StyleSheet.create({
   titleBox: {
     flexDirection: 'row',
     columnGap: 10,
+    marginTop: 15,
+    marginBottom: 15,
   },
 
   estimatedTime: {
@@ -342,7 +350,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     fontSize: 24,
     fontFamily: 'HammersmithOne',
-    marginBottom: 10,
     maxWidth: '80%',
   },
 
@@ -421,14 +428,17 @@ const styles = StyleSheet.create({
     height: 150,
   },
 
+  reloadContainer: {
+    position: 'absolute',
+    bottom: 15,
+    right: 15,
+  },
+
   reloadButton: {
     backgroundColor: 'rgba(255, 255, 255, 0.5)',
     alignSelf: 'baseline',
     padding: 7,
     borderRadius: 100,
-    position: 'absolute',
-    bottom: 15,
-    right: 15,
   },
 
   collectionCover: {
