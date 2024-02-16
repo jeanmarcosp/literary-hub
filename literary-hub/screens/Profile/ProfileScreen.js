@@ -229,56 +229,78 @@ const ProfileScreen = () => {
           <Ionicons name="settings-outline" size={26} color="#373F41" />
         </View>
       </TouchableOpacity>
-      <View style={styles.centerAligned}>
-        <Image
-          source={{
-            uri: user?.profilePicture,
-          }}
-          style={styles.profilePic}
-        />
+      <View style={styles.innerContainer}>
+
+        <View style={styles.topSection}>
+          <Image
+            source={{
+              uri: user?.profilePicture,
+            }}
+            style={styles.profilePic}
+          />
+
+          <View style={styles.metrics}>
+            <View style={styles.metric}>
+              <Text style={styles.metricNumber}>
+                {user?.createdCollections?.length}
+              </Text>
+              <Text style={styles.metricName}>Collections</Text>
+            </View>
+
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate("FollowersScreen", {
+                  followerList: user?.followers,
+                  loggedInUser: userId,
+                  followingList: user?.following,
+                })
+              }
+            >
+              <View style={styles.metric}>
+                <Text style={styles.metricNumber}>{user?.followers?.length}</Text>
+                <Text style={styles.metricName}>Followers</Text>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate("FollowingScreen", {
+                  followingList: user?.following,
+                  loggedInUser: userId,
+                })
+              }
+            >
+              <View style={styles.metric}>
+                <Text style={styles.metricNumber}>{user?.following?.length}</Text>
+                <Text style={styles.metricName}>Following</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </View>
 
         <View style={styles.names}>
           <Text style={styles.name}>{user?.name}</Text>
           <Text style={styles.username}>@{user?.username}</Text>
         </View>
 
-        <View style={styles.metrics}>
-          <View style={styles.metric}>
-            <Text style={styles.metricNumber}>
-              {user?.createdCollections?.length}
-            </Text>
-            <Text style={styles.metricName}>Collections</Text>
+        <View style={styles.stats}>
+          <View style={styles.stat}>
+            <Ionicons name="flame-outline" size={22} color="#658049" />
+            <Text style={styles.statText}>12 PoTDs</Text>
           </View>
 
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate("FollowersScreen", {
-                followerList: user?.followers,
-                loggedInUser: userId,
-                followingList: user?.following,
-              })
-            }
-          >
-            <View style={styles.metric}>
-              <Text style={styles.metricNumber}>{user?.followers?.length}</Text>
-              <Text style={styles.metricName}>Followers</Text>
-            </View>
-          </TouchableOpacity>
+          <View style={styles.stat}>
+            <Ionicons name="book-outline" size={22} color="#658049" />
+            <Text style={styles.statText}>132 poems</Text>
+          </View>
 
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate("FollowingScreen", {
-                followingList: user?.following,
-                loggedInUser: userId,
-              })
-            }
-          >
-            <View style={styles.metric}>
-              <Text style={styles.metricNumber}>{user?.following?.length}</Text>
-              <Text style={styles.metricName}>Following</Text>
-            </View>
-          </TouchableOpacity>
+          <View style={styles.stat}>
+            <Ionicons name="globe-outline" size={22} color="#658049" />
+            <Text style={styles.statText}>22 contributions</Text>
+          </View>
         </View>
+
+      </View>
 
         {/* <TouchableOpacity>
           <View style={styles.followButton}>
@@ -354,7 +376,7 @@ const ProfileScreen = () => {
             </View>
           </TouchableOpacity>
         </View>
-      </View>
+      
 
       <View style={styles.leftAligned}>
         {segmentedControlView === "My Collections" && (
@@ -379,25 +401,31 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
 
-  centerAligned: {
-    alignItems: "center",
+  innerContainer: {
+    marginTop: 10,
+    paddingLeft: 20,
+  },
+
+  topSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    columnGap: 40,
   },
 
   profilePic: {
-    width: 100,
-    height: 100,
+    width: 80,
+    height: 80,
     borderRadius: 50,
-    marginTop: 20,
   },
 
   names: {
     marginTop: 10,
     flexDirection: "column",
-    alignItems: "center",
+    columnGap: 10,
   },
 
   name: {
-    fontSize: 20,
+    fontSize: 18,
     fontFamily: "HammersmithOne",
     color: "#373F41",
     flexDirection: "column",
@@ -406,14 +434,30 @@ const styles = StyleSheet.create({
 
   username: {
     fontSize: 15,
-    fontFamily: "HammersmithOne",
-    color: "#373F41",
+    fontFamily: "Sarabun-Regular",
+    color: "#6C7476",
+  },
+
+  stats: {
+    marginTop: 20,
+    flexDirection: 'row',
+    columnGap: 28,
+  },
+
+  stat: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    columnGap: 5,
+  },
+
+  statText: {
+    fontFamily: 'Sarabun-Medium',
+    fontSize: 15,
   },
 
   metrics: {
     flexDirection: "row",
     columnGap: 20,
-    marginTop: 10,
   },
 
   metric: {
@@ -452,12 +496,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     width: "93%",
-    marginTop: 20,
+    marginTop: 60,
     marginBottom: 10,
     borderRadius: 100,
     paddingHorizontal: 4,
     paddingVertical: 4,
     backgroundColor: "#E1DBE6",
+    alignSelf: 'center'
   },
 
   segmentedControlSelected: {
@@ -493,7 +538,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     columnGap: 7,
-    marginTop: 15,
+    marginTop: 10,
     paddingLeft: 18,
   },
 
@@ -595,7 +640,7 @@ const styles = StyleSheet.create({
 
   settingsButton: {
     alignItems: "flex-end",
-    marginRight: 24,
-    marginTop: 16,
+    marginRight: 20,
+    marginTop: 5,
   },
 });
