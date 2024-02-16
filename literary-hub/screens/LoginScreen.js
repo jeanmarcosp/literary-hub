@@ -33,7 +33,7 @@ const LoginScreen = () => {
       try {
         const token = await AsyncStorage.getItem("authToken");
 
-        if (token) {
+        if (token && userId) {
           navigation.navigate("Main");
         }
       } catch (error) {
