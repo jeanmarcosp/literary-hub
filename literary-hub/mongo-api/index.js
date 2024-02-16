@@ -1029,39 +1029,23 @@ app.put("/comments/:commentId/:userId/:poemId/unlike", async (req, res) => {
   }
 });
 
-// Deletion of a poem from the collection
-app.delete("/collections/:collectionId/poems/:poemId", async (req, res) => {
-  const { collectionId, poemId } = req.params;
-
-  try {
-    await Collection.findByIdAndUpdate(collectionId, {
-      $pull: { poemsInCollection: poemId }
-    });
-    res.status(200).json({ message: "Poem deleted from collection successfully" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Failed to delete poem from collection" });
-  }
-});
-
 // Edit poems in a collection
 app.put("/edit/collections/:collectionId/poems", async (req, res) => {
   const collectionId = req.params.collectionId
-  console.log('THIS IS MY COLLECTION ID: ', collectionId)
   const newPoems = req.body.newPoems
   const title = req.body.title
   const caption = req.body.caption
-  console.log('THIS IS MY NEW POEM IDS: ', newPoems, title, caption)
+  const coverArt = req.body.coverArt
 
   try {
-    const updatedCollection = await Collection.findByIdAndUpdate(collectionId, {
+    await Collection.findByIdAndUpdate(collectionId, {
       $set: { 
         poemsInCollection: newPoems, 
         title: title,
         caption: caption,
+        coverArt: coverArt,
       },
     });
-    console.log("UPDATED COLLECTION: ", updatedCollection);
     res.status(200).json({ message: "Edited collection poems successfully" });
   } catch (error) {
     console.error(error);

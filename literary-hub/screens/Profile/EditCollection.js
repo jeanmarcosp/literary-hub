@@ -27,14 +27,12 @@ const EditCollectionScreen = ({route}) => {
   const [title, setTitle] = useState(collection.title);
   const [caption, setCaption] = useState(collection.caption);
 
-  const [coverArt, setCoverArt] = useState(collection.coverArt);
+  const [coverArt, setCoverArt] = useState(null);
   const [uploading, setUploading] = useState("");
   const [poems, setPoems] = useState([])
-  // const [newPoems, setNewPoems] = useState([])
   const [userLikedPoems, setUserLikedPoems] = useState([]);
   const poemIds = collection.poemsInCollection;
   const isAuthor = !collection.username;
-  
 
   useEffect(() => {
     const fetchPoems = async() => {
@@ -55,7 +53,6 @@ const EditCollectionScreen = ({route}) => {
     const fetchLikedPoems = async () => {
       try { 
         const response = await axios.get(`${ROOT_URL}/users/${userId}/likedPoems`);
-        console.log("fetched liked poems")
         setUserLikedPoems(response.data); 
       } catch (error) {
         console.error('Error fetching liked poems:', error);
@@ -65,14 +62,11 @@ const EditCollectionScreen = ({route}) => {
     fetchLikedPoems();
   }, [poemIds])
 
-  const handleEditCollection = async () => {
-    try {
-
-      console.log(newCollection);
-    } catch (error) {
-      console.error("Error creating collection:", error);
+  useEffect(() => {
+    if (collection.coverArt) {
+      setCoverArt({ uri: collection.coverArt });
     }
-  };
+  }, []);
 
   const handleChangeImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -103,55 +97,33 @@ const EditCollectionScreen = ({route}) => {
       await ref.put(blob);
       const downloadURL = await ref.getDownloadURL();
       setCoverArt(downloadURL);
-      console.log("url", coverArt);
     } catch (e) {
       console.log(e);
     }
-    setUploading(false);
-    Alert.alert("Photo uploaded!");
+    setUploading(true);
   };
 
   const handleSave = async() => {
-
-    // save changes to the title
-    // save changes to the description
-    // save changes to the image
-    // save changes to the poems
-    console.log("I AM IN SAVE EDITS");
-    console.log('title', title);
-    console.log('caption', caption);
-    updatePoems(poems);
-    navigation.goBack();
-  }
-
-  
-  const updatePoems = async(newPoems) => {
     try {
       const response = await axios.put(`http://localhost:3000/edit/collections/${collection._id}/poems`, {
-        newPoems: newPoems.map(poem => poem._id),
+        newPoems: poems.map(poem => poem._id),
         title,
         caption,
-
+        coverArt:coverArt.uri
       })
-      console.log(response.data);
-      return response.data
+      navigation.goBack();
     } catch (error) {
       console.error('Error editing collection poems: ', error);
     }
   }
 
   const deletePoem = async(poemId) => {
-    console.log("this is hte collection id: ", collection._id);
-    console.log("this is hte poem id: ", poemId);
     try {
       updatedPoems = poems.filter(poem => poem._id !== poemId);
       setPoems(updatedPoems);      
-      // await axios.delete(`http://localhost:3000/collections/${collection._id}/poems/${poemId}`)
-      // setPoems(poems.filter(poem => poem._id !==poemId))
     } catch (error) {
       console.log("Error deleting the poem: ", error);
     }
-
   };
 
   const PoemName = ({ poem }) => {
@@ -255,12 +227,6 @@ const EditCollectionScreen = ({route}) => {
         </View>
        
         <PoemList userLikedPoems={collection.userLikedPoems}/>
-
-        {/* <TouchableOpacity onPress={handleEditCollection}>
-          <View style={styles.createCTA}>
-            <Text style={styles.createText}>Save</Text>
-          </View>
-        </TouchableOpacity> */}
       </View>
       
     </View>
