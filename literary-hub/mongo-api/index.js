@@ -208,7 +208,6 @@ app.get("/get-poems", async (req, res) => {
   try {
     const { skip, limit } = req.query;
     // Query your database for random poems
-    // Example using Mongoose:
     const poems = await Poem.aggregate([
       { $sample: { size: parseInt(limit) } },
     ]);
@@ -1045,10 +1044,12 @@ app.get('/get-recs/:userId', async (req, res) => {
 
     recommendedPoems = [...new Set(recommendedPoems)]; // Remove duplicates
     recommendedPoems = recommendedPoems.filter(p => !user.readPoems.includes(p)); // Filter out already read poems
-    // // Further logic to select and order these poems
-    // // ...
+    console.log(recommendedPoems);
+    const poems = await Poem.find({ _id: { $in: recommendedPoems } });
 
-    res.json(recommendedPoems);
+    console.log(poems);
+    res.json(poems);
+
   } catch (error) {
     res.status(500).json({ error: 'Error fetching recommendations' });
   }
