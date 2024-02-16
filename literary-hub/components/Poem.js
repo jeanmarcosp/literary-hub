@@ -25,6 +25,7 @@ import React, {
   useRef,
 } from "react";
 import { TextInput } from "react-native-gesture-handler";
+import { BlurView } from "@react-native-community/blur";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
@@ -63,11 +64,11 @@ const Poem = ({ route }) => {
   var unit;
   
   if (estimatedTime < 1) {
-    estimatedTime = '<' + String(1);
-    unit = 'minute';
+    estimatedTime = '< ' + String(1);
+    unit = 'min';
   } else {
     estimatedTime = String(Math.round(estimatedTime));
-    unit = 'minutes';
+    unit = 'min';
   }
   
   console.log(estimatedTime + ' ' + unit);
@@ -191,13 +192,24 @@ const Poem = ({ route }) => {
           },
         ]}
       >
-        <Image
+        <ImageBackground
             source={image ? { uri: image } : require('../assets/collection-images/defaultCover.jpeg')}
             style={styles.image}
-        />
-        <TouchableOpacity onPress={handleGenerateImage}>
-          <Text>Generate image</Text>
-        </TouchableOpacity>
+        >
+          
+          <TouchableOpacity onPress={handleGenerateImage} style={styles.reloadContainer}>
+            <View style={styles.reloadButton}>
+              <Ionicons name="reload-outline" size={20} color="#000" />
+              {/* <BlurView
+                style={styles.absolute}
+                blurType="light"
+                blurAmount={10}
+                reducedTransparencyFallbackColor="white"
+              /> */}
+            </View>
+          </TouchableOpacity>
+        </ImageBackground>
+
         <ScrollView
           horizontal
           pagingEnabled
@@ -215,11 +227,14 @@ const Poem = ({ route }) => {
               {index === 0 && (
                 <React.Fragment>
                   <View style={styles.titleBox}>
-                  <Text style={styles.title}>{poem.title} </Text>
-                  <View style={styles.estimatedTime}><Text>{estimatedTime} {unit}</Text> 
+                    <Text style={styles.title}>{poem.title}</Text>
+                    <View style={styles.estimatedTime}>
+                      <Text style={styles.estimatedTimeText}>
+                        {estimatedTime} {unit}
+                      </Text> 
+                    </View>
                   </View>
-                  </View>
-                  <Text style={styles.author}>Author: {poem.author}</Text>
+                  <Text style={styles.author}>by {poem.author}</Text>
                 </React.Fragment>
               )}
               <Text style={styles.pageContent}>{page}</Text>
@@ -307,36 +322,41 @@ const styles = StyleSheet.create({
     position: "relative",
     backgroundColor: "#fff",
   },
+
   titleBox: {
-    flexDirection:'row',
+    flexDirection: 'row',
+    columnGap: 10,
+    marginTop: 15,
+    marginBottom: 15,
   },
+
   estimatedTime: {
-    backgroundColor: '#644990',
-    borderRadius:'10',
-    alignContent:'center',
-    paddingLeft: 16, 
-    paddingRight: 16, 
-    paddingTop: 4, 
-    paddingBottom: 4, 
-    backgroundColor: 'rgba(100, 73, 128, 0.20)', 
+    borderRadius: 10,
+    backgroundColor: '#F9F3FF', 
     borderRadius: 33, 
+    borderWidth: 1,
+    borderColor: '#D6CEDF',
     justifyContent: 'center', 
-    alignItems: 'center', 
-    gap: 16, 
-    display: 'flex'
+    paddingHorizontal: 10,
+    height: 25,
+  },
+
+  estimatedTimeText: {
+    fontFamily: 'Sarabun-Bold',
+    color: '#774BA3'
   },
 
   title: {
     flexDirection: 'column',
     fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 10,
+    fontFamily: 'HammersmithOne',
+    maxWidth: '80%',
   },
 
   author: {
     fontSize: 16,
     fontStyle: "italic",
-    marginBottom: 10,
+    marginBottom: 20,
   },
 
   page: {
@@ -401,16 +421,32 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     padding: 5,
   },
+
   image: {
     position: "relative",
     width: "100%",
     height: 150,
   },
+
+  reloadContainer: {
+    position: 'absolute',
+    bottom: 15,
+    right: 15,
+  },
+
+  reloadButton: {
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    alignSelf: 'baseline',
+    padding: 7,
+    borderRadius: 100,
+  },
+
   collectionCover: {
     position: "relative",
     width: "100%",
     height: 100,
   },
+
   collectionTitle: {
     color: "white",
     fontFamily: "HammersmithOne",
@@ -418,6 +454,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
   },
+
   bannerContainer: {
     flexDirection: "row", 
     alignItems: "center", 
@@ -425,11 +462,13 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     top: 60,
   },
+
   dummyContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
+
   dummyText: {
     fontSize: 24,
     fontWeight: 'bold',
