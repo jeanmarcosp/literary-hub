@@ -14,6 +14,7 @@ import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { Ionicons } from "@expo/vector-icons";
 import getUserId from "../hooks/getUserId";
+import ShareMenu from "./ShareMenu";
 
 const CollectionCard = ({ collection, handleRefresh }) => {
   const navigation = useNavigation();
@@ -88,21 +89,21 @@ const CollectionCard = ({ collection, handleRefresh }) => {
     navigation.navigate("EditCollectionScreen", { collection })
   }
 
-  const ShareMenu = ({ isVisible, children, onClose }) => {
-    return (
-      <Modal animationType="slide" transparent={true} visible={isVisible}>
-        <View style={styles.modalContent}>
-          <View style={styles.modalTitleContainer}>
-            <Text style={styles.modalTitle}>Collection Actions</Text>
-            <TouchableOpacity onPress={onClose}>
-              <Ionicons name="close" size={24} color="black" />
-            </TouchableOpacity>
-          </View>
-          {children}
-        </View>
-      </Modal>
-    );
-  };
+  // const ShareMenu = ({ isVisible, children, onClose }) => {
+  //   return (
+  //     <Modal animationType="slide" transparent={true} visible={isVisible}>
+  //       <View style={styles.modalContent}>
+  //         <View style={styles.modalTitleContainer}>
+  //           <Text style={styles.modalTitle}>Collection Actions</Text>
+  //           <TouchableOpacity onPress={onClose}>
+  //             <Ionicons name="close" size={24} color="black" />
+  //           </TouchableOpacity>
+  //         </View>
+  //         {children}
+  //       </View>
+  //     </Modal>
+  //   );
+  // };
 
   const onShare = () => {
     setIsModalVisible(true);

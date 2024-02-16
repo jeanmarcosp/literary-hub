@@ -89,6 +89,10 @@ const CollectionScreen = ({ route }) => {
       />
     );
   };
+
+  const handleEditCollection = () => {
+    navigation.navigate("EditCollectionScreen", { collection })
+  }
   
   return (
     <View style={styles.container}>
@@ -108,10 +112,17 @@ const CollectionScreen = ({ route }) => {
           {!isAuthor && (
             <Text style={styles.collectionAuthor}>@{collection.username}</Text>
             )}
-          <View style={styles.likes}>
-            <Like />
-            <Text style={styles.collectionLikeNumber}>{collection.likes.length}</Text>
+          <View style={styles.options}>
+            <View style={styles.likes}>
+              <Like />
+              <Text style={styles.collectionLikeNumber}>{collection.likes.length}</Text>
+            </View>
+            {!isAuthor && (
+              <Ionicons name="create" size={24} color="white" onPress={handleEditCollection}/>
+            )}
+            
           </View>
+          
         </View>
 
         <TouchableOpacity style={styles.readButtonWrapper}>
@@ -176,7 +187,6 @@ const styles = StyleSheet.create({
   likes: {
     flexDirection: 'row',
     alignItems: 'center',
-    columnGap: 7,
   },
 
   collectionLikeNumber: {
@@ -231,6 +241,11 @@ const styles = StyleSheet.create({
     fontFamily: 'Sarabun-Regular',
     fontSize: 15,
     color: '#6C7476'
+  },
+  options: {
+    flexDirection: 'row',
+    columnGap: 15,
+    alignItems: 'center',
   }
 });
 
