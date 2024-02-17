@@ -38,31 +38,44 @@ const HomeScreen = () => {
   const linesPerPage = 17;
   const [readPoems, setReadPoems] = useState([]);
 
+
   const loadMorePoems = async () => {
     if (loading) return;
-
+  
     setLoading(true);
-
+  
     try {
-      const response = await axios.get(`${ROOT_URL}/get-poems`, {
-        params: {
-          skip: poems.length,
-          limit: 1,
-        },
-      });
-
-      if (response.data.length === 0) {
+      let newPoems = [];
+  
+      const recsResponse = await axios.get(`http://localhost:3000/get-recs/${userId}`);
+      const recommendedPoems = recsResponse.data;
+  
+      if (recommendedPoems.length > 0) {
+        // filter out previously read poems
+        newPoems = recommendedPoems.filter(
+          (poemId) => !readPoems.includes(poemId)
+        );
+      } else {
+        // load random poems if no recs available
+        const randomResponse = await axios.get(`${ROOT_URL}/get-poems`, {
+          params: {
+            skip: poems.length,
+            limit: 1, 
+          },
+        });
+        newPoems = randomResponse.data.filter(
+          (poem) => !readPoems.includes(poem.id)
+        );
+      }
+  
+      // stop loading if no new poems
+      if (newPoems.length === 0) {
         setLoading(false);
         return;
       }
-
-      // filter out previously read poems
-      const newPoems = response.data.filter(
-        (poem) => !readPoems.includes(poem.id)
-      );
-
+  
+      // process new poems and update state
       poemToPage(newPoems, linesPerPage);
-
       setPoems((prevPoems) => [...prevPoems, ...newPoems]);
       setLoading(false);
     } catch (error) {
@@ -70,6 +83,7 @@ const HomeScreen = () => {
       setLoading(false);
     }
   };
+  
 
   // fetch list of liked poems
   useEffect(() => {
@@ -104,6 +118,26 @@ const HomeScreen = () => {
 
     fetchReadPoems();
   }, [userId]);
+
+  // test recommended poems
+  // useEffect(() => {
+  //   const testRecs = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         `http://localhost:3000/get-recs/${userId}`
+  //       );
+  //       //console.log("fetched recced poems");
+
+  //       //console.log(response.data);
+  //       //console.log('those were recced poems');        
+  //     } catch (error) {
+  //       console.error("Error fetching recced poems:", error);
+  //     }
+  //   };
+
+  //   testRecs();
+  // }, [userId]);
+
 
   useEffect(() => {
     loadMorePoems();
