@@ -34,7 +34,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.literaryhub.literaryhub",
-      "buildNumber": 3
+      "buildNumber": "3"
     },
     "android": {
       "adaptiveIcon": {
