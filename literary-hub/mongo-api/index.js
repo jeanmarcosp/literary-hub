@@ -1042,12 +1042,15 @@ app.get('/get-recs/:userId', async (req, res) => {
       }
     }
 
-    recommendedPoems = [...new Set(recommendedPoems)]; // Remove duplicates
-    recommendedPoems = recommendedPoems.filter(p => !user.readPoems.includes(p)); // Filter out already read poems
-    console.log(recommendedPoems);
+    recommendedPoems = [...new Set(recommendedPoems)]; // remove duplicates
+    recommendedPoems = recommendedPoems.filter(p => !user.readPoems.includes(p)); // filter out already read poems
+    //console.log(recommendedPoems);
+    recommendedPoems = recommendedPoems.filter(p => !user.likedPoems.includes(p)); // filter out liked poems
+
     const poems = await Poem.find({ _id: { $in: recommendedPoems } });
 
-    console.log(poems);
+    //console.log("recced:");
+    //console.log(poems);
     res.json(poems);
 
   } catch (error) {
