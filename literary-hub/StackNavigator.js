@@ -17,17 +17,20 @@ import FollowingScreen from "./screens/FollowingScreen.js";
 import CollectionScreen from "./screens/CollectionScreen.js";
 
 const StackNavigator = () => {
+
   const Stack = createNativeStackNavigator();
   const Tab = createBottomTabNavigator();
+
   function BottomTabs() {
     return (
       <Tab.Navigator
-        screenOptions={{
-          tabBarStyle: {
-            backgroundColor: 'white'
-          },
-        }}
-      >
+      initialParams={{ initialScreen: 'Main' }} 
+      screenOptions={{
+        tabBarStyle: {
+          backgroundColor: 'white'
+        },
+      }}
+    >
         <Tab.Screen
           name="Home"
           component={HomeScreen}

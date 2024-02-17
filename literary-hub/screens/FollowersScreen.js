@@ -22,7 +22,6 @@ const FollowersScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const { followerList, loggedInUser, followingList } = route.params;
-  console.log()
 
   const [followerInfo, setFollowerInfo] = useState([]);
 

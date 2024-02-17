@@ -48,18 +48,22 @@ const secretKey = generateSecretKey();
 // endpoint for login
 app.post("/login", async (req, res) => {
   try {
+
     const { email, password } = req.body;
     console.log("Email received:", email);
     const user = await User.findOne({ email });
+
     if (!user) {
       return res.status(404).json({ message: "Invalid email" });
     }
+    
     if (user.password != password) {
       return res.status(404).json({ message: "Invalid password" });
     }
 
     const token = jwt.sign({ userId: user._id }, secretKey);
     res.status(200).json({ token, userId: user._id });
+
   } catch (error) {
     console.log("error", error);
   }

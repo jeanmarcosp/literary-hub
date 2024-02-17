@@ -29,7 +29,6 @@ const CreateCollection = ({ route }) => {
   const [uploading, setUploading] = useState("");
 
   const { username } = route.params;
-  console.log("here", username)
 
   const handleCreateCollection = async () => {
     try {
@@ -41,17 +40,10 @@ const CreateCollection = ({ route }) => {
         username: username,
       };
 
-      console.log(newCollection);
-
       const response = await axios.post(
         `${ROOT_URL}/create-collection`,
         newCollection
       );
-
-      // const response = await axios.post(
-      //   `http://localhost:3000/create-collection`,
-      //   newCollection
-      // );
 
       const createdCollection = response.data;
       console.log("Created Collection:", createdCollection);

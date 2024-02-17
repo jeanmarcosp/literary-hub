@@ -111,8 +111,6 @@ const CollectionBottomSheet = forwardRef((props, ref) => {
       });
   };
 
-  console.log(collections);
-
   return (
     <BottomSheet
       ref={(bottomSheet) => {

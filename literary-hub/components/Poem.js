@@ -58,8 +58,8 @@ const Poem = ({ route }) => {
   
   const wordCount = poem.content.split(' ').length;
   var estimatedTime = parseInt(wordCount) / 200;
-  console.log(estimatedTime);
-  console.log(Math.round(estimatedTime));
+  // console.log(estimatedTime);
+  // console.log(Math.round(estimatedTime));
   
   var unit;
   
@@ -71,7 +71,7 @@ const Poem = ({ route }) => {
     unit = 'min';
   }
   
-  console.log(estimatedTime + ' ' + unit);
+  // console.log(estimatedTime + ' ' + unit);
 
 
   // if poem is already marked as read, do nothing
