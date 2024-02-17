@@ -117,7 +117,7 @@ app.post("/addpoemtocollection", async (req, res) => {
 app.post("/collection/new", async (req, res) => {
   try {
     const { userId, title } = req.body; // Change 'user' to 'userId'
-
+    
     if (!title) {
       return res.status(400).json({ message: "Title is required" });
     }
@@ -125,20 +125,18 @@ app.post("/collection/new", async (req, res) => {
     const existingCollection = await Collection.findOne({ user: userId, title }); // Change 'user' to 'userId'
 
     if (existingCollection) {
-      return res.status(400).json({ message: "Collection already exists" });
+      return res.status(400).json({ message: "Collection with same title already exists" });
     }
 
     // create new collection
-    const newCollection = new Collection({ user: userId, title }); // Change 'user' to 'userId'
+    const newCollection = new Collection({ user: userId, title: title }); // Change 'user' to 'userId'
 
     // Save the new collection to the database
     await newCollection.save();
-
     await User.updateOne(
       { _id: userId }, // Change '_id' to 'userId'
       { $push: { createdCollections: newCollection._id } }
     );
-
     res.status(201).json({
       message: "Collection created successfully",
       collection: newCollection,
@@ -362,7 +360,7 @@ app.put("/collections/:collectionId/:userId/unlike", async (req, res) => {
 //endpoint for creating a collection
 app.post("/create-collection", async (req, res) => {
   try {
-    const { userId, title, caption, coverArt } = req.body;
+    const { userId, title, caption, coverArt, username } = req.body;
 
     if (!userId) {
       return res.status(400).json({ error: "User is a required field" });
@@ -385,6 +383,7 @@ app.post("/create-collection", async (req, res) => {
       likes: [],
       poemsInCollection: [],
       caption: collectionCaption,
+      username: username,
     });
 
     const savedCollection = await newCollection.save();

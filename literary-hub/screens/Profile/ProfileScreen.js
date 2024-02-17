@@ -23,12 +23,18 @@ const ProfileScreen = () => {
   const [poems, setPoems] = useState([]);
   const [collections, setCollections] = useState([]);
   const [likedCollections, setLikedCollections] = useState([]);
-  const [segmentedControlView, setSegmentedControlView] = useState("My Collections");
+  const [segmentedControlView, setSegmentedControlView] =
+    useState("My Collections");
   const navigation = useNavigation();
 
   const handlePoemPress = (poem) => {
     console.log("pressed poem card");
-    navigation.navigate("PoemDetailScreen", { poem: poem, isLiked: true, comments: poem.comments, handleRefresh: {fetchProfile} });
+    navigation.navigate("PoemDetailScreen", {
+      poem: poem,
+      isLiked: true,
+      comments: poem.comments,
+      handleRefresh: { fetchProfile },
+    });
   };
 
   // this gets the users information stored in user?.
@@ -113,7 +119,7 @@ const ProfileScreen = () => {
     fetchCreatedCollections();
   }, [user]);
 
-// fetch liked collections
+  // fetch liked collections
   useEffect(() => {
     // Fetch collections based on user's createdCollections
     const fetchLikedCollections = async () => {
@@ -149,7 +155,11 @@ const ProfileScreen = () => {
     return (
       <View>
         <TouchableOpacity
-          onPress={() => navigation.navigate("CreateCollectionScreen")}
+          onPress={() =>
+            navigation.navigate("CreateCollectionScreen", {
+              username: user.username,
+            })
+          }
         >
           <View style={styles.createCollectionCTA}>
             <Ionicons name="add" size={22} color="#373F41" />
@@ -158,15 +168,15 @@ const ProfileScreen = () => {
             </Text>
           </View>
         </TouchableOpacity>
-          <FlatList
-            data={collections}
-            renderItem={({ item }) => (
-              <CollectionCard collection={item} handleRefresh={fetchProfile} />
-            )}
-            keyExtractor={(item) => item._id}
-            style={styles.collections}
-            contentInset= {{bottom: 80}}
-          />
+        <FlatList
+          data={collections}
+          renderItem={({ item }) => (
+            <CollectionCard collection={item} handleRefresh={fetchProfile} />
+          )}
+          keyExtractor={(item) => item._id}
+          style={styles.collections}
+          contentInset={{ bottom: 80 }}
+        />
       </View>
     );
   };
@@ -191,7 +201,7 @@ const ProfileScreen = () => {
           />
         )}
         style={styles.collections}
-        contentInset= {{bottom: 40}}
+        contentInset={{ bottom: 40 }}
       />
     );
   };
@@ -206,7 +216,7 @@ const ProfileScreen = () => {
           )}
           keyExtractor={(item) => item._id}
           style={styles.collections}
-          contentInset= {{bottom: 40}}
+          contentInset={{ bottom: 40 }}
         />
       </View>
     );
@@ -219,56 +229,78 @@ const ProfileScreen = () => {
           <Ionicons name="settings-outline" size={26} color="#373F41" />
         </View>
       </TouchableOpacity>
-      <View style={styles.centerAligned}>
-        <Image
-          source={{
-            uri: user?.profilePicture,
-          }}
-          style={styles.profilePic}
-        />
+      <View style={styles.innerContainer}>
+
+        <View style={styles.topSection}>
+          <Image
+            source={{
+              uri: user?.profilePicture,
+            }}
+            style={styles.profilePic}
+          />
+
+          <View style={styles.metrics}>
+            <View style={styles.metric}>
+              <Text style={styles.metricNumber}>
+                {user?.createdCollections?.length}
+              </Text>
+              <Text style={styles.metricName}>Collections</Text>
+            </View>
+
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate("FollowersScreen", {
+                  followerList: user?.followers,
+                  loggedInUser: userId,
+                  followingList: user?.following,
+                })
+              }
+            >
+              <View style={styles.metric}>
+                <Text style={styles.metricNumber}>{user?.followers?.length}</Text>
+                <Text style={styles.metricName}>Followers</Text>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate("FollowingScreen", {
+                  followingList: user?.following,
+                  loggedInUser: userId,
+                })
+              }
+            >
+              <View style={styles.metric}>
+                <Text style={styles.metricNumber}>{user?.following?.length}</Text>
+                <Text style={styles.metricName}>Following</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </View>
 
         <View style={styles.names}>
           <Text style={styles.name}>{user?.name}</Text>
           <Text style={styles.username}>@{user?.username}</Text>
         </View>
 
-        <View style={styles.metrics}>
-          <View style={styles.metric}>
-            <Text style={styles.metricNumber}>
-              {user?.createdCollections?.length}
-            </Text>
-            <Text style={styles.metricName}>Collections</Text>
+        <View style={styles.stats}>
+          <View style={styles.stat}>
+            <Ionicons name="flame-outline" size={22} color="#658049" />
+            <Text style={styles.statText}>12 PoTDs</Text>
           </View>
 
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate("FollowersScreen", {
-                followerList: user?.followers,
-                loggedInUser: userId,
-                followingList: user?.following,
-              })
-            }
-          >
-            <View style={styles.metric}>
-              <Text style={styles.metricNumber}>{user?.followers?.length}</Text>
-              <Text style={styles.metricName}>Followers</Text>
-            </View>
-          </TouchableOpacity>
+          <View style={styles.stat}>
+            <Ionicons name="book-outline" size={22} color="#658049" />
+            <Text style={styles.statText}>132 poems</Text>
+          </View>
 
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate("FollowingScreen", {
-                followingList: user?.following,
-                loggedInUser: userId,
-              })
-            }
-          >
-            <View style={styles.metric}>
-              <Text style={styles.metricNumber}>{user?.following?.length}</Text>
-              <Text style={styles.metricName}>Following</Text>
-            </View>
-          </TouchableOpacity>
+          <View style={styles.stat}>
+            <Ionicons name="globe-outline" size={22} color="#658049" />
+            <Text style={styles.statText}>22 contributions</Text>
+          </View>
         </View>
+
+      </View>
 
         {/* <TouchableOpacity>
           <View style={styles.followButton}>
@@ -344,7 +376,7 @@ const ProfileScreen = () => {
             </View>
           </TouchableOpacity>
         </View>
-      </View>
+      
 
       <View style={styles.leftAligned}>
         {segmentedControlView === "My Collections" && (
@@ -369,25 +401,31 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
 
-  centerAligned: {
-    alignItems: "center",
+  innerContainer: {
+    marginTop: 10,
+    paddingLeft: 20,
   },
-  
+
+  topSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    columnGap: 40,
+  },
+
   profilePic: {
-    width: 100,
-    height: 100,
+    width: 80,
+    height: 80,
     borderRadius: 50,
-    marginTop: 20,
   },
 
   names: {
     marginTop: 10,
     flexDirection: "column",
-    alignItems: "center",
+    columnGap: 10,
   },
 
   name: {
-    fontSize: 20,
+    fontSize: 18,
     fontFamily: "HammersmithOne",
     color: "#373F41",
     flexDirection: "column",
@@ -396,14 +434,30 @@ const styles = StyleSheet.create({
 
   username: {
     fontSize: 15,
-    fontFamily: "HammersmithOne",
-    color: "#373F41",
+    fontFamily: "Sarabun-Regular",
+    color: "#6C7476",
+  },
+
+  stats: {
+    marginTop: 20,
+    flexDirection: 'row',
+    columnGap: 28,
+  },
+
+  stat: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    columnGap: 5,
+  },
+
+  statText: {
+    fontFamily: 'Sarabun-Medium',
+    fontSize: 15,
   },
 
   metrics: {
     flexDirection: "row",
     columnGap: 20,
-    marginTop: 10,
   },
 
   metric: {
@@ -441,13 +495,14 @@ const styles = StyleSheet.create({
   segmentedControl: {
     flexDirection: "row",
     justifyContent: "space-around",
-    width: '93%',
-    marginTop: 20,
+    width: "93%",
+    marginTop: 60,
     marginBottom: 10,
     borderRadius: 100,
     paddingHorizontal: 4,
     paddingVertical: 4,
     backgroundColor: "#E1DBE6",
+    alignSelf: 'center'
   },
 
   segmentedControlSelected: {
@@ -477,14 +532,13 @@ const styles = StyleSheet.create({
     color: "#373F41",
   },
 
-  leftAligned: {
-  },
+  leftAligned: {},
 
   createCollectionCTA: {
     flexDirection: "row",
     alignItems: "center",
     columnGap: 7,
-    marginTop: 15,
+    marginTop: 10,
     paddingLeft: 18,
   },
 
@@ -513,7 +567,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     columnGap: 20,
   },
-  
+
   collectionPic: {
     width: 70,
     height: 70,
@@ -586,7 +640,7 @@ const styles = StyleSheet.create({
 
   settingsButton: {
     alignItems: "flex-end",
-    marginRight: 24,
-    marginTop: 16,
+    marginRight: 20,
+    marginTop: 5,
   },
 });
