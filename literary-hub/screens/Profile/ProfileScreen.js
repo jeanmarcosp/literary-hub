@@ -33,7 +33,7 @@ const ProfileScreen = () => {
       poem: poem,
       isLiked: true,
       comments: poem.comments,
-      handleRefresh: { fetchProfile },
+      // handleRefresh: { fetchProfile },
     });
   };
 

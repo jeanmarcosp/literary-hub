@@ -30,6 +30,7 @@ import BottomSheet, {
 } from "@gorhom/bottom-sheet";
 import Comment from "../../components/Comment";
 import CommentSection from "../../components/CommentSection";
+import Dots from "react-native-dots-pagination";
 
 const PoemDetailScreen = ({ route }) => {
   const navigation = useNavigation();
@@ -46,6 +47,7 @@ const PoemDetailScreen = ({ route }) => {
   const [newComment, setNewComment] = useState("");
   const commentSectionRef = useRef(null);
   const [currentPoem, setCurrentPoem] = useState({});
+  const [activePage, setActivePage] = useState(0);
 
   const handleCommentsOpen = () => {
     commentSectionRef.current?.expand();
@@ -144,6 +146,17 @@ const PoemDetailScreen = ({ route }) => {
     }, [poem._id])
   );
 
+  const handleScroll = (event) => {
+    const contentOffsetX = event.nativeEvent.contentOffset.x;
+
+    if (contentOffsetX > activePage * Dimensions.get("window").width) {
+      setActivePage((prevPage) => prevPage + 1);
+    } 
+    
+    if (contentOffsetX < activePage * Dimensions.get("window").width) {
+      setActivePage((prevPage) => prevPage - 1);
+    }
+  };
 
   return (
     <View style={styles.poemContainer}>
@@ -161,6 +174,8 @@ const PoemDetailScreen = ({ route }) => {
           showsHorizontalScrollIndicator={false}
           decelerationRate="fast"
           snapToInterval={Dimensions.get("window").width}
+          onScroll={handleScroll}
+          scrollEventThrottle={900}
         >
           {processedPoem.pages.map((page, index) => (
             <View key={index} style={styles.page}>
@@ -191,6 +206,15 @@ const PoemDetailScreen = ({ route }) => {
           setLiked(false);
         }}
       />
+
+      <View style={styles.pagination}>
+        <Dots
+          length={processedPoem.pages.length}
+          active={activePage}
+          activeColor="#644980"
+          passiveColor="#C3CBCD"
+        />
+      </View>
 
       <View style={styles.toggle}>
         {annotationMode ? (
@@ -225,6 +249,7 @@ const PoemDetailScreen = ({ route }) => {
           <Feather name="plus" size={30} color="#644980" />
         </Pressable>
       </View>
+
       <View style={styles.comment}>
         <Pressable onPress={handleCommentsOpen} style={styles.icon}>
           <Ionicons name="chatbox-outline" size={30} color="#644980" />
@@ -232,11 +257,11 @@ const PoemDetailScreen = ({ route }) => {
       </View>
 
       <CollectionBottomSheet
-          ref={bottomSheetRef}
-          title="Add to your collections"
-          poem={poem}
-          userId = {userId}
-        />
+        ref={bottomSheetRef}
+        title="Add to your collections"
+        poem={poem}
+        userId={userId}
+      />
 
       <CommentSection
         ref={commentSectionRef}
@@ -296,6 +321,11 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: screenWidth * 0.05,
     bottom: screenHeight * 0.2,
+  },
+  pagination: {
+    position: "absolute",
+    bottom: screenHeight * 0.1,
+    alignItems: "center",
   },
   bottomSheet: {
     flex: 1,

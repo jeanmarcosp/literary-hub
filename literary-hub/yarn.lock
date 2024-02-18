@@ -10190,6 +10190,13 @@ react-native-dotenv@^3.4.10:
   dependencies:
     dotenv "^16.4.1"
 
+react-native-dots-pagination@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/react-native-dots-pagination/-/react-native-dots-pagination-0.3.1.tgz#686894e439ad82a756eb405269f8984041636998"
+  integrity sha512-Z9+z6lSruQ84aNMOHsQ/wkh/K+A5IWciNuz5St+yQUp4eEyvCkA8nPkNAl+MEV4GVdO7rrh276M8in1ePJr17g==
+  dependencies:
+    prop-types "^15.7.2"
+
 react-native-gesture-handler@~2.12.0:
   version "2.12.1"
   resolved "https://registry.npmjs.org/react-native-gesture-handler/-/react-native-gesture-handler-2.12.1.tgz"
