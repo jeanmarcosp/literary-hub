@@ -158,6 +158,8 @@ const PoemDetailScreen = ({ route }) => {
     }
   };
 
+  // console.log("pages", processedPoem);
+
   return (
     <View style={styles.poemContainer}>
       <TouchableOpacity
@@ -209,7 +211,7 @@ const PoemDetailScreen = ({ route }) => {
 
       <View style={styles.pagination}>
         <Dots
-          length={processedPoem.pages.length}
+          length={processedPoem?.pages?.length || 10}
           active={activePage}
           activeColor="#644980"
           passiveColor="#C3CBCD"

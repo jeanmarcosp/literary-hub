@@ -265,7 +265,7 @@ const Poem = ({ route }) => {
 
         <View style={styles.pagination}>
           <Dots
-            length={poem.pages.length}
+            length={poem?.pages?.length || 10}
             active={activePage}
             activeColor="#644980"
             passiveColor="#C3CBCD"

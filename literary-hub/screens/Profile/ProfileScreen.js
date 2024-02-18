@@ -302,13 +302,6 @@ const ProfileScreen = () => {
 
       </View>
 
-        {/* <TouchableOpacity>
-          <View style={styles.followButton}>
-            <Ionicons name="person-add-outline" size={17} color="white" />
-            <Text style={styles.followText}>Follow</Text>
-          </View>
-        </TouchableOpacity> */}
-
         <View style={styles.segmentedControl}>
           <TouchableOpacity
             onPress={() => setSegmentedControlView("My Collections")}
