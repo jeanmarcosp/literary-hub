@@ -35,7 +35,7 @@ const HomeScreen = () => {
   const [loading, setLoading] = useState(false);
   const [userLikedPoems, setUserLikedPoems] = useState([]);
   const userId = getUserId();
-  const linesPerPage = 17;
+  const linesPerPage = 15;
   const [readPoems, setReadPoems] = useState([]);
 
 
@@ -211,10 +211,6 @@ const styles = StyleSheet.create({
   page: {
     width: Dimensions.get("window").width,
     paddingTop: 50,
-  },
-  pageContent: {
-    fontSize: 18,
-    lineHeight: 24,
   },
 });
 

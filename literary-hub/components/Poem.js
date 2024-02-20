@@ -274,7 +274,7 @@ const Poem = ({ route }) => {
 
         <View style={styles.plus}>
           <Pressable onPress={handleOpenPress} style={styles.icon}>
-            <Feather name="plus" size={30} color="#644980" />
+            <Feather name="plus" size={32} color="#644980" />
           </Pressable>
         </View>
 
@@ -360,11 +360,11 @@ const styles = StyleSheet.create({
   },
 
   pageContent: {
-    fontSize: 18,
+    fontSize: 17,
     lineHeight: 24,
   },
 
-  toggle: {
+  plus: {
     position: "absolute",
     left: screenWidth * 0.05,
     bottom: screenHeight * 0.1,
@@ -382,16 +382,10 @@ const styles = StyleSheet.create({
     bottom: screenHeight * 0.1,
   },
 
-  plus: {
-    position: "absolute",
-    right: screenWidth * 0.05,
-    bottom: screenHeight * 0.15,
-  },
-
   commentIcon: {
     position: "absolute",
     right: screenWidth * 0.05,
-    bottom: screenHeight * 0.2,
+    bottom: screenHeight * 0.15,
   },
 
   bottomSheet: {
