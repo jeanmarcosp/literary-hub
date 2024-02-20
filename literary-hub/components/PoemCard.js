@@ -3,6 +3,7 @@ import { React, useState } from "react";
 import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
 import Like from "./Like";
 import axios from "axios";
+import getUserId from "../hooks/getUserId";
 
 const PoemCard = ({
   poemId,
@@ -13,22 +14,21 @@ const PoemCard = ({
   likes,
   inLikes,
   handleRefresh,
-  onPress, ...props}) => {
+  onPress,
+  ...props
+}) => {
+  
   const likeText = likes === 1 ? "like" : "likes";
   timeEstimate = Math.ceil(excerpt.length / 200);
+  const loggedUser = getUserId();
 
   const [liked, setLiked] = useState(false);
+
   const handleLikePoem = async () => {
     try {
-      // Send a PUT request to like the poem
-      const response = await axios.put(
-        `${ROOT_URL}/poems/${poemId}/${userId}/like`
-      );
-
-      // If the request is successful, update the state or perform any other action
+      const response = await axios.put(`${ROOT_URL}/poems/${poemId}/${loggedUser}/like`);
       const updatedPoem = response.data;
 
-      // Set the liked state to true (or perform any other state update)
       setLiked(true);
       handleRefresh();
     } catch (error) {
@@ -38,15 +38,9 @@ const PoemCard = ({
 
   const handleUnlikePoem = async () => {
     try {
-      // Send a PUT request to unlike the poem
-      const response = await axios.put(
-        `${ROOT_URL}/poems/${poemId}/${userId}/unlike`
-      );
-
-      // If the request is successful, update the state or perform any other action
+      const response = await axios.put(`${ROOT_URL}/poems/${poemId}/${loggedUser}/unlike`);
       const updatedPoem = response.data;
 
-      // Set the liked state to false (or perform any other state update)
       setLiked(false);
       handleRefresh();
     } catch (error) {

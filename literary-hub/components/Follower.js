@@ -22,7 +22,6 @@ const Follower = ({
   status,
 }) => {
   const [isFollowing, setIsFollowing] = useState(status);
-  console.log(otherUser);
 
   const navigation = useNavigation();
 

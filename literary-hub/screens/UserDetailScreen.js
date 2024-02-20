@@ -21,7 +21,8 @@ const UserDetailScreen = ({ route }) => {
   const [poems, setPoems] = useState([]);
   const [collections, setCollections] = useState([]);
   const [likedCollections, setLikedCollections] = useState([]);
-  const [segmentedControlView, setSegmentedControlView] = useState("Collections");
+  const [segmentedControlView, setSegmentedControlView] =
+    useState("Collections");
   const navigation = useNavigation();
   const { otherUserId, isFollowing, callbacks } = route.params;
   const [following, setFollowing] = useState(isFollowing);
@@ -33,10 +34,10 @@ const UserDetailScreen = ({ route }) => {
 
   const handlePress = () => {
     if (callbacks && callbacks.handleFollow && following) {
-      callbacks.handleUnfollow(); 
+      callbacks.handleUnfollow();
     }
     if (callbacks && callbacks.handleUnfollow) {
-      callbacks.handleFollow(); 
+      callbacks.handleFollow();
     }
     setFollowing(!following);
     fetchOtherProfile();
@@ -56,11 +57,11 @@ const UserDetailScreen = ({ route }) => {
 
   useFocusEffect(
     React.useCallback(() => {
-        fetchOtherProfile();
+      fetchOtherProfile();
     }, [otherUserId])
   );
 
-  console.log(otherUser.name);
+  // console.log(otherUser.name);
 
   // fetch poems
   useEffect(() => {
@@ -198,7 +199,10 @@ const UserDetailScreen = ({ route }) => {
         <FlatList
           data={likedCollections}
           renderItem={({ item }) => (
-            <CollectionCard collection={item} handleRefresh={fetchOtherProfile} />
+            <CollectionCard
+              collection={item}
+              handleRefresh={fetchOtherProfile}
+            />
           )}
           keyExtractor={(item) => item._id}
           style={styles.collections}
@@ -214,146 +218,164 @@ const UserDetailScreen = ({ route }) => {
           <Ionicons name="chevron-back" size={26} color="#373F41" />
         </View>
       </TouchableOpacity>
-      <View style={styles.centerAligned}>
-        <Image
-          source={{
-            uri: otherUser?.profilePicture,
-          }}
-          style={styles.profilePic}
-        />
 
-        <View style={styles.names}>
-          <Text style={styles.name}>{otherUser?.name}</Text>
-          <Text style={styles.username}>@{otherUser?.username}</Text>
-        </View>
+      <View>
+        <View style={styles.innerContainer}>
+          <View style={styles.topSection}>
+            <Image
+              source={{
+                uri: otherUser?.profilePicture,
+              }}
+              style={styles.profilePic}
+            />
 
-        <View style={styles.metrics}>
-          <View style={styles.metric}>
-            <Text style={styles.metricNumber}>
-              {otherUser?.createdCollections?.length}
-            </Text>
-            <Text style={styles.metricName}>Collections</Text>
+            <View style={styles.metrics}>
+              <View style={styles.metric}>
+                <Text style={styles.metricNumber}>
+                  {otherUser?.createdCollections?.length}
+                </Text>
+                <Text style={styles.metricName}>Collections</Text>
+              </View>
+
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("FollowersScreen", {
+                    followerList: otherUser?.followers,
+                    loggedInUser: userId,
+                    followingList: otherUser?.following,
+                  })
+                }
+              >
+                <View style={styles.metric}>
+                  <Text style={styles.metricNumber}>
+                    {otherUser?.followers?.length}
+                  </Text>
+                  <Text style={styles.metricName}>Followers</Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("FollowingScreen", {
+                    followingList: otherUser?.following,
+                    loggedInUser: userId,
+                  })
+                }
+              >
+                <View style={styles.metric}>
+                  <Text style={styles.metricNumber}>
+                    {otherUser?.following?.length}
+                  </Text>
+                  <Text style={styles.metricName}>Following</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
           </View>
 
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate("FollowersScreen", {
-                followerList: otherUser?.followers,
-                loggedInUser: userId,
-                followingList: otherUser?.following,
-              })
-            }
-          >
-            <View style={styles.metric}>
-              <Text style={styles.metricNumber}>
-                {otherUser?.followers?.length}
-              </Text>
-              <Text style={styles.metricName}>Followers</Text>
-            </View>
-          </TouchableOpacity>
+          <View style={styles.names}>
+            <Text style={styles.name}>{otherUser?.name}</Text>
+            <Text style={styles.username}>@{otherUser?.username}</Text>
+          </View>
 
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate("FollowingScreen", {
-                followingList: otherUser?.following,
-                loggedInUser: userId,
-              })
-            }
-          >
-            <View style={styles.metric}>
-              <Text style={styles.metricNumber}>
-                {otherUser?.following?.length}
-              </Text>
-              <Text style={styles.metricName}>Following</Text>
+          <View style={styles.stats}>
+            <View style={styles.stat}>
+              <Ionicons name="flame-outline" size={22} color="#658049" />
+              <Text style={styles.statText}>12 PoTDs</Text>
             </View>
-          </TouchableOpacity>
+
+            <View style={styles.stat}>
+              <Ionicons name="book-outline" size={22} color="#658049" />
+              <Text style={styles.statText}>132 poems</Text>
+            </View>
+
+            <View style={styles.stat}>
+              <Ionicons name="globe-outline" size={22} color="#658049" />
+              <Text style={styles.statText}>22 contributions</Text>
+            </View>
+          </View>
         </View>
+      </View>
 
-        <TouchableOpacity onPress={handlePress}>
-          {following ? (
-            <View style={styles.unfollowButton}>
-              <Ionicons
-                name="person-remove-outline"
-                size={17}
-                color="#644980"
-              />
-              <Text style={styles.unfollowText}>Unfollow</Text>
-            </View>
-          ) : (
-            <View style={styles.followButton}>
-              <Ionicons name="person-add-outline" size={17} color="white" />
-              <Text style={styles.followText}>Follow</Text>
-            </View>
-          )}
-        </TouchableOpacity>
+      <TouchableOpacity onPress={handlePress} style={styles.centerAligned}>
+        {following ? (
+          <View style={styles.unfollowButton}>
+            <Ionicons name="person-remove-outline" size={17} color="#644980" />
+            <Text style={styles.unfollowText}>Unfollow</Text>
+          </View>
+        ) : (
+          <View style={styles.followButton}>
+            <Ionicons name="person-add-outline" size={17} color="white" />
+            <Text style={styles.followText}>Follow</Text>
+          </View>
+        )}
+      </TouchableOpacity>
 
-        <View style={styles.segmentedControl}>
-          <TouchableOpacity
-            onPress={() => setSegmentedControlView("Collections")}
+      <View style={styles.segmentedControl}>
+        <TouchableOpacity
+          onPress={() => setSegmentedControlView("Collections")}
+        >
+          <View
+            style={
+              segmentedControlView === "Collections"
+                ? styles.segmentedControlSelected
+                : styles.segmentedControlUnselected
+            }
           >
-            <View
+            <Text
               style={
                 segmentedControlView === "Collections"
-                  ? styles.segmentedControlSelected
-                  : styles.segmentedControlUnselected
+                  ? styles.segmentedControlSelectedText
+                  : styles.segmentedControlUnselectedText
               }
             >
-              <Text
-                style={
-                  segmentedControlView === "Collections"
-                    ? styles.segmentedControlSelectedText
-                    : styles.segmentedControlUnselectedText
-                }
-              >
-                Collections
-              </Text>
-            </View>
-          </TouchableOpacity>
+              Collections
+            </Text>
+          </View>
+        </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => setSegmentedControlView("Liked poems")}
+        <TouchableOpacity
+          onPress={() => setSegmentedControlView("Liked poems")}
+        >
+          <View
+            style={
+              segmentedControlView === "Liked poems"
+                ? styles.segmentedControlSelected
+                : styles.segmentedControlUnselected
+            }
           >
-            <View
+            <Text
               style={
                 segmentedControlView === "Liked poems"
-                  ? styles.segmentedControlSelected
-                  : styles.segmentedControlUnselected
+                  ? styles.segmentedControlSelectedText
+                  : styles.segmentedControlUnselectedText
               }
             >
-              <Text
-                style={
-                  segmentedControlView === "Liked poems"
-                    ? styles.segmentedControlSelectedText
-                    : styles.segmentedControlUnselectedText
-                }
-              >
-                Liked poems
-              </Text>
-            </View>
-          </TouchableOpacity>
+              Liked poems
+            </Text>
+          </View>
+        </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => setSegmentedControlView("Liked Collections")}
+        <TouchableOpacity
+          onPress={() => setSegmentedControlView("Liked Collections")}
+        >
+          <View
+            style={
+              segmentedControlView === "Liked Collections"
+                ? styles.segmentedControlSelected
+                : styles.segmentedControlUnselected
+            }
           >
-            <View
+            <Text
               style={
                 segmentedControlView === "Liked Collections"
-                  ? styles.segmentedControlSelected
-                  : styles.segmentedControlUnselected
+                  ? styles.segmentedControlSelectedText
+                  : styles.segmentedControlUnselectedText
               }
             >
-              <Text
-                style={
-                  segmentedControlView === "Liked Collections"
-                    ? styles.segmentedControlSelectedText
-                    : styles.segmentedControlUnselectedText
-                }
-              >
-                Liked Collections
-              </Text>
-            </View>
-          </TouchableOpacity>
-        </View>
+              Liked Collections
+            </Text>
+          </View>
+        </TouchableOpacity>
       </View>
 
       <View style={styles.leftAligned}>
@@ -367,6 +389,7 @@ const UserDetailScreen = ({ route }) => {
           <LikedCollectionsView likedCollections={likedCollections} />
         )}
       </View>
+
     </SafeAreaView>
   );
 };
@@ -381,19 +404,28 @@ const styles = StyleSheet.create({
   centerAligned: {
     alignItems: "center",
   },
+  innerContainer: {
+    marginTop: 10,
+    paddingLeft: 20,
+  },
+
+  topSection: {
+    flexDirection: "row",
+    alignItems: "center",
+    columnGap: 40,
+  },
   profilePic: {
-    width: 100,
-    height: 100,
+    width: 80,
+    height: 80,
     borderRadius: 50,
-    marginTop: 20,
   },
   names: {
     marginTop: 10,
     flexDirection: "column",
-    alignItems: "center",
+    columnGap: 10,
   },
   name: {
-    fontSize: 20,
+    fontSize: 18,
     fontFamily: "HammersmithOne",
     color: "#373F41",
     flexDirection: "column",
@@ -401,13 +433,12 @@ const styles = StyleSheet.create({
   },
   username: {
     fontSize: 15,
-    fontFamily: "HammersmithOne",
-    color: "#373F41",
+    fontFamily: "Sarabun-Regular",
+    color: "#6C7476",
   },
   metrics: {
     flexDirection: "row",
     columnGap: 20,
-    marginTop: 10,
   },
   metric: {
     alignItems: "center",
@@ -420,6 +451,23 @@ const styles = StyleSheet.create({
   metricName: {
     fontFamily: "Sarabun-Regular",
     color: "#6C7476",
+  },
+  leftAligned: {},
+  stats: {
+    marginTop: 20,
+    flexDirection: "row",
+    columnGap: 28,
+  },
+
+  stat: {
+    flexDirection: "row",
+    alignItems: "center",
+    columnGap: 5,
+  },
+
+  statText: {
+    fontFamily: "Sarabun-Medium",
+    fontSize: 15,
   },
   followButton: {
     flexDirection: "row",
@@ -456,19 +504,18 @@ const styles = StyleSheet.create({
   segmentedControl: {
     flexDirection: "row",
     justifyContent: "space-around",
-    width: 400,
-    marginTop: 20,
+    width: "93%",
+    marginTop: 60,
     marginBottom: 10,
-    borderWidth: 1,
     borderRadius: 100,
-    borderColor: "#E2E5E6",
-    paddingHorizontal: 2,
-    paddingVertical: 2,
+    paddingHorizontal: 4,
+    paddingVertical: 4,
     backgroundColor: "#E1DBE6",
+    alignSelf: 'center'
   },
   segmentedControlSelected: {
     borderRadius: 100,
-    width: 140,
+    width: 120,
     paddingVertical: 10,
     backgroundColor: "white",
     alignItems: "center",
@@ -504,8 +551,10 @@ const styles = StyleSheet.create({
     fontFamily: "HammersmithOne",
   },
   collections: {
-    marginTop: 5,
-    overflow: "visible",
+    marginTop: 8,
+    paddingHorizontal: 8,
+    paddingTop: 12,
+    height: 400,
   },
   collection: {
     marginBottom: 10,

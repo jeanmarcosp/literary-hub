@@ -14,7 +14,7 @@ import {
   SafeAreaView,
   Image,
   ImageBackground,
-  Modal
+  Modal,
 } from "react-native";
 import React, {
   useState,
@@ -40,6 +40,7 @@ import getUserId from "../hooks/getUserId";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
 import OpenAI from "openai";
+import Dots from "react-native-dots-pagination";
 
 const Poem = ({ route }) => {
   const { poem, poemId, userLikedPoems, fromHome, collection, comments } =
@@ -54,25 +55,20 @@ const Poem = ({ route }) => {
   const [openComments, setOpenComments] = useState(false);
   const userId = getUserId();
   const [currentPoem, setCurrentPoem] = useState({});
+  const [activePage, setActivePage] = useState(0);
 
-  
-  const wordCount = poem.content.split(' ').length;
+  const wordCount = poem.content.split(" ").length;
   var estimatedTime = parseInt(wordCount) / 200;
-  // console.log(estimatedTime);
-  // console.log(Math.round(estimatedTime));
-  
+
   var unit;
-  
+
   if (estimatedTime < 1) {
-    estimatedTime = '< ' + String(1);
-    unit = 'min';
+    estimatedTime = "< " + String(1);
+    unit = "min";
   } else {
     estimatedTime = String(Math.round(estimatedTime));
-    unit = 'min';
+    unit = "min";
   }
-  
-  // console.log(estimatedTime + ' ' + unit);
-
 
   // if poem is already marked as read, do nothing
   // if it isn't, mark it as read
@@ -123,39 +119,52 @@ const Poem = ({ route }) => {
   );
 
   const [image, setImage] = useState(null);
-  const generateImage = async(prompt) => {
+  const generateImage = async (prompt) => {
     const openai = new OpenAI({
       apiKey: process.env.OPENAI_KEY,
-    })
+    });
 
-    openai.baseURL = 'https://api.openai.com/v1';
+    openai.baseURL = "https://api.openai.com/v1";
     openai.buildURL = (path) => `${openai.baseURL}${path}`;
 
-    if(prompt){
-      if(prompt.length < 800){
+    if (prompt) {
+      if (prompt.length < 800) {
         prompt = "Illustration representing this poem: " + prompt;
       } else {
-        prompt = "Illustration representing a poem by this title: " + currentPoem.title
+        prompt =
+          "Illustration representing a poem by this title: " +
+          currentPoem.title;
       }
     }
 
     try {
       const response = await openai.images.generate({
-        "model": "dall-e-2",
-        "prompt": prompt.replace(/\n/g, ' '),
-        "n": 1,
-        "size": "256x256",
-        "response_format": "url",
+        model: "dall-e-2",
+        prompt: prompt.replace(/\n/g, " "),
+        n: 1,
+        size: "256x256",
+        response_format: "url",
       });
-      setImage(response.data[0].url)
-
+      setImage(response.data[0].url);
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
     }
   };
 
   const handleGenerateImage = () => {
-    generateImage(poem.content); 
+    generateImage(poem.content);
+  };
+
+  const handleScroll = (event) => {
+    const contentOffsetX = event.nativeEvent.contentOffset.x;
+
+    if (contentOffsetX > activePage * Dimensions.get("window").width) {
+      setActivePage((prevPage) => prevPage + 1);
+    }
+
+    if (contentOffsetX < activePage * Dimensions.get("window").width) {
+      setActivePage((prevPage) => prevPage - 1);
+    }
   };
 
   return (
@@ -181,7 +190,7 @@ const Poem = ({ route }) => {
           )}
         </ImageBackground>
       )}
-      
+
       <View
         style={[
           styles.poemContainer,
@@ -193,11 +202,17 @@ const Poem = ({ route }) => {
         ]}
       >
         <ImageBackground
-            source={image ? { uri: image } : require('../assets/collection-images/defaultCover.jpeg')}
-            style={styles.image}
+          source={
+            image
+              ? { uri: image }
+              : require("../assets/collection-images/defaultCover.jpeg")
+          }
+          style={styles.image}
         >
-          
-          <TouchableOpacity onPress={handleGenerateImage} style={styles.reloadContainer}>
+          <TouchableOpacity
+            onPress={handleGenerateImage}
+            style={styles.reloadContainer}
+          >
             <View style={styles.reloadButton}>
               <Ionicons name="reload-outline" size={20} color="#000" />
               {/* <BlurView
@@ -216,9 +231,9 @@ const Poem = ({ route }) => {
           showsHorizontalScrollIndicator={false}
           decelerationRate="fast"
           snapToInterval={Dimensions.get("window").width}
+          onScroll={handleScroll}
+          scrollEventThrottle={900}
         >
-        
-        
           {poem.pages.map((page, index) => (
             <View
               key={index}
@@ -231,7 +246,7 @@ const Poem = ({ route }) => {
                     <View style={styles.estimatedTime}>
                       <Text style={styles.estimatedTimeText}>
                         {estimatedTime} {unit}
-                      </Text> 
+                      </Text>
                     </View>
                   </View>
                   <Text style={styles.author}>by {poem.author}</Text>
@@ -247,6 +262,15 @@ const Poem = ({ route }) => {
           handleLike={() => handleLike(userId, poemId)}
           handleDislike={() => handleDislike(userId, poemId)}
         />
+
+        <View style={styles.pagination}>
+          <Dots
+            length={poem?.pages?.length || 10}
+            active={activePage}
+            activeColor="#644980"
+            passiveColor="#C3CBCD"
+          />
+        </View>
 
         <View style={styles.plus}>
           <Pressable onPress={handleOpenPress} style={styles.icon}>
@@ -264,7 +288,7 @@ const Poem = ({ route }) => {
           ref={bottomSheetRef}
           title="Add to your collections"
           poem={poem}
-          userId = {userId}
+          userId={userId}
         />
 
         <CommentSection
@@ -289,14 +313,13 @@ const styles = StyleSheet.create({
   poemContainer: {
     alignItems: "center",
     justifyContent: "center",
-    // paddingHorizontal: 16,
     paddingBottom: 0,
     position: "relative",
     backgroundColor: "#fff",
   },
 
   titleBox: {
-    flexDirection: 'row',
+    flexDirection: "row",
     columnGap: 10,
     marginTop: 15,
     marginBottom: 15,
@@ -304,25 +327,25 @@ const styles = StyleSheet.create({
 
   estimatedTime: {
     borderRadius: 10,
-    backgroundColor: '#F9F3FF', 
-    borderRadius: 33, 
+    backgroundColor: "#F9F3FF",
+    borderRadius: 33,
     borderWidth: 1,
-    borderColor: '#D6CEDF',
-    justifyContent: 'center', 
+    borderColor: "#D6CEDF",
+    justifyContent: "center",
     paddingHorizontal: 10,
     height: 25,
   },
 
   estimatedTimeText: {
-    fontFamily: 'Sarabun-Bold',
-    color: '#774BA3'
+    fontFamily: "Sarabun-Bold",
+    color: "#774BA3",
   },
 
   title: {
-    flexDirection: 'column',
+    flexDirection: "column",
     fontSize: 24,
-    fontFamily: 'HammersmithOne',
-    maxWidth: '80%',
+    fontFamily: "HammersmithOne",
+    maxWidth: "80%",
   },
 
   author: {
@@ -345,6 +368,12 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: screenWidth * 0.05,
     bottom: screenHeight * 0.1,
+  },
+
+  pagination: {
+    position: "absolute",
+    bottom: screenHeight * 0.1,
+    alignItems: "center",
   },
 
   heart: {
@@ -401,14 +430,14 @@ const styles = StyleSheet.create({
   },
 
   reloadContainer: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 15,
     right: 15,
   },
 
   reloadButton: {
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
-    alignSelf: 'baseline',
+    backgroundColor: "rgba(255, 255, 255, 0.5)",
+    alignSelf: "baseline",
     padding: 7,
     borderRadius: 100,
   },
@@ -428,8 +457,8 @@ const styles = StyleSheet.create({
   },
 
   bannerContainer: {
-    flexDirection: "row", 
-    alignItems: "center", 
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 20,
     paddingVertical: 10,
     top: 60,
@@ -437,14 +466,19 @@ const styles = StyleSheet.create({
 
   dummyContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   dummyText: {
     fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  pagination: {
+    position: "absolute",
+    bottom: screenHeight * 0.1,
+    alignItems: "center",
   },
 });
 
