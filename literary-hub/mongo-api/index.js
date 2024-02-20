@@ -896,30 +896,42 @@ app.get("/trending-collections", async (req, res) => {
   }
 });
 
+const ObjectId = mongoose.Types.ObjectId;
+
 //endpoint for commenting
 app.post("/comment", async (req, res) => {
   const { userId, poemId, content } = req.body;
-  console.log("Received request:", req.body);
+  // console.log("Received request:", req.body);
 
   try {
-    // Find the poem by ID
+
+    const commentId = new ObjectId();
+
     const poem = await Poem.findById(poemId);
 
-    // Create a new comment
     const newComment = {
-      user: userId, // Assuming you have user information in the request
+      _id: commentId, 
+      user: userId, 
       content: content,
       likes: [],
     };
 
     const updatedPoem = await Poem.findByIdAndUpdate(
       poemId,
-      { $addToSet: { comments: newComment } }, // Add user's ID to the likes array
-      { new: true } // To return the updated poem
+      { $addToSet: { comments: newComment } }, 
+      { new: true } 
     );
 
     if (!updatedPoem) {
       return res.status(404).json({ message: "Poem not found" });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(userId, {
+      $addToSet: { createdComments: commentId },
+    });
+
+    if (!updatedUser) { // Check if user update was successful
+      return res.status(404).json({ message: "Could not add comments to user's createdComments field" });
     }
 
     return res.status(201).json({ success: true, comment: newComment });
@@ -928,6 +940,7 @@ app.post("/comment", async (req, res) => {
     res.status(500).json({ message: "Error making comment" });
   }
 });
+
 
 //endpoint for getting single poem info
 app.get("/poem/:poemId", async (req, res) => {

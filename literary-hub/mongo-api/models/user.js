@@ -30,6 +30,8 @@ const userSchema = new mongoose.Schema({
   likedComments: [{ type: mongoose.Schema.Types.ObjectId }],
   createdCollections: [{ type: mongoose.Schema.Types.ObjectId, ref: "Collection" }],
   readPoems: [{ type: mongoose.Schema.Types.ObjectId, ref: "Poem" }],
+  createdComments: [{ type: mongoose.Schema.Types.ObjectId }],
+  poemsOfTheDay: [{ type: mongoose.Schema.Types.ObjectId, ref: "Poem" }],
 });
 
 const User = mongoose.model("User", userSchema);

@@ -55,7 +55,7 @@ const ProfileScreen = () => {
     }, [userId])
   );
 
-  console.log(user.name);
+  // console.log(user.createdComments);
 
   // fetch poems
   useEffect(() => {
