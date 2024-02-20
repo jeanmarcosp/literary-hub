@@ -71,13 +71,14 @@ const CollectionBottomSheet = forwardRef((props, ref) => {
   };
   const handleSubmitNewCollection = (inputText) => {
     const newCollection = {
-      user: props.userId,
+      userId: props.userId,
       title: inputText,
     };
-
+    console.log(newCollection);
     axios
       .post(`${ROOT_URL}/collection/new`, newCollection)
       .then((response) => {
+        console.log("hrer");
         console.log(response);
         addPoemToCollection(props.poem._id, response.data.collection._id);
         closeDialog();
@@ -109,8 +110,6 @@ const CollectionBottomSheet = forwardRef((props, ref) => {
         console.log("Error adding poem to collection:", error);
       });
   };
-
-  console.log(collections);
 
   return (
     <BottomSheet

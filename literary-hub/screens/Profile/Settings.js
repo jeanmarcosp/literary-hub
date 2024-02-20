@@ -12,26 +12,52 @@ import { useDispatch } from "react-redux";
 import { resetUser } from "../../state/actions/userActions";
 import getUserId from "../../hooks/getUserId";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Settings = ({ navigation }) => {
   const userId = getUserId();
   const dispatch = useDispatch();
 
+  const clearAuthToken = async () => {
+    try {
+      await AsyncStorage.removeItem("authToken");
+      console.log("Authentication token cleared successfully");
+    } catch (error) {
+      console.error("Error clearing authentication token:", error);
+    }
+  };
+
   const handleLogout = () => {
+    clearAuthToken();
     dispatch(resetUser());
     navigation.navigate("Login");
   };
 
   const handleDeleteAccount = async () => {
+    Alert.alert(
+      "Delete Account",
+      "Are you sure you want to delete your account? This action cannot be undone.",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        { text: "Delete", onPress: deleteConfirmed }
+      ]
+    );
+  };
+  
+  const deleteConfirmed = async () => {
     try {
       const response = await axios.delete(`${ROOT_URL}/delete-account/${userId}`);
-
+  
       if (response.data.success) {
         Alert.alert(
           "Deletion Successful",
           "Your account has been deleted successfully"
         );
-
+  
         dispatch(resetUser());
         navigation.navigate("Login");
       }
@@ -43,8 +69,9 @@ const Settings = ({ navigation }) => {
       );
     }
   };
+  
 
-  console.log(userId);
+  // console.log(userId);
 
   return (
     <SafeAreaView style={styles.mainContainer}>

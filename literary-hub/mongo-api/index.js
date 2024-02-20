@@ -56,18 +56,22 @@ module.exports = mongoose.model("DailyPoem", dailyPoemSchema);
 // endpoint for login
 app.post("/login", async (req, res) => {
   try {
+
     const { email, password } = req.body;
     console.log("Email received:", email);
     const user = await User.findOne({ email });
+
     if (!user) {
       return res.status(404).json({ message: "Invalid email" });
     }
+    
     if (user.password != password) {
       return res.status(404).json({ message: "Invalid password" });
     }
 
     const token = jwt.sign({ userId: user._id }, secretKey);
     res.status(200).json({ token, userId: user._id });
+
   } catch (error) {
     console.log("error", error);
   }
@@ -125,7 +129,7 @@ app.post("/addpoemtocollection", async (req, res) => {
 app.post("/collection/new", async (req, res) => {
   try {
     const { userId, title } = req.body; // Change 'user' to 'userId'
-
+    
     if (!title) {
       return res.status(400).json({ message: "Title is required" });
     }
@@ -133,20 +137,18 @@ app.post("/collection/new", async (req, res) => {
     const existingCollection = await Collection.findOne({ user: userId, title }); // Change 'user' to 'userId'
 
     if (existingCollection) {
-      return res.status(400).json({ message: "Collection already exists" });
+      return res.status(400).json({ message: "Collection with same title already exists" });
     }
 
     // create new collection
-    const newCollection = new Collection({ user: userId, title }); // Change 'user' to 'userId'
+    const newCollection = new Collection({ user: userId, title: title }); // Change 'user' to 'userId'
 
     // Save the new collection to the database
     await newCollection.save();
-
     await User.updateOne(
       { _id: userId }, // Change '_id' to 'userId'
       { $push: { createdCollections: newCollection._id } }
     );
-
     res.status(201).json({
       message: "Collection created successfully",
       collection: newCollection,
@@ -216,7 +218,6 @@ app.get("/get-poems", async (req, res) => {
   try {
     const { skip, limit } = req.query;
     // Query your database for random poems
-    // Example using Mongoose:
     const poems = await Poem.aggregate([
       { $sample: { size: parseInt(limit) } },
     ]);
@@ -371,7 +372,7 @@ app.put("/collections/:collectionId/:userId/unlike", async (req, res) => {
 //endpoint for creating a collection
 app.post("/create-collection", async (req, res) => {
   try {
-    const { userId, title, caption, coverArt } = req.body;
+    const { userId, title, caption, coverArt, username } = req.body;
 
     if (!userId) {
       return res.status(400).json({ error: "User is a required field" });
@@ -394,6 +395,7 @@ app.post("/create-collection", async (req, res) => {
       likes: [],
       poemsInCollection: [],
       caption: collectionCaption,
+      username: username,
     });
 
     const savedCollection = await newCollection.save();
@@ -1037,6 +1039,42 @@ app.put("/comments/:commentId/:userId/:poemId/unlike", async (req, res) => {
   }
 });
 
+app.get('/get-recs/:userId', async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const user = await User.findById(userId);
+    console.log("trying to find user");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    let recommendedPoems = [];
+
+    for (let poemId of user.likedPoems) {
+      let poem = await Poem.findById(poemId);
+      for (let otherUserId of poem.likes) {
+        if (otherUserId !== userId) {
+          let otherUser = await User.findById(otherUserId);
+          recommendedPoems = [...recommendedPoems, ...otherUser.likedPoems];
+        }
+      }
+    }
+
+    recommendedPoems = [...new Set(recommendedPoems)]; // remove duplicates
+    recommendedPoems = recommendedPoems.filter(p => !user.readPoems.includes(p)); // filter out already read poems
+    //console.log(recommendedPoems);
+    recommendedPoems = recommendedPoems.filter(p => !user.likedPoems.includes(p)); // filter out liked poems
+
+    const poems = await Poem.find({ _id: { $in: recommendedPoems } });
+
+    //console.log("recced:");
+    //console.log(poems);
+    res.json(poems);
+
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching recommendations' });
+  }
+});
 // Edit poems in a collection
 app.put("/edit/collections/:collectionId/poems", async (req, res) => {
   const collectionId = req.params.collectionId

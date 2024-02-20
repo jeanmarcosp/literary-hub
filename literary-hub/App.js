@@ -3,9 +3,10 @@ import { StyleSheet, Text, View } from "react-native";
 import StackNavigator from "./StackNavigator";
 import { useFonts } from "expo-font";
 import { Provider } from "react-redux";
-import store from "./state/store";
 import { useSelector, useDispatch } from "react-redux";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { PersistGate } from 'redux-persist/es/integration/react';
+import { store, persistor } from './state/store';
 
 export default function App() {
   global.ROOT_URL = "https://literary-hub-backend.onrender.com";
@@ -35,9 +36,11 @@ export default function App() {
   }
   return (
     <Provider store={store}>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <StackNavigator />
-      </GestureHandlerRootView>
+      <PersistGate loading={null} persistor={persistor}>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <StackNavigator />
+        </GestureHandlerRootView>
+      </PersistGate>
     </Provider>
   );
 }
