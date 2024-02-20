@@ -179,6 +179,8 @@ const Poem = ({ route }) => {
         <TouchableOpacity onPress={handleGenerateImage}>
           <Text>Generate image</Text>
         </TouchableOpacity>
+        <TouchableOpacity>
+    </TouchableOpacity>
         <ScrollView
           horizontal
           pagingEnabled

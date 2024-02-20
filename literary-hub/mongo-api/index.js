@@ -45,6 +45,14 @@ const generateSecretKey = () => {
 };
 const secretKey = generateSecretKey();
 
+const Schema = mongoose.Schema;
+const dailyPoemSchema = new Schema({
+  _id: Date,
+  poemId: { type: Schema.Types.ObjectId }
+});
+
+module.exports = mongoose.model("DailyPoem", dailyPoemSchema);
+
 // endpoint for login
 app.post("/login", async (req, res) => {
   try {
