@@ -47,7 +47,7 @@ const HomeScreen = () => {
     try {
       let newPoems = [];
   
-      const recsResponse = await axios.get(`http://localhost:3000/get-recs/${userId}`);
+      const recsResponse = await axios.get(`${ROOT_URL}/get-recs/${userId}`);
       const recommendedPoems = recsResponse.data;
   
       if (recommendedPoems.length > 0) {
