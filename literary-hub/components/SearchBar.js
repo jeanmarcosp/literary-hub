@@ -30,10 +30,11 @@ const SearchBar = ({onSearch}) => {
 
   return (
     <View style={styles.container}>
-      <Ionicons name="search" size={24} color="gray" style={styles.icon} />
+      <Ionicons name="search" size={20} color="#888888" style={styles.icon} />
       <TextInput
         style={styles.input}
         placeholder="Search poems, collections, and authors"
+        placeholderTextColor="#888888"
         value={searchText}
         onChangeText={(text) => handleSearch(text)}
       />
@@ -46,20 +47,21 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "white",
-    borderRadius: 7,
-    paddingHorizontal: 10,
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 7,
+    backgroundColor: "#EFEFEF",
+    borderRadius: 10,
   },
+
   icon: {
+    marginLeft: 10,
     marginRight: 10,
   },
+
   input: {
     flex: 1,
     height: 40,
     padding: 0,
+    fontFamily: 'Sarabun-Medium',
+    fontSize: 15,
   },
 });
 
