@@ -263,32 +263,13 @@ const Poem = ({ route }) => {
           handleDislike={() => handleDislike(userId, poemId)}
         />
 
-        <View style={styles.toggle}>
-          {annotationMode ? (
-            <Pressable
-              onPress={() => {
-                handleAnnotationMode(false);
-              }}
-            >
-              <MaterialCommunityIcons
-                name="toggle-switch"
-                size={35}
-                color="#644980"
-              />
-            </Pressable>
-          ) : (
-            <Pressable
-              onPress={() => {
-                handleAnnotationMode(true);
-              }}
-            >
-              <MaterialCommunityIcons
-                name="toggle-switch-off-outline"
-                size={35}
-                color="#644980"
-              />
-            </Pressable>
-          )}
+        <View style={styles.pagination}>
+          <Dots
+            length={poem?.pages?.length || 10}
+            active={activePage}
+            activeColor="#644980"
+            passiveColor="#C3CBCD"
+          />
         </View>
 
         <View style={styles.plus}>
@@ -387,6 +368,12 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: screenWidth * 0.05,
     bottom: screenHeight * 0.1,
+  },
+
+  pagination: {
+    position: "absolute",
+    bottom: screenHeight * 0.1,
+    alignItems: "center",
   },
 
   heart: {
