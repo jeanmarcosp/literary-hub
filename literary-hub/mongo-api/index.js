@@ -45,6 +45,14 @@ const generateSecretKey = () => {
 };
 const secretKey = generateSecretKey();
 
+const Schema = mongoose.Schema;
+const dailyPoemSchema = new Schema({
+  _id: Date,
+  poemId: { type: Schema.Types.ObjectId }
+});
+
+module.exports = mongoose.model("DailyPoem", dailyPoemSchema);
+
 // endpoint for login
 app.post("/login", async (req, res) => {
   try {
@@ -870,11 +878,18 @@ app.get("/search", async (req, res) => {
 app.get("/trending-collections", async (req, res) => {
   try {
     const collections = await Collection.aggregate([
-      { $match: { poemsInCollection: { $exists: true, $not: { $size: 0 } } } },
+      { $match: { poemsInCollection: { $not: { $size: 0 } } } },
       { $match: { username: { $ne: null } } },
+      {
+        $addFields: {
+          likesCount: {$size: "$likes"}
+        }
+      },
+      { $sort: { likesCount: -1 } },
       { $sample: { size: 5 } },
     ]);
     res.json(collections);
+    // console.log("these are the trending collections", collections)
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error fetching trending collections" });
@@ -1058,5 +1073,28 @@ app.get('/get-recs/:userId', async (req, res) => {
 
   } catch (error) {
     res.status(500).json({ error: 'Error fetching recommendations' });
+  }
+});
+// Edit poems in a collection
+app.put("/edit/collections/:collectionId/poems", async (req, res) => {
+  const collectionId = req.params.collectionId
+  const newPoems = req.body.newPoems
+  const title = req.body.title
+  const caption = req.body.caption
+  const coverArt = req.body.coverArt
+
+  try {
+    await Collection.findByIdAndUpdate(collectionId, {
+      $set: { 
+        poemsInCollection: newPoems, 
+        title: title,
+        caption: caption,
+        coverArt: coverArt,
+      },
+    });
+    res.status(200).json({ message: "Edited collection poems successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to update poems in collection" });
   }
 });

@@ -8,10 +8,12 @@ import { useNavigation } from '@react-navigation/native';
 import axios from "axios";
 import getUserId from '../hooks/getUserId';
 import { poemToPage } from '../hooks/poemActions';
+import PoemList from '../components/PoemList';
 
 // const CollectionScreen = ({poems, title, showAuthor = true, showCreator = true}) => {
 const CollectionScreen = ({ route }) => {
   const { collection } = route.params;
+  console.log("FANTAAAAA", collection);
   const navigation = useNavigation();
   const isAuthor = !collection.username;
   const userId = getUserId();
@@ -87,6 +89,10 @@ const CollectionScreen = ({ route }) => {
       />
     );
   };
+
+  const handleEditCollection = () => {
+    navigation.navigate("EditCollectionScreen", { collection })
+  }
   
   return (
     <View style={styles.container}>
@@ -106,10 +112,17 @@ const CollectionScreen = ({ route }) => {
           {!isAuthor && (
             <Text style={styles.collectionAuthor}>@{collection.username}</Text>
             )}
-          <View style={styles.likes}>
-            <Like />
-            <Text style={styles.collectionLikeNumber}>{collection.likes.length}</Text>
+          <View style={styles.options}>
+            <View style={styles.likes}>
+              <Like />
+              <Text style={styles.collectionLikeNumber}>{collection.likes.length}</Text>
+            </View>
+            {isAuthor && (
+              <Ionicons name="create" size={24} color="white" onPress={handleEditCollection}/>
+            )}
+            
           </View>
+          
         </View>
 
         <TouchableOpacity style={styles.readButtonWrapper}>
@@ -119,7 +132,7 @@ const CollectionScreen = ({ route }) => {
         </TouchableOpacity>
       </ImageBackground>
 
-      <PoemList userLikedPoems={userLikedPoems}/>
+      <PoemList userLikedPoems={collection.userLikedPoems}/>
     </View>
   );
 };
@@ -174,7 +187,6 @@ const styles = StyleSheet.create({
   likes: {
     flexDirection: 'row',
     alignItems: 'center',
-    columnGap: 7,
   },
 
   collectionLikeNumber: {
@@ -229,6 +241,11 @@ const styles = StyleSheet.create({
     fontFamily: 'Sarabun-Regular',
     fontSize: 15,
     color: '#6C7476'
+  },
+  options: {
+    flexDirection: 'row',
+    columnGap: 15,
+    alignItems: 'center',
   }
 });
 

@@ -248,34 +248,6 @@ const Poem = ({ route }) => {
           handleDislike={() => handleDislike(userId, poemId)}
         />
 
-        <View style={styles.toggle}>
-          {annotationMode ? (
-            <Pressable
-              onPress={() => {
-                handleAnnotationMode(false);
-              }}
-            >
-              <MaterialCommunityIcons
-                name="toggle-switch"
-                size={35}
-                color="#644980"
-              />
-            </Pressable>
-          ) : (
-            <Pressable
-              onPress={() => {
-                handleAnnotationMode(true);
-              }}
-            >
-              <MaterialCommunityIcons
-                name="toggle-switch-off-outline"
-                size={35}
-                color="#644980"
-              />
-            </Pressable>
-          )}
-        </View>
-
         <View style={styles.plus}>
           <Pressable onPress={handleOpenPress} style={styles.icon}>
             <Feather name="plus" size={30} color="#644980" />

@@ -15,6 +15,7 @@ import UserDetailScreen from "./screens/UserDetailScreen.js";
 import FollowersScreen from "./screens/FollowersScreen.js";
 import FollowingScreen from "./screens/FollowingScreen.js";
 import CollectionScreen from "./screens/CollectionScreen.js";
+import EditCollectionScreen from "./screens/Profile/EditCollection";
 
 const StackNavigator = () => {
 
@@ -94,6 +95,7 @@ const StackNavigator = () => {
         <Stack.Screen name="FollowersScreen" component={FollowersScreen} options={{ headerShown: false }}/>
         <Stack.Screen name="FollowingScreen" component={FollowingScreen} options={{ headerShown: false }}/>
         <Stack.Screen name="CollectionScreen" component={CollectionScreen} options={{ headerShown: false }}/>
+        <Stack.Screen name="EditCollectionScreen" component={EditCollectionScreen} options={{ headerShown: false }}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

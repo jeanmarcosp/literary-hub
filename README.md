@@ -24,6 +24,8 @@ TODO:  descriptions of code organization and tools and libraries used
 `yarn add react-native-dialog-input`\
 `yarn add @gorhom/bottom-sheet`
 `yarn add react-search-box`
+`yarn add react-native-dotenv`
+`yarn add openai`
 
 
 

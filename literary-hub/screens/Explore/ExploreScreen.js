@@ -26,14 +26,13 @@ const ExploreScreen = () => {
   const handleSearch = (results) =>{
 
     setSearchResults(results);
-    console.log('results are: ', results);
   }
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
         <SearchBar onSearch={handleSearch}/>
-        
-        <DailyPoem/>
+
+
 
         <Text style={styles.text}>Author Collections</Text>
         <AuthorList />
