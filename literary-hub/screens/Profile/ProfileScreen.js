@@ -396,7 +396,7 @@ const styles = StyleSheet.create({
 
   innerContainer: {
     marginTop: 10,
-    paddingLeft: 20,
+    paddingHorizontal: 20,
   },
 
   topSection: {
@@ -434,7 +434,7 @@ const styles = StyleSheet.create({
   stats: {
     marginTop: 20,
     flexDirection: 'row',
-    columnGap: 28,
+    columnGap: 20,
   },
 
   stat: {
@@ -445,7 +445,7 @@ const styles = StyleSheet.create({
 
   statText: {
     fontFamily: 'Sarabun-Medium',
-    fontSize: 15,
+    fontSize: 14,
   },
 
   metrics: {
