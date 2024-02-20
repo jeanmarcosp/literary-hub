@@ -74,12 +74,13 @@ const styles = StyleSheet.create({
     fontFamily: 'Sarabun-Bold',
     fontSize: 16,
     color: '#3D3D3D',
+    marginRight: 10,
   },
 
   author:{
     fontFamily: 'Sarabun-Regular',
     fontSize: 14,
-    color: '#9C9FAB',
+    color: '#898B96',
   },
 
   image:{
@@ -103,7 +104,7 @@ const styles = StyleSheet.create({
   username: {
     fontFamily: 'Sarabun-Regular',
     fontSize: 14,
-    color: '#9C9FAB',
+    color: '#898B96',
   },
 
   icon: {

@@ -32,8 +32,6 @@ const ExploreScreen = () => {
       <ScrollView style={styles.scrollView}>
         <SearchBar onSearch={handleSearch}/>
 
-
-
         <Text style={styles.text}>Author Collections</Text>
         <AuthorList />
 
