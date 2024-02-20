@@ -286,17 +286,17 @@ const ProfileScreen = () => {
         <View style={styles.stats}>
           <View style={styles.stat}>
             <Ionicons name="flame-outline" size={22} color="#658049" />
-            <Text style={styles.statText}>12 PoTDs</Text>
+            <Text style={styles.statText}>{user?.poemsOfTheDay?.length} PoTDs</Text>
           </View>
 
           <View style={styles.stat}>
             <Ionicons name="book-outline" size={22} color="#658049" />
-            <Text style={styles.statText}>132 poems</Text>
+            <Text style={styles.statText}>{user?.readPoems?.length} poems</Text>
           </View>
 
           <View style={styles.stat}>
             <Ionicons name="globe-outline" size={22} color="#658049" />
-            <Text style={styles.statText}>22 contributions</Text>
+            <Text style={styles.statText}>{user?.createdComments?.length} contributions</Text>
           </View>
         </View>
 

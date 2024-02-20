@@ -69,6 +69,8 @@ const CommentSection = forwardRef((props, ref) => {
     }
   };
 
+  // console.log(props.comments);
+
   return (
     <BottomSheet
       ref={(bottomSheet) => {
