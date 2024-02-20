@@ -263,15 +263,6 @@ const Poem = ({ route }) => {
           handleDislike={() => handleDislike(userId, poemId)}
         />
 
-        <View style={styles.pagination}>
-          <Dots
-            length={poem?.pages?.length || 10}
-            active={activePage}
-            activeColor="#644980"
-            passiveColor="#C3CBCD"
-          />
-        </View>
-
         <View style={styles.toggle}>
           {annotationMode ? (
             <Pressable
