@@ -75,7 +75,7 @@ const Comment = ({
       };
       console.log(commentDetails);
 
-      const response = await axios.delete(`${ROOT_URL}/delete-comment`, commentDetails);
+      const response = await axios.delete(`${ROOT_URL}/delete-comment`, { data: commentDetails });
 
       console.log("Deleted Comment successfully", response);
       handleLikeRefresh();
