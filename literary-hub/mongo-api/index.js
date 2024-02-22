@@ -1131,9 +1131,12 @@ app.delete("/delete-comment", async (req, res) => {
       return res.status(404).json({ message: "Poem not found" });
     }
 
-    const updatedUser = await User.findByIdAndUpdate(userId, {
-      $pull: { createdComments: commentId },
-    });
+    // comment.likes.pull(userId);
+    await poem.save();
+
+    const user = await User.findById(userId);
+    user.createdComments.pull(commentId);
+    await user.save();
 
     if (!updatedUser) { // Check if user update was successful
       return res.status(404).json({ message: "Could not remove comments from user's createdComments field" });
@@ -1144,4 +1147,5 @@ app.delete("/delete-comment", async (req, res) => {
     console.error("Error deleting comment:", error);
     res.status(500).json({ message: "Error deleting comment" });
   }
+});
 });
