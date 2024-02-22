@@ -3,12 +3,22 @@ import { View, Text, StyleSheet, Image } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
 import Like from "./Like";
+import { Ionicons } from "@expo/vector-icons";
+import getUserId from "../hooks/getUserId";
 
-const Comment = ({ user, text, likeCount, poemId, commentId, handleLikeRefresh }) => {
+const Comment = ({
+  user,
+  text,
+  likeCount,
+  poemId,
+  commentId,
+  handleLikeRefresh,
+}) => {
   const [commenter, setCommenter] = useState({});
   const [liked, setLiked] = useState(false);
+  const userId = getUserId();
 
-//   console.log(handleLikeRefresh);
+  console.log(user);
   const fetchProfile = async () => {
     try {
       const response = await axios.get(`${ROOT_URL}/profile/${user}`);
@@ -56,6 +66,24 @@ const Comment = ({ user, text, likeCount, poemId, commentId, handleLikeRefresh }
     }
   };
 
+  const handleDeleteComment = async () => {
+    try {
+      const commentDetails = {
+        userId: user,
+        poemId: poemId,
+        commentId: commentId,
+      };
+      console.log(commentDetails);
+
+      const response = await axios.delete(`${ROOT_URL}/delete-comment`, commentDetails);
+
+      console.log("Deleted Comment successfully", response);
+      handleLikeRefresh();
+    } catch (error) {
+      console.error("Error deleting comment:", error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View>
@@ -76,6 +104,14 @@ const Comment = ({ user, text, likeCount, poemId, commentId, handleLikeRefresh }
         />
         <Text style={styles.likeNumber}>{likeCount}</Text>
       </View>
+      {userId === user && (
+        <Ionicons
+          name="trash-outline"
+          size={24}
+          color="black"
+          onPress={handleDeleteComment}
+        />
+      )}
     </View>
   );
 };
@@ -126,6 +162,6 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignItems: "center",
     marginLeft: 15,
-    marginRight: 100,
+    marginRight: 95,
   },
 });

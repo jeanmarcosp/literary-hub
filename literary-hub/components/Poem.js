@@ -60,6 +60,8 @@ const Poem = ({ route }) => {
   const wordCount = poem.content.split(" ").length;
   var estimatedTime = parseInt(wordCount) / 200;
 
+  // console.log(poem.comments);
+
   var unit;
 
   if (estimatedTime < 1) {

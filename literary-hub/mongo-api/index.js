@@ -1111,3 +1111,37 @@ app.put("/edit/collections/:collectionId/poems", async (req, res) => {
     res.status(500).json({ error: "Failed to update poems in collection" });
   }
 });
+
+//endpoint for deleting a comment
+app.delete("/delete-comment", async (req, res) => {
+  const { userId, poemId, commentId } = req.body;
+  console.log(commentId);
+
+  try {
+
+    const poem = await Poem.findById(poemId);
+
+    const updatedPoem = await Poem.findByIdAndUpdate(
+      poemId,
+      { $pull: { comments: commentId } }, 
+      { new: true } 
+    );
+
+    if (!updatedPoem) {
+      return res.status(404).json({ message: "Poem not found" });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(userId, {
+      $pull: { createdComments: commentId },
+    });
+
+    if (!updatedUser) { // Check if user update was successful
+      return res.status(404).json({ message: "Could not remove comments from user's createdComments field" });
+    }
+
+    return res.status(201).json({ success: true, comment: newComment });
+  } catch (error) {
+    console.error("Error deleting comment:", error);
+    res.status(500).json({ message: "Error deleting comment" });
+  }
+});
