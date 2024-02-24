@@ -1084,28 +1084,40 @@ app.delete("/delete-comment", async (req, res) => {
 
     const poem = await Poem.findById(poemId);
 
+    if (!poem) {
+      return res.status(404).json({ message: "Poem not found" });
+    }
+    
     const updatedPoem = await Poem.findByIdAndUpdate(
       poemId,
-      { $pull: { comments: commentId } }, 
-      { new: true } 
+      { $pull: { comments: commentId } },
+      { new: true }
     );
 
     if (!updatedPoem) {
-      return res.status(404).json({ message: "Poem not found" });
+      return res.status(404).json({ message: "could not remove comment from poem" });
     }
 
-    // comment.likes.pull(userId);
-    await poem.save();
-
     const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
     user.createdComments.pull(commentId);
     await user.save();
 
-    if (!updatedUser) { // Check if user update was successful
-      return res.status(404).json({ message: "Could not remove comments from user's createdComments field" });
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $pull: { createdComments: commentId } },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "could not remove comment from users profile" });
     }
 
-    return res.status(201).json({ success: true, comment: newComment });
+    return res.status(201).json({ success: true });
   } catch (error) {
     console.error("Error deleting comment:", error);
     res.status(500).json({ message: "Error deleting comment" });
