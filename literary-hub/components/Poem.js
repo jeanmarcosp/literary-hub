@@ -45,6 +45,8 @@ import Dots from "react-native-dots-pagination";
 const Poem = ({ route }) => {
   const { poem, poemId, userLikedPoems, fromHome, collection, comments } =
     route.params || {};
+  console.log("THIS IS HTE POEM", poem);
+  console.log("USERLIKED POEMS", userLikedPoems);
   const navigation = useNavigation();
   const [annotationMode, handleAnnotationMode] = useState(false);
   const bottomSheetRef = useRef(null);
@@ -59,8 +61,6 @@ const Poem = ({ route }) => {
 
   const wordCount = poem.content.split(" ").length;
   var estimatedTime = parseInt(wordCount) / 200;
-
-  // console.log(poem.comments);
 
   var unit;
 

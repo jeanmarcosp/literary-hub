@@ -13,7 +13,6 @@ import PoemList from '../components/PoemList';
 // const CollectionScreen = ({poems, title, showAuthor = true, showCreator = true}) => {
 const CollectionScreen = ({ route }) => {
   const { collection } = route.params;
-  console.log("FANTAAAAA", collection);
   const navigation = useNavigation();
   const isAuthor = !collection.username;
   const userId = getUserId();
@@ -42,7 +41,6 @@ const CollectionScreen = ({ route }) => {
     const fetchLikedPoems = async () => {
       try { 
         const response = await axios.get(`${ROOT_URL}/users/${userId}/likedPoems`);
-        console.log("fetched liked poems")
         setUserLikedPoems(response.data); 
       } catch (error) {
         console.error('Error fetching liked poems:', error);
@@ -57,6 +55,8 @@ const CollectionScreen = ({ route }) => {
   }
 
   const navigateToSinglePoem = (poem, poemId, userLikedPoems ) => {
+    console.log("im navving to a single poem");
+    console.log("in collectionscreen", userLikedPoems)
     navigation.navigate('SinglePoem', { poem, poemId, userLikedPoems, fromHome:false, collection }); 
   };
 
@@ -132,7 +132,7 @@ const CollectionScreen = ({ route }) => {
         </TouchableOpacity>
       </ImageBackground>
 
-      <PoemList userLikedPoems={collection.userLikedPoems}/>
+      <PoemList userLikedPoems={userLikedPoems}/>
     </View>
   );
 };
