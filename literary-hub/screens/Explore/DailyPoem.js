@@ -3,6 +3,9 @@ import { View, Text, ImageBackground, StyleSheet } from 'react-native';
 
 const DailyPoem = () => {
 
+  const currentDate = new Date();
+  const formattedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+
     return (
         <View style={styles.poemOfTheDayContainer}>
             <ImageBackground

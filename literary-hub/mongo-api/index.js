@@ -17,6 +17,7 @@ const jwt = require("jsonwebtoken");
 const User = require("./models/user");
 const Poem = require("./models/poem");
 const Collection = require("./models/collection");
+const DailyPoem = require("./models/dailypoem")
 const { log } = require("console");
 
 mongoose
@@ -44,14 +45,6 @@ const generateSecretKey = () => {
   return secretKey;
 };
 const secretKey = generateSecretKey();
-
-const Schema = mongoose.Schema;
-const dailyPoemSchema = new Schema({
-  _id: Date,
-  poemId: { type: Schema.Types.ObjectId }
-});
-
-module.exports = mongoose.model("DailyPoem", dailyPoemSchema);
 
 // endpoint for login
 app.post("/login", async (req, res) => {
@@ -158,36 +151,6 @@ app.post("/collection/new", async (req, res) => {
     res.status(500).json({ message: "Error creating collection" });
   }
 });
-
-// app.post("/collection/new", async (req, res) => {
-//   try {
-//     const { userId, title } = req.body;
-//     if (!title) {
-//       return res.status(400).json({ message: "Title is required" });
-//     }
-//     const existingCollection = await Collection.findOne({ userId, title });
-//     if (existingCollection) {
-//       return res.status(400).json({ message: "Collection already exists" });
-//     }
-
-//     // create new collection
-//     const newCollection = new Collection({ user, title });
-//     // Save the new collection to the database
-//     await newCollection.save();
-//     await User.updateOne(
-//       { _id: user },
-//       { $push: { createdCollections: newCollection._id } }
-//     );
-
-//     res.status(201).json({
-//       message: "Collection created successfully",
-//       collection: newCollection,
-//     });
-//   } catch (error) {
-//     console.log("error", error);
-//     res.status(500).json({ message: "Error creatng collecton" });
-//   }
-// });
 
 // endpoint to get userdata
 app.get("/getuser", async (req, res) => {
@@ -1148,4 +1111,74 @@ app.delete("/delete-comment", async (req, res) => {
     res.status(500).json({ message: "Error deleting comment" });
   }
 });
+
+
+const generateDatesForNext10Months = () => {
+  const dates = [];
+  let currentDate = new Date();
+
+  for (let i = 0; i < 10; i++) {
+    const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
+    for (let day = 1; day <= daysInMonth; day++) {
+      const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+      dates.push(newDate);
+    }
+    currentDate.setMonth(currentDate.getMonth() + 1);
+  }
+
+  return dates;
+};
+
+// Step 2: Create dailyPoem objects for each date and save them to the database
+const populateDailyPoems = async () => {
+  const dates = generateDatesForNext10Months();
+
+  try {
+    for (const date of dates) {
+      const existingDailyPoem = await DailyPoem.findById(date);
+      if (!existingDailyPoem){
+        const randomPoem = await Poem.aggregate([{ $sample: { size: 1 } }]);
+        const poemId = randomPoem[0]._id;
+        const dailyPoem = new DailyPoem({
+          _id: date,
+          poemId: poemId
+        });
+
+        await dailyPoem.save();
+      }
+    }
+
+    console.log('Daily poems populated successfully!');
+  } catch (error) {
+    console.error('Error populating daily poems:', error);
+  }
+};
+// one time endpoint to populate the dailypoems
+app.post("/populate/daily-poems", async (req, res) => {
+  try {
+    // Call the function to populate daily poems
+    await populateDailyPoems();
+    res.status(200).json({ message: "Daily poems populated successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to populate daily poems" });
+  }
+});
+
+// endpoint for getting dailypoem
+app.get("/daily-poems/:date", async (req, res) => {
+  const requestedDate = new Date(req.params.date);
+  
+  try {
+    const dailyPoem = await DailyPoem.findById(requestedDate);
+    
+    if (dailyPoem) {
+      res.status(200).json({ poemId: dailyPoem.poemId });
+    } else {
+      res.status(404).json({ error: "No DailyPoem found for the requested date" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to fetch DailyPoem" });
+  }
 });
