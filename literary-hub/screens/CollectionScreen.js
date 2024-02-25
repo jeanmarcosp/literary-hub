@@ -55,8 +55,6 @@ const CollectionScreen = ({ route }) => {
   }
 
   const navigateToSinglePoem = (poem, poemId, userLikedPoems ) => {
-    console.log("im navving to a single poem");
-    console.log("in collectionscreen", userLikedPoems)
     navigation.navigate('SinglePoem', { poem, poemId, userLikedPoems, fromHome:false, collection }); 
   };
 

@@ -27,36 +27,11 @@ const ExploreScreen = () => {
 
     setSearchResults(results);
   }
-
-  const populateDailyPoems = async() => {
-    console.log("im in populatedailypoems")
-    try {
-      const response = await fetch(`http://localhost:3000/populate/daily-poems`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        Alert.alert('Success', data.message);
-      } else {
-        throw new Error('Failed to populate daily poems');
-      }
-    } catch (error) {
-      console.error(error);
-      Alert.alert('Error', 'Failed to populate daily poems');
-    }
-  };
   
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
         <SearchBar onSearch={handleSearch}/>
-        <TouchableOpacity onPress={populateDailyPoems}>
-          <Text>Hi</Text>
-        </TouchableOpacity>
         <DailyPoem/>
         <Text style={styles.text}>Author Collections</Text>
         <AuthorList />

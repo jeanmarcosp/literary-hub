@@ -1177,20 +1177,28 @@ app.post("/populate/daily-poems", async (req, res) => {
   }
 });
 
-// endpoint for getting dailypoem
+// endpoint for getting poem from date (dailypoem)
 app.get("/daily-poems/:date", async (req, res) => {
   const requestedDate = new Date(req.params.date);
-  
+  console.log(requestedDate)
   try {
     const dailyPoem = await DailyPoem.findById(requestedDate);
-    
-    if (dailyPoem) {
-      res.status(200).json({ poemId: dailyPoem.poemId });
-    } else {
+
+    if (!dailyPoem) {
       res.status(404).json({ error: "No DailyPoem found for the requested date" });
     }
+
+    const poemId = dailyPoem.poemId;
+    const poem = await Poem.findById(poemId);
+    if (!poem) {
+      return res.status(404).json({ message: "Poem not found for the DailyPoem" });
+    }
+    console.log(poem);
+    res.status(200).json({ poem });
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to fetch DailyPoem" });
   }
+
 });
