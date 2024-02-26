@@ -27,13 +27,16 @@ const ExploreScreen = () => {
 
     setSearchResults(results);
   }
+  
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
         <SearchBar onSearch={handleSearch}/>
-
+        <DailyPoem/>
         <Text style={styles.text}>Author Collections</Text>
         <AuthorList />
+
+        
 
         <Text style={styles.text}>Trending</Text>
         <View style={styles.segmentedControl}>

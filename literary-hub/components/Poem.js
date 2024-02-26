@@ -56,11 +56,8 @@ const Poem = ({ route }) => {
   const userId = getUserId();
   const [currentPoem, setCurrentPoem] = useState({});
   const [activePage, setActivePage] = useState(0);
-
   const wordCount = poem.content.split(" ").length;
   var estimatedTime = parseInt(wordCount) / 200;
-
-  // console.log(poem.comments);
 
   var unit;
 
@@ -192,6 +189,14 @@ const Poem = ({ route }) => {
           )}
         </ImageBackground>
       )}
+
+      {/* {!collection && fromHome && (
+        <TouchableOpacity onPress={() => {navigation.goBack()}}>
+          <View style={styles.backButton}>
+            <Ionicons name="chevron-back" size={23} color="white" />
+          </View>
+        </TouchableOpacity>
+      )} */}
 
       <View
         style={[
@@ -410,12 +415,12 @@ const styles = StyleSheet.create({
   },
 
   backButton: {
-    position: "absolute",
-    top: 40,
+    position: 'absolute',
     left: 20,
-    zIndex: 1,
-    backgroundColor: "#00000080",
+    top: 40,
+    backgroundColor: '#00000080',
     borderRadius: 100,
+    alignSelf: 'baseline',
     padding: 5,
   },
 
