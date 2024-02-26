@@ -105,7 +105,7 @@ const EditCollectionScreen = ({route}) => {
 
   const handleSave = async() => {
     try {
-      const response = await axios.put(`http://localhost:3000/edit/collections/${collection._id}/poems`, {
+      const response = await axios.put(`${ROOT_URL}/edit/collections/${collection._id}/poems`, {
         newPoems: poems.map(poem => poem._id),
         title,
         caption,

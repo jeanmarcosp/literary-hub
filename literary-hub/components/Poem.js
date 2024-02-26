@@ -56,6 +56,7 @@ const Poem = ({ route }) => {
   const userId = getUserId();
   const [currentPoem, setCurrentPoem] = useState({});
   const [activePage, setActivePage] = useState(0);
+  const [dyslexicFontEnabled, setDyslexicFontEnabled] = useState(false);
 
   const wordCount = poem.content.split(" ").length;
   var estimatedTime = parseInt(wordCount) / 200;
@@ -101,6 +102,12 @@ const Poem = ({ route }) => {
     commentSectionRef.current?.close();
     setOpenComments(false);
   };
+
+  const toggleDyslexicFont = () => {
+    setDyslexicFontEnabled(!dyslexicFontEnabled);
+  };
+
+  
 
   const fetchPoem = async () => {
     try {
@@ -278,6 +285,12 @@ const Poem = ({ route }) => {
           </Pressable>
         </View>
 
+        <View style={styles.fontIcon}>
+          <Pressable style={styles.icon}>
+            <Ionicons name="text-outline" size={30} color="#644980" />
+          </Pressable>
+        </View>
+
         <View style={styles.commentIcon}>
           <Pressable onPress={handleCommentsOpen} style={styles.icon}>
             <Ionicons name="chatbox-outline" size={30} color="#644980" />
@@ -313,7 +326,7 @@ const styles = StyleSheet.create({
   poemContainer: {
     alignItems: "center",
     justifyContent: "center",
-    paddingBottom: 0,
+    paddingBottom: screenHeight * 0.13,
     position: "relative",
     backgroundColor: "#fff",
   },
@@ -356,7 +369,7 @@ const styles = StyleSheet.create({
 
   page: {
     width: Dimensions.get("window").width,
-    paddingHorizontal: 16,
+    paddingHorizontal: 14,
   },
 
   pageContent: {
@@ -380,6 +393,12 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: screenWidth * 0.045,
     bottom: screenHeight * 0.1,
+  },
+
+  fontIcon: {
+    position: "absolute",
+    right: screenWidth * 0.045,
+    top: screenHeight * 0.18,
   },
 
   commentIcon: {
@@ -473,6 +492,9 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: screenHeight * 0.1,
     alignItems: "center",
+  },
+  dyslexicFont: {
+    fontFamily: "OpenDyslexic-Regular",
   },
 });
 
