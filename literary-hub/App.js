@@ -29,6 +29,15 @@ export default function App() {
     "Sarabun-SemiBoldItalic": require("./assets/fonts/Sarabun-SemiBoldItalic.ttf"),
     "Sarabun-ThinItalic": require("./assets/fonts/Sarabun-ThinItalic.ttf"),
     "Sarabun-Italic": require("./assets/fonts/Sarabun-Italic.ttf"),
+    "OpenDyslexicBold": require("./assets/fonts/OpenDyslexic-Bold.otf"),
+    "OpenDyslexicBoldItalic": require("./assets/fonts/OpenDyslexic-BoldItalic.otf"),
+    "OpenDyslexicItalic": require("./assets/fonts/OpenDyslexic-Italic.otf"),
+    "OpenDyslexicRegular": require("./assets/fonts/OpenDyslexic-Regular.otf"),
+    "OpenDyslexicAltaBoldItalic": require("./assets/fonts/OpenDyslexicAlta-BoldItalic.otf"),
+    "OpenDyslexicAltaBoldItalic": require("./assets/fonts/OpenDyslexicAlta-Bold.otf"),
+    "OpenDyslexicAltaItalic": require("./assets/fonts/OpenDyslexicAlta-Italic.otf"),
+    "OpenDyslexicAltaRegular": require("./assets/fonts/OpenDyslexicAlta-Regular.otf"),
+    "OpenDyslexicMonoRegular": require("./assets/fonts/OpenDyslexicMono-Regular.otf"),
   });
 
   if (!fontsLoaded) {
