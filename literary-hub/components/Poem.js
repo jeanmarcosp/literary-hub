@@ -273,7 +273,7 @@ const Poem = ({ route }) => {
                 </React.Fragment>
               )}
               {/* <Text style={{ fontSize: fontSize, fontFamily: dyslexicFontEnabled ? 'dyslexicFont' : 'regularFont' }}> */}
-              <Text style={styles.pageContent}>{page}</Text>
+              <Text style={{fontSize: fontSize, lineHeight: 24, fontFamily: dyslexicFontEnabled ? 'OpenDyslexicRegular': 'Sarabun-Bold'}}>{page}</Text>
             </View>
           ))}
         </ScrollView>
@@ -537,6 +537,9 @@ const styles = StyleSheet.create({
   },
   dyslexicFont: {
     fontFamily: "OpenDyslexic-Regular",
+  },
+  regularFont: {
+    fontFamily: "SFNSText-Regular",
   },
 });
 

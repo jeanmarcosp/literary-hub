@@ -38,6 +38,18 @@ export default function App() {
     "OpenDyslexicAltaItalic": require("./assets/fonts/OpenDyslexicAlta-Italic.otf"),
     "OpenDyslexicAltaRegular": require("./assets/fonts/OpenDyslexicAlta-Regular.otf"),
     "OpenDyslexicMonoRegular": require("./assets/fonts/OpenDyslexicMono-Regular.otf"),
+    "SFNSText-Bold": require("./assets/fonts/SFNSText-Bold.otf"),
+    "SFNSText-BoldItalic": require("./assets/fonts/SFNSText-BoldItalic.otf"),
+    "SFNSText-Heavy": require("./assets/fonts/SFNSText-Heavy.otf"),
+    "SFNSText-HeavyItalic": require("./assets/fonts/SFNSText-HeavyItalic.otf"),
+    "SFNSText-Light": require("./assets/fonts/SFNSText-Light.otf"),
+    "SFNSText-LightItalic": require("./assets/fonts/SFNSText-LightItalic.otf"),
+    "SFNSText-Medium": require("./assets/fonts/SFNSText-Medium.otf"),
+    "SFNSText-MediumItalic": require("./assets/fonts/SFNSText-MediumItalic.otf"),
+    "SFNSText-Regular": require("./assets/fonts/SFNSText-Regular.otf"),
+    "SFNSText-RegularItalic": require("./assets/fonts/SFNSText-RegularItalic.otf"),
+    "SFNSText-Semibold": require("./assets/fonts/SFNSText-Semibold.otf"),
+    "SFNSText-SemiboldItalic": require("./assets/fonts/SFNSText-SemiboldItalic.otf"),
   });
 
   if (!fontsLoaded) {
