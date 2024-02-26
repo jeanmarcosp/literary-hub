@@ -114,11 +114,15 @@ const Poem = ({ route }) => {
   };
 
   const increaseFontSize = () => {
-    setFontSize(fontSize + 2); 
+    if (fontSize < 24) {
+      setFontSize(prevSize => Math.min(prevSize + 1, 24)); 
+    }
   };
 
   const decreaseFontSize = () => {
-    setFontSize(fontSize - 2); 
+    if (fontSize > 10) {
+      setFontSize(prevSize => Math.max(prevSize - 1, 10)); 
+    }
   };
 
 
