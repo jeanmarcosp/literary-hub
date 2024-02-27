@@ -56,6 +56,9 @@ const Poem = ({ route }) => {
   const userId = getUserId();
   const [currentPoem, setCurrentPoem] = useState({});
   const [activePage, setActivePage] = useState(0);
+  const [fontMenuVisible, setFontMenuVisible] = useState(false);
+  const [dyslexicFontEnabled, setDyslexicFontEnabled] = useState(false);
+  const [fontSize, setFontSize] = useState(16); 
   const wordCount = poem.content.split(" ").length;
   var estimatedTime = parseInt(wordCount) / 200;
 
@@ -100,6 +103,27 @@ const Poem = ({ route }) => {
     commentSectionRef.current?.close();
     setOpenComments(false);
   };
+
+  const toggleFontMenu = () => {
+    setFontMenuVisible(!fontMenuVisible);
+  };
+
+  const toggleDyslexicFont = () => {
+    setDyslexicFontEnabled(!dyslexicFontEnabled);
+  };
+
+  const increaseFontSize = () => {
+    if (fontSize < 24) {
+      setFontSize(prevSize => Math.min(prevSize + 1, 24)); 
+    }
+  };
+
+  const decreaseFontSize = () => {
+    if (fontSize > 10) {
+      setFontSize(prevSize => Math.max(prevSize - 1, 10)); 
+    }
+  };
+
 
   const fetchPoem = async () => {
     try {
@@ -259,7 +283,8 @@ const Poem = ({ route }) => {
                   <Text style={styles.author}>by {poem.author}</Text>
                 </React.Fragment>
               )}
-              <Text style={styles.pageContent}>{page}</Text>
+              {/* <Text style={{ fontSize: fontSize, fontFamily: dyslexicFontEnabled ? 'dyslexicFont' : 'regularFont' }}> */}
+              <Text style={{fontSize: fontSize, lineHeight: 24, fontFamily: dyslexicFontEnabled ? 'OpenDyslexicRegular': 'SFNSText-Regular'}}>{page}</Text>
             </View>
           ))}
         </ScrollView>
@@ -284,6 +309,40 @@ const Poem = ({ route }) => {
             <Feather name="plus" size={32} color="#644980" />
           </Pressable>
         </View>
+
+        <TouchableOpacity onPress={toggleFontMenu} style={styles.fontIcon}>
+          <Ionicons name="text-outline" size={30} color="#644980" />
+        </TouchableOpacity>
+
+        <Modal
+        animationType="slide"
+        transparent={true}
+        visible={fontMenuVisible}
+        onRequestClose={() => setFontMenuVisible(false)}
+        >
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)' }}>
+          <View style={{ backgroundColor: 'white', padding: 20, borderRadius: 10, width: '85%', height: 180 }}>
+            <Pressable onPress={() => setFontMenuVisible(false)} style={{ position: 'absolute', top: 10, left: 10 }}>
+              <Ionicons name="close" size={24} color="black" />
+            </Pressable>
+
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20, marginTop: 40 }}>
+              <TouchableOpacity onPress={decreaseFontSize}>
+                <Ionicons name="remove-circle" size={24} color="black" />
+              </TouchableOpacity>
+              <Text style={{ fontSize: 18 }}>Font Size: {fontSize}</Text>
+              <TouchableOpacity onPress={increaseFontSize}>
+                <Ionicons name="add-circle" size={24} color="black" />
+              </TouchableOpacity>
+            </View>
+
+            
+            <TouchableOpacity onPress={toggleDyslexicFont}>
+              <Text style={{ fontSize: 18 }}>Switch to {dyslexicFontEnabled ? 'Default' : 'Dyslexic-Friendly'} Font</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        </Modal>
 
         <View style={styles.commentIcon}>
           <Pressable onPress={handleCommentsOpen} style={styles.icon}>
@@ -320,7 +379,7 @@ const styles = StyleSheet.create({
   poemContainer: {
     alignItems: "center",
     justifyContent: "center",
-    paddingBottom: 0,
+    paddingBottom: screenHeight * 0.13,
     position: "relative",
     backgroundColor: "#fff",
   },
@@ -363,7 +422,7 @@ const styles = StyleSheet.create({
 
   page: {
     width: Dimensions.get("window").width,
-    paddingHorizontal: 16,
+    paddingHorizontal: 14,
   },
 
   pageContent: {
@@ -387,6 +446,12 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: screenWidth * 0.045,
     bottom: screenHeight * 0.1,
+  },
+
+  fontIcon: {
+    position: "absolute",
+    right: screenWidth * 0.045,
+    top: screenHeight * 0.18,
   },
 
   commentIcon: {
@@ -480,6 +545,12 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: screenHeight * 0.1,
     alignItems: "center",
+  },
+  dyslexicFont: {
+    fontFamily: "OpenDyslexic-Regular",
+  },
+  regularFont: {
+    fontFamily: "SFNSText-Regular",
   },
 });
 
