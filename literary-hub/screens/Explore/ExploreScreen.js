@@ -27,15 +27,16 @@ const ExploreScreen = () => {
 
     setSearchResults(results);
   }
+  
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
         <SearchBar onSearch={handleSearch}/>
-
-
-
+        <DailyPoem/>
         <Text style={styles.text}>Author Collections</Text>
         <AuthorList />
+
+        
 
         <Text style={styles.text}>Trending</Text>
         <View style={styles.segmentedControl}>
@@ -108,26 +109,29 @@ const ExploreScreen = () => {
       </ScrollView>
 
        {/* Overlay the SearchResult component below the search bar */}
-       <View style={styles.overlayResultContainer}>
-        {searchResults['poems']?.map((poem) => (
-          <SearchResult
-            type='poem'
-            data={poem}
-            key={poem._id}
-            Poem = {poem}
-            style={styles.overlayResult}
-          />
-        ))}
-        {searchResults['users']?.map((user) => (
-          <SearchResult
-            type='user'
-            data={user}
-            key={user._id}
-            User = {user}
-            style={styles.overlayResult}
-          />
-        ))}
-      </View>
+       {searchResults.length !== 0 &&
+        <ScrollView style={styles.overlayResultContainer} contentInset= {{bottom: 80}}>
+            {searchResults['poems']?.map((poem) => (
+              <SearchResult
+                type='poem'
+                data={poem}
+                key={poem._id}
+                Poem = {poem}
+                style={styles.overlayResult}
+              />
+            ))}
+            {searchResults['users']?.map((user) => (
+              <SearchResult
+                type='user'
+                data={user}
+                key={user._id}
+                User = {user}
+                style={styles.overlayResult}
+              />
+            ))}
+        </ScrollView>
+       }
+       
     </SafeAreaView>
   );
 };
@@ -202,12 +206,15 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: "#644980",
   },
+
   overlayResultContainer: {
     position: 'absolute',
     top: 115, 
     left: 0,
     right: 0,
     zIndex: 999, 
+    backgroundColor: 'white',
+    height: 700,
   },
 
   overlayResult: {

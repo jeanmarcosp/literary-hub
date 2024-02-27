@@ -17,6 +17,7 @@ const jwt = require("jsonwebtoken");
 const User = require("./models/user");
 const Poem = require("./models/poem");
 const Collection = require("./models/collection");
+const DailyPoem = require("./models/dailypoem")
 const { log } = require("console");
 
 mongoose
@@ -44,14 +45,6 @@ const generateSecretKey = () => {
   return secretKey;
 };
 const secretKey = generateSecretKey();
-
-const Schema = mongoose.Schema;
-const dailyPoemSchema = new Schema({
-  _id: Date,
-  poemId: { type: Schema.Types.ObjectId }
-});
-
-module.exports = mongoose.model("DailyPoem", dailyPoemSchema);
 
 // endpoint for login
 app.post("/login", async (req, res) => {
@@ -158,36 +151,6 @@ app.post("/collection/new", async (req, res) => {
     res.status(500).json({ message: "Error creating collection" });
   }
 });
-
-// app.post("/collection/new", async (req, res) => {
-//   try {
-//     const { userId, title } = req.body;
-//     if (!title) {
-//       return res.status(400).json({ message: "Title is required" });
-//     }
-//     const existingCollection = await Collection.findOne({ userId, title });
-//     if (existingCollection) {
-//       return res.status(400).json({ message: "Collection already exists" });
-//     }
-
-//     // create new collection
-//     const newCollection = new Collection({ user, title });
-//     // Save the new collection to the database
-//     await newCollection.save();
-//     await User.updateOne(
-//       { _id: user },
-//       { $push: { createdCollections: newCollection._id } }
-//     );
-
-//     res.status(201).json({
-//       message: "Collection created successfully",
-//       collection: newCollection,
-//     });
-//   } catch (error) {
-//     console.log("error", error);
-//     res.status(500).json({ message: "Error creatng collecton" });
-//   }
-// });
 
 // endpoint to get userdata
 app.get("/getuser", async (req, res) => {
@@ -341,8 +304,8 @@ app.put("/collections/:collectionId/:userId/unlike", async (req, res) => {
 
     const updatedCollection = await Collection.findByIdAndUpdate(
       collectionId,
-      { $pull: { likes: userId } }, // Add user's ID to the likes array
-      { new: true } // To return the updated post
+      { $pull: { likes: userId } }, 
+      { new: true } 
     );
 
     if (!updatedCollection) {
@@ -896,30 +859,42 @@ app.get("/trending-collections", async (req, res) => {
   }
 });
 
+const ObjectId = mongoose.Types.ObjectId;
+
 //endpoint for commenting
 app.post("/comment", async (req, res) => {
   const { userId, poemId, content } = req.body;
-  console.log("Received request:", req.body);
+  // console.log("Received request:", req.body);
 
   try {
-    // Find the poem by ID
+
+    const commentId = new ObjectId();
+
     const poem = await Poem.findById(poemId);
 
-    // Create a new comment
     const newComment = {
-      user: userId, // Assuming you have user information in the request
+      _id: commentId, 
+      user: userId, 
       content: content,
       likes: [],
     };
 
     const updatedPoem = await Poem.findByIdAndUpdate(
       poemId,
-      { $addToSet: { comments: newComment } }, // Add user's ID to the likes array
-      { new: true } // To return the updated poem
+      { $addToSet: { comments: newComment } }, 
+      { new: true } 
     );
 
     if (!updatedPoem) {
       return res.status(404).json({ message: "Poem not found" });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(userId, {
+      $addToSet: { createdComments: commentId },
+    });
+
+    if (!updatedUser) { // Check if user update was successful
+      return res.status(404).json({ message: "Could not add comments to user's createdComments field" });
     }
 
     return res.status(201).json({ success: true, comment: newComment });
@@ -928,6 +903,7 @@ app.post("/comment", async (req, res) => {
     res.status(500).json({ message: "Error making comment" });
   }
 });
+
 
 //endpoint for getting single poem info
 app.get("/poem/:poemId", async (req, res) => {
@@ -1097,4 +1073,132 @@ app.put("/edit/collections/:collectionId/poems", async (req, res) => {
     console.error(error);
     res.status(500).json({ error: "Failed to update poems in collection" });
   }
+});
+
+//endpoint for deleting a comment
+app.delete("/delete-comment", async (req, res) => {
+  const { userId, poemId, commentId } = req.body;
+  console.log(commentId);
+
+  try {
+
+    const poem = await Poem.findById(poemId);
+
+    if (!poem) {
+      return res.status(404).json({ message: "Poem not found" });
+    }
+    
+    const updatedPoem = await Poem.findByIdAndUpdate(
+      poemId,
+      { $pull: { comments: commentId } },
+      { new: true }
+    );
+
+    if (!updatedPoem) {
+      return res.status(404).json({ message: "could not remove comment from poem" });
+    }
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    user.createdComments.pull(commentId);
+    await user.save();
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $pull: { createdComments: commentId } },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "could not remove comment from users profile" });
+    }
+
+    return res.status(201).json({ success: true });
+  } catch (error) {
+    console.error("Error deleting comment:", error);
+    res.status(500).json({ message: "Error deleting comment" });
+  }
+});
+
+
+const generateDatesForNext10Months = () => {
+  const dates = [];
+  let currentDate = new Date();
+
+  for (let i = 0; i < 10; i++) {
+    const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
+    for (let day = 1; day <= daysInMonth; day++) {
+      const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+      dates.push(newDate);
+    }
+    currentDate.setMonth(currentDate.getMonth() + 1);
+  }
+
+  return dates;
+};
+
+// Step 2: Create dailyPoem objects for each date and save them to the database
+const populateDailyPoems = async () => {
+  const dates = generateDatesForNext10Months();
+
+  try {
+    for (const date of dates) {
+      const existingDailyPoem = await DailyPoem.findById(date);
+      if (!existingDailyPoem){
+        const randomPoem = await Poem.aggregate([{ $sample: { size: 1 } }]);
+        const poemId = randomPoem[0]._id;
+        const dailyPoem = new DailyPoem({
+          _id: date,
+          poemId: poemId
+        });
+
+        await dailyPoem.save();
+      }
+    }
+
+    console.log('Daily poems populated successfully!');
+  } catch (error) {
+    console.error('Error populating daily poems:', error);
+  }
+};
+// one time endpoint to populate the dailypoems
+app.post("/populate/daily-poems", async (req, res) => {
+  try {
+    // Call the function to populate daily poems
+    await populateDailyPoems();
+    res.status(200).json({ message: "Daily poems populated successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to populate daily poems" });
+  }
+});
+
+// endpoint for getting poem from date (dailypoem)
+app.get("/daily-poems/:date", async (req, res) => {
+  const requestedDate = new Date(req.params.date);
+  console.log(requestedDate)
+  try {
+    const dailyPoem = await DailyPoem.findById(requestedDate);
+
+    if (!dailyPoem) {
+      res.status(404).json({ error: "No DailyPoem found for the requested date" });
+    }
+
+    const poemId = dailyPoem.poemId;
+    const poem = await Poem.findById(poemId);
+    if (!poem) {
+      return res.status(404).json({ message: "Poem not found for the DailyPoem" });
+    }
+    console.log(poem);
+    res.status(200).json({ poem });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to fetch DailyPoem" });
+  }
+
 });

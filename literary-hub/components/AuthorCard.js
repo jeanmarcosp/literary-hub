@@ -1,12 +1,33 @@
 import "react-native-gesture-handler";
-import React from "react";
+
 import { View, TouchableOpacity, Image, Text, StyleSheet } from "react-native";
 import Like from "./Like";
 import { useNavigation } from "@react-navigation/native";
+import { handleLikeCollection, handleUnlikeCollection } from "../hooks/collectionActions";
+import getUserId from "../hooks/getUserId";
+import { useState, React } from "react";
 
 const AuthorCard = ({ collection }) => {
-
   const navigation = useNavigation();
+  const collectionId = collection._id
+  const userId = getUserId();
+  const userIsCreator = collection.user === userId;
+
+  const [likesCount, setLikesCount] = useState(collection.likes.length);
+
+  const updateLikes = async (isLike) => {
+    try {
+      if (!isLike) {
+        await handleUnlikeCollection(userId, collectionId);
+        setLikesCount(prevCount => prevCount - 1);
+      } else {
+        await handleLikeCollection(userId, collectionId);
+        setLikesCount(prevCount => prevCount + 1);
+      }
+    } catch (error) {
+      console.error("Error updating likes:", error);
+    }
+  };
 
   return (
     <TouchableOpacity style={styles.card} 
@@ -14,8 +35,12 @@ const AuthorCard = ({ collection }) => {
       <View style={styles.container}>
         <View style={styles.topRow}>
           <View style={styles.likes}>
-            <Like />
-            <Text>{collection.likes.length}</Text>
+          <Like
+              inLikes={collection.likes.includes(userId)}
+              handleLike={() => updateLikes(true)}
+              handleDislike={() => updateLikes(false)}
+            />
+            <Text>{likesCount}</Text>
           </View>
         </View>
 

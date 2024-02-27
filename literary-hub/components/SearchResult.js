@@ -19,18 +19,24 @@ const SearchResult = ({data, type}) => {
       <View style={styles.container}>
         <TouchableOpacity onPress={openItem}>
           {type === 'poem' && data && data.title? (
-            <>
-              <Text>{data.title}</Text>
-              <Text style={styles.author}> {data.author}</Text>
-            </>
+            <View style={styles.poemResult}>
+              <Ionicons name="book-outline" size={20} color="#658049" />
+              <View>
+                <Text style={styles.title}>{data.title}</Text>
+                <Text style={styles.author}>by {data.author}</Text>
+              </View>
+            </View>
           ) : type === 'user' && data ? (
             // Render user-specific content
-            <View style={styles.column}>
-            <Image
-            source={data.profilePicture ? { uri: data.profilePicture } : require('../assets/collection-images/defaultCover.jpeg')}
-            style={styles.image}
-          />
-            <Text>{data.username}   {data.name}</Text>
+            <View style={styles.userResult}>
+              <Image
+                source={data.profilePicture ? { uri: data.profilePicture } : require('../assets/collection-images/defaultCover.jpeg')}
+                style={styles.image}
+              />
+              <View style={styles.names}>
+                <Text style={styles.name}>{data.name}</Text>
+                <Text style={styles.username}>@{data.username}</Text>
+              </View>
             </View>
           ) : (
             // Add more conditions for other types
@@ -48,28 +54,63 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "white",
-    borderRadius: 7,
-    paddingHorizontal: 10,
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 7,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F6F5F8',
   },
-  column:{
-    flexDirection: 'row',
-  },
-  author:{
-    alignItems: "flex-end",
 
+  poemResult: {
+    flexDirection: 'row',
+    columnGap: 10,
   },
+
+  userResult:{
+    flexDirection: 'row',
+    columnGap: 10,
+  },
+
+  title: {
+    fontFamily: 'Sarabun-Bold',
+    fontSize: 16,
+    color: '#3D3D3D',
+    marginRight: 10,
+  },
+
+  author:{
+    fontFamily: 'Sarabun-Regular',
+    fontSize: 14,
+    color: '#898B96',
+  },
+
   image:{
     alignItems: 'center',
-    height: 20,
-    width: 20,
+    height: 40,
+    width: 40,
     marginRight: 5,
+    borderRadius: 100,
   },
+
+  names: {
+    flexDirection: 'column',
+  },
+
+  name: {
+    fontFamily: 'Sarabun-Bold',
+    fontSize: 16,
+    color: '#3D3D3D',
+  },
+
+  username: {
+    fontFamily: 'Sarabun-Regular',
+    fontSize: 14,
+    color: '#898B96',
+  },
+
   icon: {
     marginRight: 10,
   },
+
   input: {
     flex: 1,
     height: 40,

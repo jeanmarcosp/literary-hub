@@ -69,6 +69,8 @@ const CommentSection = forwardRef((props, ref) => {
     }
   };
 
+  // console.log(props.comments);
+
   return (
     <BottomSheet
       ref={(bottomSheet) => {
@@ -253,13 +255,17 @@ const styles = StyleSheet.create({
   },
 
   commentInput: {
-    borderRadius: 100,
+    borderRadius: 10,
     backgroundColor: "#F4F5F4",
     marginHorizontal: 10,
-    marginVertical: 20,
-    height: 30,
-    paddingHorizontal: 10,
+    // marginVertical: 20,
+    // height: 30,
+    // paddingHorizontal: 15,
+    // paddingVertical: 15,
+    padding: 10,
     width: Dimensions.get("window").width * 0.85,
+    minHeight: 30,
+    maxHeight: 100,
   },
 });
 
