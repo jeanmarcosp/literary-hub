@@ -15,6 +15,7 @@ import axios from "axios";
 import { Ionicons } from "@expo/vector-icons";
 import getUserId from "../hooks/getUserId";
 import ShareMenu from "./ShareMenu";
+import { handleLikeCollection, handleUnlikeCollection } from "../hooks/collectionActions";
 
 const CollectionCard = ({ collection, handleRefresh }) => {
   const navigation = useNavigation();
@@ -29,41 +30,41 @@ const CollectionCard = ({ collection, handleRefresh }) => {
   const [liked, setLiked] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false); //prob cause of liking lag on profile
 
-  const handleLikeCollection = async () => {
-    try {
-      const response = await axios.put(
-        `${ROOT_URL}/collections/${collectionId}/${userId}/like`
-      );
+  // const handleLikeCollection = async () => {
+  //   try {
+  //     const response = await axios.put(
+  //       `${ROOT_URL}/collections/${collectionId}/${userId}/like`
+  //     );
 
-      // If the request is successful, update the state or perform any other action
-      const updatedCollection = response.data;
+  //     // If the request is successful, update the state or perform any other action
+  //     const updatedCollection = response.data;
 
-      // Set the liked state to true (or perform any other state update)
-      setLiked(true);
-      handleRefresh();
-    } catch (error) {
-      console.error("Error liking collection:", error);
-      // Handle errors or perform any other action
-    }
-  };
+  //     // Set the liked state to true (or perform any other state update)
+  //     setLiked(true);
+  //     handleRefresh();
+  //   } catch (error) {
+  //     console.error("Error liking collection:", error);
+  //     // Handle errors or perform any other action
+  //   }
+  // };
 
-  const handleUnlikeCollection = async () => {
-    try {
-      const response = await axios.put(
-        `${ROOT_URL}/collections/${collectionId}/${userId}/unlike`
-      );
+  // const handleUnlikeCollection = async () => {
+  //   try {
+  //     const response = await axios.put(
+  //       `${ROOT_URL}/collections/${collectionId}/${userId}/unlike`
+  //     );
 
-      // If the request is successful, update the state or perform any other action
-      const updatedCollection = response.data;
+  //     // If the request is successful, update the state or perform any other action
+  //     const updatedCollection = response.data;
 
-      // Set the liked state to false (or perform any other state update)
-      setLiked(false);
-      handleRefresh();
-    } catch (error) {
-      console.error("Error unliking collection:", error);
-      // Handle errors or perform any other action
-    }
-  };
+  //     // Set the liked state to false (or perform any other state update)
+  //     setLiked(false);
+  //     handleRefresh();
+  //   } catch (error) {
+  //     console.error("Error unliking collection:", error);
+  //     // Handle errors or perform any other action
+  //   }
+  // };
 
   const handleDeleteCollection = async () => {
     try {
@@ -88,22 +89,6 @@ const CollectionCard = ({ collection, handleRefresh }) => {
     setIsModalVisible(false);
     navigation.navigate("EditCollectionScreen", { collection })
   }
-
-  // const ShareMenu = ({ isVisible, children, onClose }) => {
-  //   return (
-  //     <Modal animationType="slide" transparent={true} visible={isVisible}>
-  //       <View style={styles.modalContent}>
-  //         <View style={styles.modalTitleContainer}>
-  //           <Text style={styles.modalTitle}>Collection Actions</Text>
-  //           <TouchableOpacity onPress={onClose}>
-  //             <Ionicons name="close" size={24} color="black" />
-  //           </TouchableOpacity>
-  //         </View>
-  //         {children}
-  //       </View>
-  //     </Modal>
-  //   );
-  // };
 
   const onShare = () => {
     setIsModalVisible(true);
@@ -148,8 +133,8 @@ const CollectionCard = ({ collection, handleRefresh }) => {
           <View style={styles.likes}>
             <Like
               inLikes={collection.likes.includes(userId)}
-              handleLike={handleLikeCollection}
-              handleDislike={handleUnlikeCollection}
+              handleLike={() => handleLikeCollection(userId, collectionId)}
+              handleDislike={() => handleUnlikeCollection(userId, collectionId)}
             />
             <Text style={styles.likeNumber}>{collection.likes.length}</Text>
           </View>

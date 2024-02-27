@@ -3,10 +3,13 @@ import React from "react";
 import { View, TouchableOpacity, Image, Text, StyleSheet } from "react-native";
 import Like from "./Like";
 import { useNavigation } from "@react-navigation/native";
+import { handleLikeCollection, handleUnlikeCollection } from "../hooks/collectionActions";
+import getUserId from "../hooks/getUserId";
 
 const AuthorCard = ({ collection }) => {
-
   const navigation = useNavigation();
+  const collectionId = collection._id
+  const userId = getUserId();
 
   return (
     <TouchableOpacity style={styles.card} 
@@ -14,7 +17,11 @@ const AuthorCard = ({ collection }) => {
       <View style={styles.container}>
         <View style={styles.topRow}>
           <View style={styles.likes}>
-            <Like />
+          <Like
+              inLikes={collection.likes.includes(userId)}
+              handleLike={() => handleLikeCollection(userId, collectionId)}
+              handleDislike={() => handleUnlikeCollection(userId, collectionId)}
+            />
             <Text>{collection.likes.length}</Text>
           </View>
         </View>
