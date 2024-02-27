@@ -6,26 +6,35 @@ import { useNavigation } from "@react-navigation/native";
 import { handleLikeCollection, handleUnlikeCollection } from "../hooks/collectionActions";
 import getUserId from "../hooks/getUserId";
 import { useState, React } from "react";
+import { handleLike } from "../hooks/poemActions";
+import axios from "axios";
 
-const AuthorCard = ({ collection }) => {
+const AuthorCard = ({ collection, handleRefresh }) => {
   const navigation = useNavigation();
   const collectionId = collection._id
   const userId = getUserId();
   const userIsCreator = collection.user === userId;
 
-  const [likesCount, setLikesCount] = useState(collection.likes.length);
-
-  const updateLikes = async (isLike) => {
+  const handleLikeCollection = async () => {
     try {
-      if (!isLike) {
-        await handleUnlikeCollection(userId, collectionId);
-        setLikesCount(prevCount => prevCount - 1);
-      } else {
-        await handleLikeCollection(userId, collectionId);
-        setLikesCount(prevCount => prevCount + 1);
-      }
+      const response = await axios.put(
+        `${ROOT_URL}/collections/${collectionId}/${userId}/like`
+      );
+      handleRefresh();
     } catch (error) {
-      console.error("Error updating likes:", error);
+      console.error("Error liking collection:", error);
+    }
+  };
+
+  const handleUnlikeCollection = async () => {
+    try {
+      const response = await axios.put(
+        `${ROOT_URL}/collections/${collectionId}/${userId}/unlike`
+      );
+      handleRefresh();
+    } catch (error) {
+      console.error("Error unliking collection:", error);
+
     }
   };
 
@@ -37,10 +46,10 @@ const AuthorCard = ({ collection }) => {
           <View style={styles.likes}>
           <Like
               inLikes={collection.likes.includes(userId)}
-              handleLike={() => updateLikes(true)}
-              handleDislike={() => updateLikes(false)}
+              handleLike={handleLikeCollection}
+              handleDislike={handleUnlikeCollection}
             />
-            <Text>{likesCount}</Text>
+            <Text>{collection.likes.length}</Text>
           </View>
         </View>
 

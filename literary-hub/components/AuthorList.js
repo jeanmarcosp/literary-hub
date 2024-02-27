@@ -7,21 +7,37 @@ import AuthorCard from "./AuthorCard";
 const AuthorList = () => {
 
   const [collections, setCollections] = useState([]);
+  const fetchAuthors = async() => {
+    try {
+      // called at beginning to create author collections
+      // await axios.get(`${ROOT_URL}/create-author-collections`);
+      
+      // grab 6 collections
+      const response = await axios.get(`${ROOT_URL}/explore-authors`);
+      setCollections(response.data.extractedCollections)
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // once you choose the 6 authors using fetchAuthors, refresh for those 6
+  const handleRefresh = async() => {
+    const collectionIdsToFetch = collections.map(collection=>collection._id)
+
+    try {
+      const response = await axios.get(`${ROOT_URL}/collections-by-ids`, {
+        params: {
+          collectionIds: collectionIdsToFetch,
+        },
+      })
+      setCollections(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   // gets authors with more than 10 poems in db
   useEffect(() => {
-    const fetchAuthors = async() => {
-      try {
-        // called at beginning to create author collections
-        // await axios.get(`${ROOT_URL}/create-author-collections`);
-        
-        // grab 6 collections
-        const response = await axios.get(`${ROOT_URL}/explore-authors`);
-        setCollections(response.data.extractedCollections)
-      } catch (error) {
-        console.error(error);
-      }
-    };
     fetchAuthors();
   }, [])
 
@@ -30,6 +46,7 @@ const AuthorList = () => {
       <View>
         <AuthorCard
                 collection={item}
+                handleRefresh={handleRefresh}
               />
       </View>
     );
