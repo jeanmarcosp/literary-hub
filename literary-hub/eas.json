@@ -10,7 +10,11 @@
     "preview": {
       "distribution": "internal"
     },
-    "production": {},
+    "production": {
+      "env": {
+        "OPENAI_KEY": "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"
+      }
+    },
     "test": {
       "env": {
         "OPENAI_KEY": "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"
