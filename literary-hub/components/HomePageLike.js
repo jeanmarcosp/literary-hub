@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
   like: {
     position: "absolute",
     right: screenWidth * 0.05, 
-    bottom: screenHeight * 0.1, 
+    bottom: screenHeight * 0.12, 
   },
   count: {
     fontFamily: "PromptRegular",

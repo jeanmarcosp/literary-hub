@@ -310,9 +310,11 @@ const Poem = ({ route }) => {
           </Pressable>
         </View>
 
-        <TouchableOpacity onPress={toggleFontMenu} style={styles.fontIcon}>
-          <Ionicons name="text-outline" size={30} color="#644980" />
-        </TouchableOpacity>
+        <View style={styles.fontIcon}>
+          <TouchableOpacity onPress={toggleFontMenu}>
+            <Ionicons name="text-outline" size={30} color="#644980" />
+          </TouchableOpacity>
+        </View>
 
         <Modal
         animationType="slide"
@@ -449,7 +451,7 @@ const styles = StyleSheet.create({
   plus: {
     position: "absolute",
     left: screenWidth * 0.05,
-    bottom: screenHeight * 0.1,
+    bottom: screenHeight * 0.12,
   },
 
   pagination: {
@@ -458,22 +460,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-  heart: {
-    position: "absolute",
-    right: screenWidth * 0.045,
-    bottom: screenHeight * 0.1,
-  },
-
   fontIcon: {
     position: "absolute",
-    right: screenWidth * 0.045,
-    top: screenHeight * 0.18,
+    left: screenWidth * 0.05,
+    bottom: screenHeight * 0.17,
   },
 
   commentIcon: {
     position: "absolute",
     right: screenWidth * 0.05,
-    bottom: screenHeight * 0.15,
+    bottom: screenHeight * 0.17,
   },
 
   bottomSheet: {
