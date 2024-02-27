@@ -13,7 +13,7 @@ const DailyPoem = () => {
   useEffect(() => {
     const fetchDailyPoem = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/daily-poems/${formattedDate}`); 
+        const response = await fetch(`${ROOT_URL}/daily-poems/${formattedDate}`); 
         
         if (!response.ok) {
           throw new Error('Failed to fetch daily poem');
@@ -21,7 +21,6 @@ const DailyPoem = () => {
         
         const data = await response.json();
         setPoem(data.poem); 
-        console.log("HOLAHOLA", data.poem);
   
       } catch (error) {
         console.error(error);
