@@ -29,7 +29,7 @@ const CollectionCard = ({ collection, handleRefresh }) => {
 
   const [liked, setLiked] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false); //prob cause of liking lag on profile
-
+  const [likesCount, setLikesCount] = useState(collection.likes.length);
   // const handleLikeCollection = async () => {
   //   try {
   //     const response = await axios.put(
@@ -98,6 +98,20 @@ const CollectionCard = ({ collection, handleRefresh }) => {
     setIsModalVisible(false);
   };
 
+  const updateLikes = async (isLike) => {
+    try {
+      if (!isLike) {
+        await handleUnlikeCollection(userId, collectionId);
+        setLikesCount(prevCount => prevCount - 1);
+      } else {
+        await handleLikeCollection(userId, collectionId);
+        setLikesCount(prevCount => prevCount + 1);
+      }
+    } catch (error) {
+      console.error("Error updating likes:", error);
+    }
+  };
+
   return (
     <TouchableOpacity
       style={styles.card}
@@ -133,10 +147,10 @@ const CollectionCard = ({ collection, handleRefresh }) => {
           <View style={styles.likes}>
             <Like
               inLikes={collection.likes.includes(userId)}
-              handleLike={() => handleLikeCollection(userId, collectionId)}
-              handleDislike={() => handleUnlikeCollection(userId, collectionId)}
+              handleLike={() => updateLikes(true)}
+              handleDislike={() => updateLikes(false)}
             />
-            <Text style={styles.likeNumber}>{collection.likes.length}</Text>
+            <Text style={styles.likeNumber}>{likesCount}</Text>
           </View>
         </View>
       </View>

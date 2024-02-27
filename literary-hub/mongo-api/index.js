@@ -304,8 +304,8 @@ app.put("/collections/:collectionId/:userId/unlike", async (req, res) => {
 
     const updatedCollection = await Collection.findByIdAndUpdate(
       collectionId,
-      { $pull: { likes: userId } }, // Add user's ID to the likes array
-      { new: true } // To return the updated post
+      { $pull: { likes: userId } }, 
+      { new: true } 
     );
 
     if (!updatedCollection) {
