@@ -147,6 +147,7 @@ const CreateCollection = ({ route }) => {
             onChangeText={setTitle}
             value={title}
             placeholder="Enter a collection name"
+            placeholderTextColor={'#A6A6A6'}
             maxLength={50}
           />
         </View>
@@ -162,6 +163,7 @@ const CreateCollection = ({ route }) => {
             onChangeText={setCaption}
             value={caption}
             placeholder="Enter your collections info"
+            placeholderTextColor={'#A6A6A6'}
             maxLength={50}
           />
         </View>
@@ -268,6 +270,7 @@ const styles = StyleSheet.create({
 
   textInput: {
     borderWidth: 1,
+    borderColor: '#D9D9D9',
     borderRadius: 8,
     padding: 10,
   },

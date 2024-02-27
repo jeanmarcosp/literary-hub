@@ -320,6 +320,7 @@ const styles = StyleSheet.create({
 
   textInput: {
     borderWidth: 1,
+    borderColor: '#D9D9D9',
     borderRadius: 8,
     padding: 10,
   },
