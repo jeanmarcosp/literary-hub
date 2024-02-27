@@ -82,9 +82,16 @@ const CommentSection = forwardRef((props, ref) => {
       index={-1}
       snapPoints={["50%", "75%"]}
       enablePanDownToClose={false}
-      handleIndicatorStyle={{ backgroundColor: "#F4F5F4" }}
-      backgroundStyle={{ backgroundColor: "#F4F5F4" }}
+      handleIndicatorStyle={{ backgroundColor: "#fff" }}
+      backgroundStyle={{ backgroundColor: "#fff" }}
       // backdropComponent={renderBackdrop}
+      style={{ shadowColor: 'black',
+      shadowOffset: {
+        width: 0,
+        height: 4,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 10, }}
     >
       <View style={styles.contentContainer}>
         <View style={styles.commentsTopRow}>
@@ -130,9 +137,9 @@ const CommentSection = forwardRef((props, ref) => {
                 multiline={true}
               />
               <Ionicons
-                name="add-circle"
-                size={24}
-                color="black"
+                name="arrow-up-circle"
+                size={36}
+                color="#644980"
                 onPress={handleComment}
               />
             </View>
@@ -151,12 +158,14 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
   },
+
   containerHeadline: {
     fontSize: 24,
     fontWeight: "600",
     padding: 20,
     color: "#fff",
   },
+
   button: {
     backgroundColor: "#644980",
     padding: 10,
@@ -166,10 +175,12 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     alignItems: "center",
   },
+
   buttonText: {
     color: "white",
     fontWeight: "bold",
   },
+
   collectionRow: {
     flexDirection: "row",
     width: Dimensions.get("window").width * 0.7,
@@ -181,22 +192,27 @@ const styles = StyleSheet.create({
     backgroundColor: "#f6f5f5",
     borderRadius: 5,
   },
+
   collectionInfo: {
     flexDirection: "column",
   },
+
   collectionTitle: {
     fontSize: 16,
     fontWeight: "bold",
     padding: 5,
   },
+
   collectionLength: {
     fontSize: 16,
     fontWeight: 100,
     padding: 5,
   },
+
   collectionPoems: {
     fontSize: 10,
   },
+  
   collectionButton: {
     backgroundColor: "#644980",
     padding: 10,
@@ -214,6 +230,7 @@ const styles = StyleSheet.create({
   commentsNumber: {
     fontFamily: "Sarabun-Medium",
     color: "#6C7476",
+    fontSize: 15,
   },
 
   closeComments: {
@@ -230,7 +247,7 @@ const styles = StyleSheet.create({
   },
 
   commentsScroll: {
-    backgroundColor: "#F4F5F4",
+    backgroundColor: "#fff",
     width: Dimensions.get("screen").width,
     flex: 1,
   },
@@ -246,25 +263,29 @@ const styles = StyleSheet.create({
     // left: 0,
     // right: 0,
     backgroundColor: "white",
-    padding: 10,
-    borderTopWidth: 1,
-    borderTopColor: "#ccc",
     flexDirection: "row",
     alignItems: "center",
-    height: 90,
+    justifyContent: 'space-evenly',
+    height: 75,
+    shadowColor: 'black',
+    shadowOffset: {
+      width: 0,
+      height: -4,
+    },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
   },
 
   commentInput: {
     borderRadius: 10,
     backgroundColor: "#F4F5F4",
-    marginHorizontal: 10,
     // marginVertical: 20,
     // height: 30,
     // paddingHorizontal: 15,
     // paddingVertical: 15,
     padding: 10,
-    width: Dimensions.get("window").width * 0.85,
-    minHeight: 30,
+    width: Dimensions.get("window").width * 0.83,
+    minHeight: 35,
     maxHeight: 100,
   },
 });
