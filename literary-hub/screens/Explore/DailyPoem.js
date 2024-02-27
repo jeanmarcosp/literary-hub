@@ -21,7 +21,6 @@ const DailyPoem = () => {
         
         const data = await response.json();
         setPoem(data.poem); 
-        console.log("HOLAHOLA", data.poem);
   
       } catch (error) {
         console.error(error);
