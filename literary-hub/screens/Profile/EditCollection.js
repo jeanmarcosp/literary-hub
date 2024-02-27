@@ -7,7 +7,8 @@ import {
   TextInput,
   Alert,
   Image,
-  FlatList
+  FlatList,
+  ScrollView
 } from "react-native";
 import { React, useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -137,7 +138,7 @@ const EditCollectionScreen = ({route}) => {
           )}
           </View>
           <TouchableOpacity onPress={() => deletePoem(poem._id)}>
-            <Ionicons name="trash-outline" size={28}/>
+            <Ionicons name="trash-outline" size={28} color="red"/>
           </TouchableOpacity>
         </View>
       </TouchableOpacity>
@@ -163,74 +164,72 @@ const EditCollectionScreen = ({route}) => {
 
   return (
     <View>
-    <View style={styles.editHeader}>
-      <TouchableOpacity onPress={handleCancel}>
-      <Text style={styles.cancelSaveText}>Cancel</Text>
-      </TouchableOpacity>
+      <KeyboardAwareScrollView stickyHeaderIndices={[0]}>
+        <>
+          <View style={styles.editHeader}>
+            <TouchableOpacity onPress={handleCancel}>
+              <Text style={styles.cancelSaveText}>Cancel</Text>
+            </TouchableOpacity>
 
-      <TouchableOpacity onPress={handleSave}>
-      <Text style={styles.cancelSaveText}>Save</Text>
-      </TouchableOpacity>
-    </View>
-    <KeyboardAwareScrollView
-      stickyHeaderIndices={[0]}
-    >
+            <TouchableOpacity onPress={handleSave}>
+              <Text style={styles.cancelSaveText}>Save</Text>
+            </TouchableOpacity>
+          </View>
+        </>
     
-    <View style={styles.mainContainer}>
-      
-      <View style={styles.container}>
-        <View style={styles.coverPhotoSection}>
-          <Text style={styles.header}>Cover photo</Text>
-          <View style={styles.emptyCoverPhoto}>
-            {!coverArt && (
-              <Image source={require('./../../assets/collection-images/default-collection-cover1.jpeg')} style={styles.coverImage} />
-            )}
+        <View style={styles.mainContainer}>
+          <View style={styles.container}>
+            <View style={styles.coverPhotoSection}>
+              <Text style={styles.header}>Cover photo</Text>
+              <View style={styles.emptyCoverPhoto}>
+                {!coverArt && (
+                  <Image source={require('./../../assets/collection-images/default-collection-cover1.jpeg')} style={styles.coverImage} />
+                )}
 
-            {coverArt && (
-              <Image source={{ uri: coverArt.uri }} style={styles.coverImage} />
-            )}
-          </View>
-          <TouchableOpacity onPress={handleChangeImage}>
-            <View style={styles.editPhotoCTA}>
-              <Text style={styles.editPhotoText}>Choose Photo</Text>
+                {coverArt && (
+                  <Image source={{ uri: coverArt.uri }} style={styles.coverImage} />
+                )}
+              </View>
+              <TouchableOpacity onPress={handleChangeImage}>
+                <View style={styles.editPhotoCTA}>
+                  <Text style={styles.editPhotoText}>Choose Photo</Text>
+                </View>
+              </TouchableOpacity>
             </View>
-          </TouchableOpacity>
-        </View>
 
-        <View style={styles.nameSection}>
-          <View style={styles.nameInfo}>
-            <Text style={styles.header}>Name</Text>
-            <Text style={styles.headerDescription}>50 characters max</Text>
+            <View style={styles.nameSection}>
+              <View style={styles.nameInfo}>
+                <Text style={styles.header}>Name</Text>
+                <Text style={styles.headerDescription}>50 characters max</Text>
+              </View>
+              <TextInput
+                style={styles.textInput}
+                onChangeText={setTitle}
+                value={title}
+                placeholder="Enter a collection name"
+                maxLength={50}
+              />
+            </View>
+
+            <View style={styles.nameSection}>
+              <View style={styles.nameInfo}>
+                <Text style={styles.header}>About</Text>
+                <Text style={styles.headerDescription}>50 characters max</Text>
+              </View>
+
+              <TextInput
+                style={styles.textInput}
+                onChangeText={setCaption}
+                value={caption}
+                placeholder="Enter your collections info"
+                maxLength={50}
+              />
+            </View>
+          
+            <PoemList userLikedPoems={collection.userLikedPoems}/>
           </View>
-          <TextInput
-            style={styles.textInput}
-            onChangeText={setTitle}
-            value={title}
-            placeholder="Enter a collection name"
-            maxLength={50}
-          />
         </View>
-
-        <View style={styles.nameSection}>
-          <View style={styles.nameInfo}>
-            <Text style={styles.header}>About</Text>
-            <Text style={styles.headerDescription}>50 characters max</Text>
-          </View>
-
-          <TextInput
-            style={styles.textInput}
-            onChangeText={setCaption}
-            value={caption}
-            placeholder="Enter your collections info"
-            maxLength={50}
-          />
-        </View>
-       
-        <PoemList userLikedPoems={collection.userLikedPoems}/>
-      </View>
-      
-    </View>
-    </KeyboardAwareScrollView>
+      </KeyboardAwareScrollView>
     </View>
   );
 };
@@ -241,6 +240,7 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     backgroundColor: "white",
+    paddingBottom: 50,
   },
 
   container: {
@@ -320,6 +320,7 @@ const styles = StyleSheet.create({
 
   textInput: {
     borderWidth: 1,
+    borderColor: '#D9D9D9',
     borderRadius: 8,
     padding: 10,
   },
