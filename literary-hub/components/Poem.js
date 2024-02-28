@@ -310,9 +310,11 @@ const Poem = ({ route }) => {
           </Pressable>
         </View>
 
-        <TouchableOpacity onPress={toggleFontMenu} style={styles.fontIcon}>
-          <Ionicons name="text-outline" size={30} color="#644980" />
-        </TouchableOpacity>
+        <View style={styles.fontIcon}>
+          <TouchableOpacity onPress={toggleFontMenu}>
+            <Ionicons name="text-outline" size={30} color="#644980" />
+          </TouchableOpacity>
+        </View>
 
         <Modal
         animationType="slide"
@@ -320,25 +322,41 @@ const Poem = ({ route }) => {
         visible={fontMenuVisible}
         onRequestClose={() => setFontMenuVisible(false)}
         >
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)' }}>
-          <View style={{ backgroundColor: 'white', padding: 20, borderRadius: 10, width: '85%', height: 180 }}>
-            <Pressable onPress={() => setFontMenuVisible(false)} style={{ position: 'absolute', top: 10, left: 10 }}>
-              <Ionicons name="close" size={24} color="black" />
-            </Pressable>
+        <View style={styles.modalBackground}>
+          <View style={styles.modal}>
+            <View style={styles.topRow}>
+              <Text style={styles.modalTitle}>Font options</Text>
+              <Pressable onPress={() => setFontMenuVisible(false)} >
+                <Ionicons name="close" size={24} color="black" />
+              </Pressable>
+            </View>
+            
+            <View style={styles.fontSize}>
+              <Text style={styles.fontSizeTitle}>Font Size</Text>
 
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20, marginTop: 40 }}>
-              <TouchableOpacity onPress={decreaseFontSize}>
-                <Ionicons name="remove-circle" size={24} color="black" />
-              </TouchableOpacity>
-              <Text style={{ fontSize: 18 }}>Font Size: {fontSize}</Text>
-              <TouchableOpacity onPress={increaseFontSize}>
-                <Ionicons name="add-circle" size={24} color="black" />
-              </TouchableOpacity>
+              <View style={styles.fontSizeActions}>
+                <TouchableOpacity onPress={decreaseFontSize}>
+                  <View style={styles.fontSizeActionCircle}>
+                    <Ionicons name="remove" size={24} color="black" />
+                  </View>
+                </TouchableOpacity>
+                <View style={styles.fontSizeNumberContainer}>
+                  <Text style={styles.fontSizeNumber}>{fontSize}</Text>
+                </View>
+                <TouchableOpacity onPress={increaseFontSize}>
+                  <View style={styles.fontSizeActionCircle}>
+                    <Ionicons name="add" size={24} color="black" />
+                  </View>
+                </TouchableOpacity>
+              </View>
             </View>
 
             
             <TouchableOpacity onPress={toggleDyslexicFont}>
-              <Text style={{ fontSize: 18 }}>Switch to {dyslexicFontEnabled ? 'Default' : 'Dyslexic-Friendly'} Font</Text>
+              <View style={styles.modalFontSwitch}>
+                <Text style={styles.modalFontSwitchText}>Switch to </Text>
+                <Text style={styles.modalFontSwitchTextBold}>{dyslexicFontEnabled ? 'Default' : 'Dyslexic-Friendly'} Font</Text>
+              </View>
             </TouchableOpacity>
           </View>
         </View>
@@ -433,7 +451,7 @@ const styles = StyleSheet.create({
   plus: {
     position: "absolute",
     left: screenWidth * 0.05,
-    bottom: screenHeight * 0.1,
+    bottom: screenHeight * 0.12,
   },
 
   pagination: {
@@ -442,22 +460,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-  heart: {
-    position: "absolute",
-    right: screenWidth * 0.045,
-    bottom: screenHeight * 0.1,
-  },
-
   fontIcon: {
     position: "absolute",
-    right: screenWidth * 0.045,
-    top: screenHeight * 0.18,
+    left: screenWidth * 0.05,
+    bottom: screenHeight * 0.17,
   },
 
   commentIcon: {
     position: "absolute",
     right: screenWidth * 0.05,
-    bottom: screenHeight * 0.15,
+    bottom: screenHeight * 0.17,
   },
 
   bottomSheet: {
@@ -541,14 +553,102 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
   },
+
   pagination: {
     position: "absolute",
     bottom: screenHeight * 0.1,
     alignItems: "center",
   },
+
+  modalBackground: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+
+  modal: {
+    backgroundColor: 'white',
+    paddingHorizontal: 25,
+    paddingVertical: 25,
+    borderRadius: 10,
+    width: '85%'
+  },
+
+  topRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
+
+  modalTitle: {
+    fontFamily: 'Sarabun-ExtraBold',
+    fontSize: 20,
+  },
+
+  fontSize: {
+    marginTop: 30,
+    flexDirection: 'row',
+    alignItems: 'center',
+    columnGap: 40,
+  },
+
+  fontSizeTitle: {
+    fontFamily: 'Sarabun-Regular',
+    fontSize: 18,
+  },
+
+  fontSizeActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    columnGap: 15,
+  },
+
+  fontSizeActionCircle: {
+    padding: 5,
+    backgroundColor: '#F6F6F6',
+    borderRadius: 100,
+  },
+
+  fontSizeNumber: {
+    fontFamily: 'Sarabun-Regular',
+    fontSize: 20,
+    color: '#774BA3'
+  },
+
+  fontSizeNumberContainer: {
+    padding: 10,
+    borderColor: '#D6CEDF',
+    borderWidth: 1.3,
+    borderRadius: 10,
+    backgroundColor: '#F9F3FF',
+  },
+
+  modalFontSwitch: {
+    backgroundColor: '#F7F7F7',
+    borderColor: '#E1E1E1',
+    borderRadius: 10,
+    borderWidth: 1.3,
+    marginTop: 30,
+    flexDirection: 'row',
+    paddingVertical: 15,
+    justifyContent: 'center'
+  },
+
+  modalFontSwitchText: {
+    fontFamily: 'Sarabun-Regular',
+    fontSize: 16,
+  },
+
+  modalFontSwitchTextBold: {
+    fontFamily: 'Sarabun-Bold',
+    fontSize: 16,
+  },
+
   dyslexicFont: {
     fontFamily: "OpenDyslexic-Regular",
   },
+
   regularFont: {
     fontFamily: "SFNSText-Regular",
   },
