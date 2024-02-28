@@ -3,7 +3,7 @@ import "react-native-gesture-handler";
 import { View, TouchableOpacity, Image, Text, StyleSheet } from "react-native";
 import Like from "./Like";
 import { useNavigation } from "@react-navigation/native";
-import { handleLikeCollection, handleUnlikeCollection } from "../hooks/collectionActions";
+// import { handleLikeCollection, handleUnlikeCollection } from "../hooks/collectionActions";
 import getUserId from "../hooks/getUserId";
 import { useState, React } from "react";
 import { handleLike } from "../hooks/poemActions";
@@ -13,7 +13,6 @@ const AuthorCard = ({ collection, handleRefresh }) => {
   const navigation = useNavigation();
   const collectionId = collection._id
   const userId = getUserId();
-  const userIsCreator = collection.user === userId;
 
   const handleLikeCollection = async () => {
     try {
@@ -48,6 +47,7 @@ const AuthorCard = ({ collection, handleRefresh }) => {
               inLikes={collection.likes.includes(userId)}
               handleLike={handleLikeCollection}
               handleDislike={handleUnlikeCollection}
+              handleRefresh={handleRefresh}
             />
             <Text>{collection.likes.length}</Text>
           </View>

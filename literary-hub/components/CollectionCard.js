@@ -86,7 +86,7 @@ const CollectionCard = ({ collection, handleRefresh }) => {
   return (
     <TouchableOpacity
       style={styles.card}
-      onPress={() => navigation.navigate("CollectionScreen", { collection })}
+      onPress={() => navigation.navigate("CollectionScreen", { collection, handleRefresh })}
     >
       <View style={styles.container}>
         <View style={styles.info}>

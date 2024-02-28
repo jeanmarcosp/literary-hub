@@ -8,17 +8,19 @@ export const markPoemAsRead = async (userId, poemId) => {
   }
 };
 
-export const handleLike = async (userId, poemId) => {
+export const handleLike = async (userId, poemId, handleRefresh) => {
   try {
     await axios.put(`${ROOT_URL}/poems/${poemId}/${userId}/like`);
+    handleRefresh()
   } catch (error) {
     console.error('Error liking poem:', error);
   }
 };
 
-export const handleDislike = async (userId, poemId) => {
+export const handleDislike = async (userId, poemId, handleRefresh) => {
   try {
     await axios.put(`${ROOT_URL}/poems/${poemId}/${userId}/unlike`);
+    handleRefresh()
   } catch (error) {
     console.error('Error unliking poem:', error);
   }

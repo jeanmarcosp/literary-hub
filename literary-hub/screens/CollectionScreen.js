@@ -9,44 +9,47 @@ import axios from "axios";
 import getUserId from '../hooks/getUserId';
 import { poemToPage } from '../hooks/poemActions';
 import PoemList from '../components/PoemList';
+import { handleLike, handleDislike } from '../hooks/poemActions';
 
 // const CollectionScreen = ({poems, title, showAuthor = true, showCreator = true}) => {
 const CollectionScreen = ({ route }) => {
   const { collection } = route.params;
   const navigation = useNavigation();
-  const isAuthor = !collection.username;
+  const hasAuthor = collection.username != undefined;
   const userId = getUserId();
-
+  const userIsCreator = collection.user === userId;
+  
   const poemIds = collection.poemsInCollection;
+  const collectionId = collection._id;
 
   // fetch poems by the IDs in poemIds
   const [poems, setPoems] = useState([])
   const [userLikedPoems, setUserLikedPoems] = useState([]);
 
+  const fetchPoems = async() => {
+    try {
+      const response = await axios.get(`${ROOT_URL}/poems-by-ids`, {
+        params: {
+          poemIds: poemIds,
+        },
+      });
+      setPoems(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchLikedPoems = async () => {
+    try { 
+      const response = await axios.get(`${ROOT_URL}/users/${userId}/likedPoems`);
+      setUserLikedPoems(response.data); 
+    } catch (error) {
+      console.error('Error fetching liked poems:', error);
+    }
+  };
+
   useEffect(() => {
-    const fetchPoems = async() => {
-      try {
-        const response = await axios.get(`${ROOT_URL}/poems-by-ids`, {
-          params: {
-            poemIds: poemIds,
-          },
-        });
-        setPoems(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
     fetchPoems();
-
-    const fetchLikedPoems = async () => {
-      try { 
-        const response = await axios.get(`${ROOT_URL}/users/${userId}/likedPoems`);
-        setUserLikedPoems(response.data); 
-      } catch (error) {
-        console.error('Error fetching liked poems:', error);
-      }
-    };
-
     fetchLikedPoems();
   }, [])
 
@@ -64,11 +67,15 @@ const CollectionScreen = ({ route }) => {
         <View style={styles.poem}>
           <View style={styles.poemInfo}>
           <Text style={styles.poemName}>{poem.title}</Text>
-          {!isAuthor && (
+          {hasAuthor && (
             <Text style={styles.poemAuthor}>{poem.author}</Text>
           )}
           </View>
-          <Like />
+          <Like 
+            inLikes={userLikedPoems.includes(poemId)}
+            handleLike={() => handleLike(userId, poemId, () => fetchPoems)}
+            handleDislike={() => handleDislike(userId, poemId, () => fetchPoems)}
+          />
         </View>
       </TouchableOpacity>
       
@@ -91,6 +98,23 @@ const CollectionScreen = ({ route }) => {
   const handleEditCollection = () => {
     navigation.navigate("EditCollectionScreen", { collection })
   }
+
+  const handleLikeCollection = async () => {
+    try {
+      await axios.put(`${ROOT_URL}/collections/${collectionId}/${userId}/like`);
+    } catch (error) {
+      console.error("Error liking collection:", error);
+    }
+  };
+
+  const handleUnlikeCollection = async () => {
+    try {
+      await axios.put(`${ROOT_URL}/collections/${collectionId}/${userId}/unlike`);
+    } catch (error) {
+      console.error("Error unliking collection:", error);
+
+    }
+  };
   
   return (
     <View style={styles.container}>
@@ -107,15 +131,19 @@ const CollectionScreen = ({ route }) => {
 
         <View style={styles.collectionInfo}>
           <Text style={styles.collectionName}>{collection.title}</Text>
-          {!isAuthor && (
+          {hasAuthor && (
             <Text style={styles.collectionAuthor}>@{collection.username}</Text>
             )}
           <View style={styles.options}>
             <View style={styles.likes}>
-              <Like />
+              <Like
+                inLikes={collection.likes.includes(userId)}
+                handleLike={handleLikeCollection}
+                handleDislike={handleUnlikeCollection}
+              />
               <Text style={styles.collectionLikeNumber}>{collection.likes.length}</Text>
             </View>
-            {isAuthor && (
+            {hasAuthor && userIsCreator && (
               <Ionicons name="create" size={24} color="white" onPress={handleEditCollection}/>
             )}
             
