@@ -3,6 +3,7 @@ import { View, Text, ImageBackground, StyleSheet, TouchableOpacity } from 'react
 import { useNavigation } from "@react-navigation/native";
 import { poemToPage } from '../../hooks/poemActions';
 import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from 'expo-linear-gradient';
 
 const DailyPoem = () => {
   const [poem, setPoem] = useState(null);
@@ -51,13 +52,17 @@ const DailyPoem = () => {
             resizeMode="cover"
             style={styles.poemOfTheDay}
             imageStyle={{ borderRadius: 10, opacity: 0.8 }}>
+              <LinearGradient
+                colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.5)']} // Adjust gradient colors and opacity here
+                style={styles.gradient}
+              />
               <View style={styles.streakContainer}>
                 <Text style={styles.streak}>12</Text>
                 <Ionicons name="flame" size={14} color="#EE6F3F" />
               </View>
               <View style={styles.poemOfTheDayAction}>
                 <Text style={styles.poemOfTheDayText}>Poem of the Day</Text>
-                <Ionicons name="arrow-forward-circle" size={30} color="#000" />
+                <Ionicons name="arrow-forward-circle" size={30} color="#fff" />
               </View>
             </ImageBackground>
         </TouchableOpacity>
@@ -68,19 +73,24 @@ const styles = StyleSheet.create({
   poemOfTheDayContainer: {
     marginTop: 20,
     position: 'relative',
-    borderWidth: 2,
-    borderColor: '#D3D3D3',
-    borderRadius: 12,
+    // borderWidth: 3,
+    // borderColor: '#D6B6B6',
+    // borderRadius: 14,
   },
 
   poemOfTheDay: {
     height: 130,
   },
 
+  gradient: {
+    ...StyleSheet.absoluteFillObject,
+    borderRadius: 10,
+  },
+
   streakContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#D3D3D3',
+    alignItems: 'baseline',
+    backgroundColor: '#393939',
     borderBottomLeftRadius: 10,
     borderTopRightRadius: 10,
     paddingHorizontal: 10,
@@ -107,7 +117,7 @@ const styles = StyleSheet.create({
   },
 
   poemOfTheDayText: {
-    color: '#000',
+    color: '#fff',
     fontFamily: 'Sarabun-ExtraBold',
     fontSize: 25,
   },
