@@ -10,10 +10,16 @@
     "preview": {
       "distribution": "internal"
     },
-    "production": {}
-  },
-  "env": {
-    "OPENAI_KEY": "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"
+    "production": {
+      "env": {
+        "OPENAI_KEY": "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"
+      }
+    },
+    "test": {
+      "env": {
+        "OPENAI_KEY": "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"
+      }
+    }
   },
   "submit": {
     "production": {

@@ -86,32 +86,37 @@ const Comment = ({
 
   return (
     <View style={styles.container}>
-      <View>
-        <Image
-          source={{ uri: commenter?.profilePicture }}
-          style={styles.userPic}
-        />
+      <View style={styles.commenterInfo}>
+        <View>
+          <Image
+            source={{ uri: commenter?.profilePicture }}
+            style={styles.userPic}
+          />
+        </View>
+        <View style={styles.textContainer}>
+          <Text style={styles.username}>@{commenter.username}</Text>
+          <Text style={styles.text}>{text}</Text>
+        </View>
       </View>
-      <View style={styles.textContainer}>
-        <Text style={styles.username}>@{commenter.username}</Text>
-        <Text style={styles.text}>{text}</Text>
+
+      <View style={styles.commentAction}>
+        {userId === user && (
+          <Ionicons
+            name="trash-outline"
+            size={24}
+            color="red"
+            onPress={handleDeleteComment}
+          />
+        )}
+        <View style={styles.likeContainer}>
+          <Like
+            inLikes={commenter?.likedComments?.includes(commentId)}
+            handleLike={handleLikeComment}
+            handleDislike={handleUnlikeComment}
+          />
+          <Text style={styles.likeNumber}>{likeCount}</Text>
+        </View>
       </View>
-      <View style={styles.likeContainer}>
-        <Like
-          inLikes={commenter?.likedComments?.includes(commentId)}
-          handleLike={handleLikeComment}
-          handleDislike={handleUnlikeComment}
-        />
-        <Text style={styles.likeNumber}>{likeCount}</Text>
-      </View>
-      {userId === user && (
-        <Ionicons
-          name="trash-outline"
-          size={24}
-          color="black"
-          onPress={handleDeleteComment}
-        />
-      )}
     </View>
   );
 };
@@ -123,6 +128,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 20,
+    justifyContent: 'space-between',
+    paddingHorizontal: 15,
+  },
+
+  commenterInfo: {
+    flexDirection: 'row',
+    columnGap: 10,
   },
 
   userPic: {
@@ -130,7 +142,6 @@ const styles = StyleSheet.create({
     height: 40,
     backgroundColor: "#D9D9D9",
     borderRadius: 100,
-    marginLeft: 15,
   },
 
   text: {
@@ -149,6 +160,12 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
 
+  commentAction: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    columnGap: 20,
+  },
+
   likeContainer: {
     alignItems: "center",
   },
@@ -161,7 +178,5 @@ const styles = StyleSheet.create({
   textContainer: {
     flexDirection: "column",
     alignItems: "center",
-    marginLeft: 15,
-    marginRight: 95,
   },
 });
