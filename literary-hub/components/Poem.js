@@ -295,6 +295,10 @@ const Poem = ({ route }) => {
             active={activePage}
             activeColor="#644980"
             passiveColor="#C3CBCD"
+            passiveDotWidth={8}
+            passiveDotHeight={8}
+            activeDotWidth={8}
+            activeDotHeight={8}
           />
         </View>
 
@@ -450,7 +454,7 @@ const styles = StyleSheet.create({
 
   pagination: {
     position: "absolute",
-    bottom: screenHeight * 0.1,
+    bottom: screenHeight * 0.13,
     alignItems: "center",
   },
 
@@ -546,12 +550,6 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     textAlign: "center",
-  },
-
-  pagination: {
-    position: "absolute",
-    bottom: screenHeight * 0.1,
-    alignItems: "center",
   },
 
   modalBackground: {
