@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { React, useState } from 'react'
+import { useEffect } from 'react';
 
 const Like = ({ inLikes, handleLike, handleDislike }) => {
   const [liked, setLiked] = useState(inLikes);

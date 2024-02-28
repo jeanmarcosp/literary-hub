@@ -26,45 +26,30 @@ const CollectionCard = ({ collection, handleRefresh }) => {
   const poemText = collection.poemsInCollection.length === 1 ? "poem" : "poems";
   const likeText = collection.likes.length === 1 ? "like" : "likes";
   const userIsCreator = collection.user === userId;
-
-  const [liked, setLiked] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false); //prob cause of liking lag on profile
-  const [likesCount, setLikesCount] = useState(collection.likes.length);
-  // const handleLikeCollection = async () => {
-  //   try {
-  //     const response = await axios.put(
-  //       `${ROOT_URL}/collections/${collectionId}/${userId}/like`
-  //     );
 
-  //     // If the request is successful, update the state or perform any other action
-  //     const updatedCollection = response.data;
+  const handleLikeCollection = async () => {
+    try {
+      const response = await axios.put(
+        `${ROOT_URL}/collections/${collectionId}/${userId}/like`
+      );
+      handleRefresh();
+    } catch (error) {
+      console.error("Error liking collection:", error);
+    }
+  };
 
-  //     // Set the liked state to true (or perform any other state update)
-  //     setLiked(true);
-  //     handleRefresh();
-  //   } catch (error) {
-  //     console.error("Error liking collection:", error);
-  //     // Handle errors or perform any other action
-  //   }
-  // };
+  const handleUnlikeCollection = async () => {
+    try {
+      const response = await axios.put(
+        `${ROOT_URL}/collections/${collectionId}/${userId}/unlike`
+      );
+      handleRefresh();
+    } catch (error) {
+      console.error("Error unliking collection:", error);
 
-  // const handleUnlikeCollection = async () => {
-  //   try {
-  //     const response = await axios.put(
-  //       `${ROOT_URL}/collections/${collectionId}/${userId}/unlike`
-  //     );
-
-  //     // If the request is successful, update the state or perform any other action
-  //     const updatedCollection = response.data;
-
-  //     // Set the liked state to false (or perform any other state update)
-  //     setLiked(false);
-  //     handleRefresh();
-  //   } catch (error) {
-  //     console.error("Error unliking collection:", error);
-  //     // Handle errors or perform any other action
-  //   }
-  // };
+    }
+  };
 
   const handleDeleteCollection = async () => {
     try {
@@ -98,24 +83,10 @@ const CollectionCard = ({ collection, handleRefresh }) => {
     setIsModalVisible(false);
   };
 
-  const updateLikes = async (isLike) => {
-    try {
-      if (!isLike) {
-        await handleUnlikeCollection(userId, collectionId);
-        setLikesCount(prevCount => prevCount - 1);
-      } else {
-        await handleLikeCollection(userId, collectionId);
-        setLikesCount(prevCount => prevCount + 1);
-      }
-    } catch (error) {
-      console.error("Error updating likes:", error);
-    }
-  };
-
   return (
     <TouchableOpacity
       style={styles.card}
-      onPress={() => navigation.navigate("CollectionScreen", { collection })}
+      onPress={() => navigation.navigate("CollectionScreen", { collection, handleRefresh })}
     >
       <View style={styles.container}>
         <View style={styles.info}>
@@ -147,10 +118,10 @@ const CollectionCard = ({ collection, handleRefresh }) => {
           <View style={styles.likes}>
             <Like
               inLikes={collection.likes.includes(userId)}
-              handleLike={() => updateLikes(true)}
-              handleDislike={() => updateLikes(false)}
+              handleLike={() => handleLikeCollection(userId, collectionId)}
+              handleDislike={() => handleUnlikeCollection(userId, collectionId)}
             />
-            <Text style={styles.likeNumber}>{likesCount}</Text>
+            <Text style={styles.likeNumber}>{collection.likes.length}</Text>
           </View>
         </View>
       </View>

@@ -80,30 +80,10 @@ const ExploreScreen = () => {
               </Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => setSegmentedControlView("Quotes")}>
-            <View
-              style={
-                segmentedControlView === "Quotes"
-                  ? styles.segmentedControlSelected
-                  : styles.segmentedControlUnselected
-              }
-            >
-              <Text
-                style={
-                  segmentedControlView === "Quotes"
-                    ? styles.segmentedControlSelectedText
-                    : styles.segmentedControlUnselectedText
-                }
-              >
-                Quotes
-              </Text>
-            </View>
-          </TouchableOpacity>
         </View>
         <View style={styles.leftAligned}>
           {segmentedControlView === "Collections" && <TrendingCollections />}
           {segmentedControlView === "Poems" && <TrendingPoems />}
-          {segmentedControlView === "Quotes" && <Quote />}
         </View>
         
       </ScrollView>
