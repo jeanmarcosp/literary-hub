@@ -7,16 +7,16 @@ import AuthorCard from "./AuthorCard";
 
 const TrendingCollections = () => {
   const [collections, setCollections] = useState([]);
+  const fetchCollections = async() => {
+    try {
+      const response = await axios.get(`${ROOT_URL}/trending-collections`);
+      setCollections(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
-    const fetchCollections = async() => {
-      try {
-        const response = await axios.get(`${ROOT_URL}/trending-collections`);
-        setCollections(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
     fetchCollections();
   }, [])
 
@@ -24,6 +24,7 @@ const TrendingCollections = () => {
     <View>
       <CollectionCard
               collection={item}
+              handleRefresh={fetchCollections}
             />
     </View>
   );
