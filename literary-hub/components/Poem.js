@@ -246,12 +246,6 @@ const Poem = ({ route }) => {
           >
             <View style={styles.reloadButton}>
               <Ionicons name="reload-outline" size={20} color="#000" />
-              {/* <BlurView
-                style={styles.absolute}
-                blurType="light"
-                blurAmount={10}
-                reducedTransparencyFallbackColor="white"
-              /> */}
             </View>
           </TouchableOpacity>
         </ImageBackground>

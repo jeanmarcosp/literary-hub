@@ -2,6 +2,7 @@ import {React, useEffect, useState} from 'react';
 import { View, Text, ImageBackground, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
 import { poemToPage } from '../../hooks/poemActions';
+import { Ionicons } from "@expo/vector-icons";
 
 const DailyPoem = () => {
   const [poem, setPoem] = useState(null);
@@ -49,8 +50,15 @@ const DailyPoem = () => {
             source={require('../../assets/poem-of-the-day.jpeg')}
             resizeMode="cover"
             style={styles.poemOfTheDay}
-            imageStyle={{ borderRadius: 10, opacity: 0.7 }}>
-            <Text style={styles.poemOfTheDayText}>Poem of the Day</Text>
+            imageStyle={{ borderRadius: 10, opacity: 0.8 }}>
+              <View style={styles.streakContainer}>
+                <Text style={styles.streak}>12</Text>
+                <Ionicons name="flame" size={14} color="#EE6F3F" />
+              </View>
+              <View style={styles.poemOfTheDayAction}>
+                <Text style={styles.poemOfTheDayText}>Poem of the Day</Text>
+                <Ionicons name="arrow-forward-circle" size={30} color="#000" />
+              </View>
             </ImageBackground>
         </TouchableOpacity>
     );
@@ -60,19 +68,48 @@ const styles = StyleSheet.create({
   poemOfTheDayContainer: {
     marginTop: 20,
     position: 'relative',
+    borderWidth: 2,
+    borderColor: '#D3D3D3',
+    borderRadius: 12,
   },
 
   poemOfTheDay: {
     height: 130,
   },
 
+  streakContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#D3D3D3',
+    borderBottomLeftRadius: 10,
+    borderTopRightRadius: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    columnGap: 5,
+    position: 'absolute',
+    top: 0,
+    right: 0,
+  },
+
+  streak: {
+    color: '#fff',
+    fontFamily: 'Sarabun-Medium',
+    fontSize: 16,
+  },
+
+  poemOfTheDayAction: {
+    flexDirection: 'row',
+    alignItems: 'end',
+    columnGap: 10,
+    position: 'absolute',
+    bottom: 15,
+    left: 20,
+  },
+
   poemOfTheDayText: {
     color: '#000',
     fontFamily: 'Sarabun-ExtraBold',
     fontSize: 25,
-    position: 'absolute',
-    bottom: 20,
-    left: 20,
   },
 });
 
