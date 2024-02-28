@@ -46,10 +46,10 @@ const DailyPoem = () => {
     return (
         <TouchableOpacity onPress={handlePress} style={styles.poemOfTheDayContainer}>
             <ImageBackground
-            source={require('../../assets/collection-images/default-collection-cover1.jpeg')}
+            source={require('../../assets/poem-of-the-day.jpeg')}
             resizeMode="cover"
             style={styles.poemOfTheDay}
-            imageStyle={{ borderRadius: 10 }}>
+            imageStyle={{ borderRadius: 10, opacity: 0.7 }}>
             <Text style={styles.poemOfTheDayText}>Poem of the Day</Text>
             </ImageBackground>
         </TouchableOpacity>
@@ -61,11 +61,13 @@ const styles = StyleSheet.create({
     marginTop: 20,
     position: 'relative',
   },
+
   poemOfTheDay: {
     height: 130,
   },
+
   poemOfTheDayText: {
-    color: '#fff',
+    color: '#000',
     fontFamily: 'Sarabun-ExtraBold',
     fontSize: 25,
     position: 'absolute',
