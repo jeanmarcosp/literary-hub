@@ -295,10 +295,6 @@ const Poem = ({ route }) => {
             active={activePage}
             activeColor="#644980"
             passiveColor="#C3CBCD"
-            passiveDotWidth={8}
-            passiveDotHeight={8}
-            activeDotWidth={8}
-            activeDotHeight={8}
           />
         </View>
 
