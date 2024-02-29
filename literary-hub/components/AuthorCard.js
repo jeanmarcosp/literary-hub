@@ -43,13 +43,13 @@ const AuthorCard = ({ collection, handleRefresh }) => {
       <View style={styles.container}>
         <View style={styles.topRow}>
           <View style={styles.likes}>
-          <Like
-              inLikes={collection.likes.includes(userId)}
-              handleLike={handleLikeCollection}
-              handleDislike={handleUnlikeCollection}
-              handleRefresh={handleRefresh}
+            <Like
+                inLikes={collection.likes.includes(userId)}
+                handleLike={handleLikeCollection}
+                handleDislike={handleUnlikeCollection}
+                handleRefresh={handleRefresh}
             />
-            <Text>{collection.likes.length}</Text>
+            <Text style={styles.likeNumber}>{collection.likes.length}</Text>
           </View>
         </View>
 
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
   container: {
     width: 150,
     height: 150,
-    padding: 14,
+    padding: 10,
     borderColor: "white",
     backgroundColor: "white",
     borderRadius: 12,
@@ -98,6 +98,11 @@ const styles = StyleSheet.create({
     columnGap: 5,
   },
 
+  likeNumber: {
+    fontFamily: 'Sarabun-Medium',
+    color: '#6C7476'
+  },
+
   authorInfo: {
     rowGap: 3,
   },
@@ -112,7 +117,7 @@ const styles = StyleSheet.create({
   },
 
   authorDates: {
-    fontFamily: 'Sarabun-Light',
+    fontFamily: 'Sarabun-Medium',
     color: '#6C7476'
   }
 

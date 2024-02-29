@@ -61,7 +61,7 @@ const AuthorList = () => {
         keyExtractor={(item) => item._id.toString()}
         renderItem={renderItem}
         horizontal
-        showsHorizontalScrollIndicator={true}
+        showsHorizontalScrollIndicator={false}
       />
     </View>
   );

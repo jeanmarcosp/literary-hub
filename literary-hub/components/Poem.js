@@ -246,12 +246,6 @@ const Poem = ({ route }) => {
           >
             <View style={styles.reloadButton}>
               <Ionicons name="reload-outline" size={20} color="#000" />
-              {/* <BlurView
-                style={styles.absolute}
-                blurType="light"
-                blurAmount={10}
-                reducedTransparencyFallbackColor="white"
-              /> */}
             </View>
           </TouchableOpacity>
         </ImageBackground>
@@ -456,7 +450,7 @@ const styles = StyleSheet.create({
 
   pagination: {
     position: "absolute",
-    bottom: screenHeight * 0.1,
+    bottom: screenHeight * 0.13,
     alignItems: "center",
   },
 
@@ -552,12 +546,6 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     textAlign: "center",
-  },
-
-  pagination: {
-    position: "absolute",
-    bottom: screenHeight * 0.1,
-    alignItems: "center",
   },
 
   modalBackground: {
