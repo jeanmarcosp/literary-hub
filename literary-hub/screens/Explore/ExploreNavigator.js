@@ -1,15 +1,17 @@
-import { createStackNavigator } from '@react-navigation/stack';
-import ExploreScreen from './ExploreScreen';
-import CollectionScreen from '../CollectionScreen';
-import PoemScreen from './PoemScreen';
-import Poem from '../../components/Poem';
+import { createStackNavigator } from "@react-navigation/stack";
+import ExploreScreen from "./ExploreScreen";
+import CollectionScreen from "../CollectionScreen";
+import PoemScreen from "./PoemScreen";
+import Poem from "../../components/Poem";
 
 const Stack = createStackNavigator();
+
+console.log("navigated")
 
 export default function ExploreNavigator() {
   return (
     <Stack.Navigator
-        screenOptions={{headerShown: false}}
+      screenOptions={{ headerShown: false, gestureEnabled: false }}
     >
       <Stack.Screen name="ExploreScreen" component={ExploreScreen} />
       <Stack.Screen name="SinglePoem" component={Poem} />

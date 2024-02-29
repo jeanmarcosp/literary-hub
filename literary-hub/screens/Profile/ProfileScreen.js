@@ -16,6 +16,7 @@ import getUserId from "../../hooks/getUserId";
 import axios from "axios";
 import PoemCard from "../../components/PoemCard";
 import CollectionCard from "../../components/CollectionCard";
+import { StatusBar } from "expo-status-bar";
 
 const ProfileScreen = () => {
   const userId = getUserId();
@@ -224,6 +225,7 @@ const ProfileScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar style="dark"></StatusBar>
       <TouchableOpacity onPress={() => navigation.navigate("SettingsScreen")}>
         <View style={styles.settingsButton}>
           <Ionicons name="settings-outline" size={26} color="#373F41" />
