@@ -66,10 +66,8 @@ const CollectionScreen = ({ route }) => {
       <TouchableOpacity onPress={() => navigateToSinglePoem(poem, poemId, userLikedPoems)}>
         <View style={styles.poem}>
           <View style={styles.poemInfo}>
-          <Text style={styles.poemName}>{poem.title}</Text>
-          {hasAuthor && (
+            <Text style={styles.poemName}>{poem.title}</Text>
             <Text style={styles.poemAuthor}>{poem.author}</Text>
-          )}
           </View>
           <Like 
             inLikes={userLikedPoems.includes(poemId)}
@@ -249,7 +247,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: 20,
+    marginTop: 25,
     paddingHorizontal: 40,
   },
 
