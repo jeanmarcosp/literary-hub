@@ -135,7 +135,8 @@ const CollectionBottomSheet = forwardRef((props, ref) => {
           }}
         >
           <TouchableOpacity style={styles.addToNewbutton} onPress={showDialog}>
-            <Text style={styles.addToNewbuttonText}>New Collection</Text>
+            <Ionicons name="copy-outline" size={20} color="#3C3C3C" />
+            <Text style={styles.addToNewbuttonText}>Create new collection</Text>
           </TouchableOpacity>
 
           <DialogInput
@@ -219,21 +220,23 @@ const styles = StyleSheet.create({
   },
 
   addToNewbutton: {
-    backgroundColor: "#644980",
-    padding: 10,
-    borderRadius: 200,
-    width: Dimensions.get("window").width * .4,
-    height: 50,
+    flexDirection: 'row',
+    columnGap: 10,
+    backgroundColor: "#F7F7F7",
+    borderColor: '#E1E1E1',
+    borderRadius: 10,
+    borderWidth: 1.3,
+    width: Dimensions.get("window").width * .8,
+    paddingVertical: 10,
     alignSelf: "center",
     alignItems: "center",
     justifyContent: 'center',
-    borderWidth:1,
-    borderColor:"#644980",
   },
 
   addToNewbuttonText: {
-    color: "white",
-    fontWeight: "bold",
+    fontFamily: 'Sarabun-Bold',
+    fontSize: 16,
+    color: '#3C3C3C'
   },
 
   buttonContainer: {
@@ -304,7 +307,7 @@ const styles = StyleSheet.create({
     borderColor: "#644980",
     borderWidth: 1,
   },
-  
+
   addedButton: {
     flexDirection: "row",
     alignItems: "center",
