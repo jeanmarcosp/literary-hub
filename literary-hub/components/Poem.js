@@ -193,6 +193,7 @@ const Poem = ({ route }) => {
   return (
     <View>
       {collection && (
+        
         <ImageBackground
           source={
             collection.coverArt
@@ -214,10 +215,10 @@ const Poem = ({ route }) => {
         </ImageBackground>
       )}
 
-      {/* {!collection && fromHome && (
+      {/* {!collection && !fromHome && (
         <TouchableOpacity onPress={() => {navigation.goBack()}}>
           <View style={styles.backButton}>
-            <Ionicons name="chevron-back" size={23} color="white" />
+            <Ionicons name="chevron-back" size={23} color="red" />
           </View>
         </TouchableOpacity>
       )} */}
@@ -248,6 +249,11 @@ const Poem = ({ route }) => {
               <Ionicons name="reload-outline" size={20} color="#000" />
             </View>
           </TouchableOpacity>
+          <TouchableOpacity onPress={() => {navigation.goBack()}}>
+          <View style={styles.backButton}>
+            <Ionicons name="chevron-back" size={23} color="white" />
+          </View>
+        </TouchableOpacity>
         </ImageBackground>
 
         <ScrollView
@@ -486,13 +492,10 @@ const styles = StyleSheet.create({
   },
 
   backButton: {
-    position: 'absolute',
     left: 20,
     top: 40,
-    backgroundColor: '#00000080',
+    backgroundColor: '#00000',
     borderRadius: 100,
-    alignSelf: 'baseline',
-    padding: 5,
   },
 
   image: {
