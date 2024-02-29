@@ -142,7 +142,7 @@ const CollectionScreen = ({ route }) => {
               <Text style={styles.collectionLikeNumber}>{collection.likes.length}</Text>
             </View>
             {hasAuthor && userIsCreator && (
-              <Ionicons name="create" size={24} color="white" onPress={handleEditCollection}/>
+              <Ionicons name="create-outline" size={24} color="white" onPress={handleEditCollection}/>
             )}
             
           </View>
