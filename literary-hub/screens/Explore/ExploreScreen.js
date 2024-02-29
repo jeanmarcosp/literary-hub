@@ -27,11 +27,14 @@ const ExploreScreen = () => {
 
     setSearchResults(results);
   }
+  const handleBlur = ()=>{
+    setSearchResults([])
+  }
   
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
-        <SearchBar onSearch={handleSearch}/>
+        <SearchBar onSearch={handleSearch} onBlur={handleBlur}/>
         <DailyPoem/>
         <Text style={styles.text}>Author Collections</Text>
         <AuthorList />

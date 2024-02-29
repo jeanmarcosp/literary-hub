@@ -3,7 +3,7 @@ import { View, TextInput, FlatList, Text, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 
-const SearchBar = ({onSearch}) => {
+const SearchBar = ({onSearch, onBlur}) => {
   const [searchText, setSearchText] = useState("");
   const [searchResults, setSearchResults] = useState([]);
 
@@ -37,7 +37,7 @@ const SearchBar = ({onSearch}) => {
         placeholderTextColor="#888888"
         value={searchText}
         onChangeText={(text) => handleSearch(text)}
-        onBlur={()=> setSearchResults([])}
+        onBlur={onBlur}
       />
       
     </View>
