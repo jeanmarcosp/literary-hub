@@ -192,12 +192,7 @@ const Poem = ({ route }) => {
 
   return (
     <View>
-<<<<<<< HEAD
       {/* {collection && (
-=======
-      {collection && (
-        
->>>>>>> be830da82232974412cc69a04755df7ffecb1d5d
         <ImageBackground
           source={
             collection.coverArt
@@ -227,6 +222,7 @@ const Poem = ({ route }) => {
           </View>
         </TouchableOpacity>
       )} */}
+
 
       <View
         style={[
