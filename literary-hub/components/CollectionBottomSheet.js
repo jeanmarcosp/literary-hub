@@ -209,6 +209,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
   },
+
   containerHeadline: {
     fontFamily: "HammersmithOne",
     fontSize: 24,
@@ -216,6 +217,7 @@ const styles = StyleSheet.create({
     padding: 20,
     color: "#373F41",
   },
+
   addToNewbutton: {
     backgroundColor: "#644980",
     padding: 10,
@@ -228,31 +230,37 @@ const styles = StyleSheet.create({
     borderWidth:1,
     borderColor:"#644980",
   },
+
   addToNewbuttonText: {
     color: "white",
     fontWeight: "bold",
   },
+
   buttonContainer: {
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
     justifyContent:'center',
   },
+
   coverArt: {
     width: 75,
     height: 75,
     borderRadius: 12,
   },
+
   addText: {
     color: "#644980",
     fontWeight: "bold",
     marginLeft: 5,
   },
+
   addedText: {
     color: "white",
     fontWeight: "bold",
     marginLeft: 5,
   },
+
   collectionRow: {
     flexDirection: "row",
     width: Dimensions.get("window").width * 1,
@@ -260,26 +268,31 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: "white",
   },
+
   collectionInfo: {
     flexDirection: "column",
     width: Dimensions.get("window").width * 0.35,
     marginLeft: 10,
     marginRight: 30,
   },
+
   collectionTitle: {
     fontFamily: "HammersmithOne",
     fontSize: 18,
     fontWeight: "bold",
     padding: 5,
   },
+
   collectionLength: {
     fontFamily: "Sarabun-ExtraLight",
     fontSize: 16,
     padding: 5,
   },
+
   collectionPoems: {
     fontSize: 10,
   },
+
   addButton: {
     flexDirection: "row",
     alignItems: "center",
@@ -291,6 +304,7 @@ const styles = StyleSheet.create({
     borderColor: "#644980",
     borderWidth: 1,
   },
+  
   addedButton: {
     flexDirection: "row",
     alignItems: "center",
