@@ -192,7 +192,7 @@ const Poem = ({ route }) => {
 
   return (
     <View>
-      {collection && (
+      {/* {collection && (
         <ImageBackground
           source={
             collection.coverArt
@@ -212,7 +212,8 @@ const Poem = ({ route }) => {
             </TouchableOpacity>
           )}
         </ImageBackground>
-      )}
+      )} */}
+
 
       {/* {!collection && fromHome && (
         <TouchableOpacity onPress={() => {navigation.goBack()}}>
@@ -227,7 +228,7 @@ const Poem = ({ route }) => {
           styles.poemContainer,
           {
             height: collection
-              ? Dimensions.get("window").height - 100
+              ? Dimensions.get("window").height
               : Dimensions.get("window").height,
           },
         ]}
@@ -240,6 +241,15 @@ const Poem = ({ route }) => {
           }
           style={styles.image}
         >
+          {!fromHome && (
+            <TouchableOpacity
+              style={styles.bannerContainer}
+              onPress={() => navigation.goBack()}
+            >
+              <Ionicons name="chevron-back" size={24} color="white" />
+              <Text style={styles.collectionTitle}>{collection.title}</Text>
+            </TouchableOpacity>
+          )}
           <TouchableOpacity
             onPress={handleGenerateImage}
             style={styles.reloadContainer}
@@ -523,7 +533,7 @@ const styles = StyleSheet.create({
   collectionTitle: {
     color: "white",
     fontFamily: "HammersmithOne",
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: "bold",
     textAlign: "center",
   },
@@ -531,9 +541,8 @@ const styles = StyleSheet.create({
   bannerContainer: {
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    top: 60,
+    top: 45,
+    left: 15,
   },
 
   dummyContainer: {
