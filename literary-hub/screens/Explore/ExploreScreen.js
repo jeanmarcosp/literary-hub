@@ -89,7 +89,7 @@ const ExploreScreen = () => {
       </ScrollView>
 
        {/* Overlay the SearchResult component below the search bar */}
-       {searchResults.length !== 0 &&
+       {searchResults.length != 0 &&
         <ScrollView style={styles.overlayResultContainer} contentInset= {{bottom: 80}}>
             {searchResults['poems']?.map((poem) => (
               <SearchResult
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
     right: 0,
     zIndex: 999, 
     backgroundColor: 'white',
-    height: 700,
+    height: 600,
   },
 
   overlayResult: {

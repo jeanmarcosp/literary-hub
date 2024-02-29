@@ -37,6 +37,7 @@ const SearchBar = ({onSearch}) => {
         placeholderTextColor="#888888"
         value={searchText}
         onChangeText={(text) => handleSearch(text)}
+        onBlur={()=> setSearchResults([])}
       />
       
     </View>
