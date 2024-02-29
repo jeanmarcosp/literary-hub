@@ -132,6 +132,7 @@ const CollectionBottomSheet = forwardRef((props, ref) => {
           style={{
             backgroundColor: "white",
             width: Dimensions.get("screen").width,
+            marginBottom: 70,
           }}
         >
           <TouchableOpacity style={styles.addToNewbutton} onPress={showDialog}>
@@ -148,20 +149,22 @@ const CollectionBottomSheet = forwardRef((props, ref) => {
           />
 
           {collections.map((collection) => (
-            <View key={collection._id} style={styles.collectionRow}>
+            <View key={collection._id}>
               <View style={styles.collectionRow}>
-                <Image
-                  source={{ uri: collection?.coverArt }}
-                  style={styles.coverArt}
-                />
-                <View style={styles.collectionInfo}>
-                  <Text style={styles.collectionTitle}>{collection.title}</Text>
-                  <Text style={styles.collectionLength}>
-                    {collection.poemsInCollection.length}{" "}
-                    {collection.poemsInCollection.length === 1
-                      ? "poem"
-                      : "poems"}
-                  </Text>
+                <View style={styles.collectionMain}>
+                  <Image
+                    source={{ uri: collection?.coverArt }}
+                    style={styles.coverArt}
+                  />
+                  <View style={styles.collectionInfo}>
+                    <Text style={styles.collectionTitle}>{collection.title}</Text>
+                    <Text style={styles.collectionLength}>
+                      {collection.poemsInCollection.length}{" "}
+                      {collection.poemsInCollection.length === 1
+                        ? "poem"
+                        : "poems"}
+                    </Text>
+                  </View>
                 </View>
                 {isPoeminCollection(
                   props.poem._id,
@@ -226,11 +229,12 @@ const styles = StyleSheet.create({
     borderColor: '#E1E1E1',
     borderRadius: 10,
     borderWidth: 1.3,
-    width: Dimensions.get("window").width * .8,
+    width: Dimensions.get("window").width - 50,
     paddingVertical: 10,
     alignSelf: "center",
     alignItems: "center",
     justifyContent: 'center',
+    marginBottom: 30,
   },
 
   addToNewbuttonText: {
@@ -247,8 +251,8 @@ const styles = StyleSheet.create({
   },
 
   coverArt: {
-    width: 75,
-    height: 75,
+    width: 60,
+    height: 60,
     borderRadius: 12,
   },
 
@@ -266,30 +270,35 @@ const styles = StyleSheet.create({
 
   collectionRow: {
     flexDirection: "row",
-    width: Dimensions.get("window").width * 1,
     alignItems: "center",
-    padding: 10,
     backgroundColor: "white",
+    marginBottom: 20,
+    justifyContent: 'space-between',
+    paddingHorizontal: 25,
+  },
+
+  collectionMain: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    columnGap: 10,
   },
 
   collectionInfo: {
     flexDirection: "column",
+    rowGap: 5,
     width: Dimensions.get("window").width * 0.35,
-    marginLeft: 10,
-    marginRight: 30,
   },
 
   collectionTitle: {
     fontFamily: "HammersmithOne",
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "bold",
-    padding: 5,
   },
 
   collectionLength: {
-    fontFamily: "Sarabun-ExtraLight",
-    fontSize: 16,
-    padding: 5,
+    fontFamily: "Sarabun-Regular",
+    fontSize: 14,
+    color: '#6C7476',
   },
 
   collectionPoems: {
@@ -301,7 +310,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "white",
-    paddingVertical: 5,
+    paddingVertical: 3,
     paddingHorizontal: 30,
     borderRadius: 20,
     borderColor: "#644980",
