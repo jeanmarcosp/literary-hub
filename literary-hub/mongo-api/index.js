@@ -1087,17 +1087,17 @@ app.delete("/delete-comment", async (req, res) => {
     if (!poem) {
       return res.status(404).json({ message: "Poem not found" });
     }
-    
+    //console.log(poem);
     const updatedPoem = await Poem.findByIdAndUpdate(
       poemId,
-      { $pull: { comments: commentId } },
+      { $pull: { comments: { _id: commentId } } },
       { new: true }
     );
 
     if (!updatedPoem) {
       return res.status(404).json({ message: "could not remove comment from poem" });
     }
-
+    //console.log(updatedPoem);
     const user = await User.findById(userId);
 
     if (!user) {
