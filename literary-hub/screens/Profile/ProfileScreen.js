@@ -17,6 +17,7 @@ import axios from "axios";
 import PoemCard from "../../components/PoemCard";
 import CollectionCard from "../../components/CollectionCard";
 import { poemToPage } from '../../hooks/poemActions';
+import { StatusBar } from "expo-status-bar";
 
 
 const ProfileScreen = () => {
@@ -237,6 +238,7 @@ const ProfileScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar style="dark"></StatusBar>
       <TouchableOpacity onPress={() => navigation.navigate("SettingsScreen")}>
         <View style={styles.settingsButton}>
           <Ionicons name="settings-outline" size={26} color="#373F41" />
