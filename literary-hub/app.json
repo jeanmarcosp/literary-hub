@@ -22,7 +22,7 @@
     ],
     "version": "3.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon-new.png",
+    "icon": "./assets/icon_new.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
