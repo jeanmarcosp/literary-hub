@@ -43,6 +43,7 @@ import OpenAI from "openai";
 import Dots from "react-native-dots-pagination";
 
 const Poem = ({ route }) => {
+  //console.log(route);
   const { poem, poemId, userLikedPoems, fromHome, collection, comments } =
     route.params || {};
   const navigation = useNavigation();

@@ -15,6 +15,7 @@ import getUserId from "../hooks/getUserId";
 import PoemCard from "../components/PoemCard";
 import CollectionCard from "../components/CollectionCard";
 
+
 const UserDetailScreen = ({ route }) => {
   const userId = getUserId();
   const [otherUser, setOtherUser] = useState({});
@@ -29,8 +30,8 @@ const UserDetailScreen = ({ route }) => {
 
   const handlePoemPress = (poem) => {
     console.log("pressed poem card");
-    navigation.navigate("PoemDetailScreen", { poem: poem, isLiked: true });
-  };
+    navigation.navigate('SinglePoem', { poem, poemId, userLikedPoems, fromHome:false, collection });
+    };
 
   const handlePress = () => {
     if (callbacks && callbacks.handleFollow && following) {

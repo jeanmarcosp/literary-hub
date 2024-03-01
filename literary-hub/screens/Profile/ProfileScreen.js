@@ -16,6 +16,8 @@ import getUserId from "../../hooks/getUserId";
 import axios from "axios";
 import PoemCard from "../../components/PoemCard";
 import CollectionCard from "../../components/CollectionCard";
+import { poemToPage } from '../../hooks/poemActions';
+
 
 const ProfileScreen = () => {
   const userId = getUserId();
@@ -27,14 +29,24 @@ const ProfileScreen = () => {
     useState("My Collections");
   const navigation = useNavigation();
 
+  const navigateToSinglePoem = (poem, poemId, userLikedPoems ) => {
+    console.log(poem);
+    poemToPage([poem], 15);
+    navigation.navigate('SinglePoem', { poem, poemId, userLikedPoems, fromHome:false }); 
+  };
+
+  
+
   const handlePoemPress = (poem) => {
     console.log("pressed poem card");
-    navigation.navigate("PoemDetailScreen", {
-      poem: poem,
-      isLiked: true,
-      comments: poem.comments,
-      // handleRefresh: { fetchProfile },
-    });
+    
+
+    //console.log(poem);
+    const poemId = poem._id;
+    //console.log(poemId);
+    const likedPoems = user?.likedPoems;
+    //console.log(likedPoems);
+    navigateToSinglePoem(poem, poemId, likedPoems);
   };
 
   // this gets the users information stored in user?.
@@ -59,6 +71,7 @@ const ProfileScreen = () => {
 
   // fetch poems
   useEffect(() => {
+    
     const fetchLikedPoems = async () => {
       try {
         const poemIdsToFetch = user?.likedPoems;
