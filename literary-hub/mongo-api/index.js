@@ -1202,3 +1202,17 @@ app.get("/daily-poems/:date", async (req, res) => {
   }
 
 });
+
+app.get('/trending-poems', async (req, res) => {
+  try {
+    const trendingPoems = await Poem.find()
+      .sort({ likes: -1 })
+      .limit(3); 
+
+    res.status(200).json(trendingPoems);
+    console.log(trendingPoems);
+  } catch (error) {
+    console.error('Error finding trending poems:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
