@@ -5,26 +5,7 @@ import axios from "axios";
 
 
 const TrendingPoems = () => {
-  const poemData = [
-    {
-      id: 1,
-      title: "October",
-      excerpt: "O hushed October morning mild, Thy leaves have ripened to the fall",
-      author: "Robert Frost",
-    },
-    {
-      id: 2,
-      title: "The Weary Blues",
-      excerpt: "Droning a drowsy syncopated tune, Rocking back and forth to a mellow croon,",
-      author: "Langston Hughes",
-    },
-    {
-      id: 3,
-      title: "Morning in the Burned House",
-      excerpt: "In the burned house I am eating breakfast. You understand: there is no house, there is no breakfast,",
-      author: "Margaret Atwood",
-    },
-  ];
+  
   const [trendingPoems, setTrendPoems] = useState([]);
 
   const fetchPoems = async() => {
@@ -47,16 +28,31 @@ const TrendingPoems = () => {
         style={styles.poemList}
         data={trendingPoems}
         keyExtractor={(item) => item._id.toString()}
-        renderItem={({ item }) => (
-          <>
+        renderItem={({ item }) => {
+          const wordCount = item.content.split(" ").length;
+          let estimatedTime = parseInt(wordCount) / 200;
+          let unit;
+
+          if (estimatedTime < 1) {
+            estimatedTime = "< " + String(1);
+            unit = "min";
+          } else {
+            estimatedTime = String(Math.round(estimatedTime));
+            unit = "min";
+          }
+
+          //console.log(estimatedTime);
+
+          return (
             <PoemCard
               title={item.title}
               author={item.author}
-              excerpt={item.content.split('\n').slice(0, 2).join('\n')} 
-              likes={item.likes.length}
+              excerpt={item.content.split('\n').slice(0, 2).join('\n')}
+              likesCount={item.likes.length}
+              timeEstimate={estimatedTime} 
             />
-          </>
-        )}
+          );
+        }}
       />
     </View>
   );

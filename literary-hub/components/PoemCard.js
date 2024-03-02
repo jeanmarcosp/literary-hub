@@ -12,6 +12,7 @@ const PoemCard = ({
   author,
   excerpt,
   likes,
+  timeEstimate,
   inLikes,
   handleRefresh,
   onPress,
@@ -19,7 +20,6 @@ const PoemCard = ({
 }) => {
   
   const likeText = likes === 1 ? "like" : "likes";
-  timeEstimate = Math.ceil(excerpt.length / 200);
   const loggedUser = getUserId();
 
   const [liked, setLiked] = useState(false);
