@@ -1,9 +1,14 @@
 import "react-native-gesture-handler";
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
 import Like from "./Like";
 import axios from "axios";
 import getUserId from "../hooks/getUserId";
+import { useNavigation } from "@react-navigation/native";
+import { poemToPage } from '../hooks/poemActions';
+
+
+
 
 const PoemCard = ({
   poemId,
@@ -21,8 +26,49 @@ const PoemCard = ({
   
   const likeText = likes === 1 ? "like" : "likes";
   const loggedUser = getUserId();
-
+  const navigation = useNavigation();
   const [liked, setLiked] = useState(false);
+  const [user, setUser] = useState({});
+
+
+  
+  const navigateToSinglePoem = (poem, poemId, userLikedPoems ) => {
+    //console.log(poem);
+    poemToPage([poem], 15);
+    navigation.navigate('SinglePoem', { poem, poemId, userLikedPoems, fromHome:false }); 
+  };
+
+  const fetchProfile = async () => {
+    try {
+      //console.log(loggedUser);
+      const response = await axios.get(`${ROOT_URL}/profile/${loggedUser}`);
+      const user = response.data.user;
+
+      setUser(user);
+    } catch (error) {
+      //console.log("didn't get user");
+      console.log("error", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchProfile();
+  }, [])
+
+  // / i need to get poem, poemId, userLikedPoems
+  const handlePoemPress = (poemId) => {
+    axios.get(`${ROOT_URL}/poem/${poemId}`)
+      .then((response) => {
+        const updatedPoem = response.data;
+        console.log(updatedPoem);
+        console.log("pressed poem card");
+        const likedPoems = user?.likedPoems;
+        navigateToSinglePoem(updatedPoem, poemId, likedPoems);
+      })
+      .catch((error) => {
+        console.error("Error finding poem:", error);
+      });
+  };
 
   const handleLikePoem = async () => {
     try {
@@ -49,7 +95,7 @@ const PoemCard = ({
   };
 
   return (
-    <TouchableOpacity style={styles.card} onPress={onPress}>
+    <TouchableOpacity style={styles.card} onPress={() => handlePoemPress(poemId)}>
       <View style={styles.container}>
         <View style={styles.leftInfo}>
           <View style={styles.mainInfo}>

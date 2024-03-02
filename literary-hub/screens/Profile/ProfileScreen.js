@@ -31,7 +31,7 @@ const ProfileScreen = () => {
   const navigation = useNavigation();
 
   const navigateToSinglePoem = (poem, poemId, userLikedPoems ) => {
-    console.log(poem);
+    //console.log(poem);
     poemToPage([poem], 15);
     navigation.navigate('SinglePoem', { poem, poemId, userLikedPoems, fromHome:false }); 
   };

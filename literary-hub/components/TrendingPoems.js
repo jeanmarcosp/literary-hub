@@ -11,7 +11,6 @@ const TrendingPoems = () => {
   const [userLikedPoems, setUserLikedPoems] = useState([]);
   const userId = getUserId();
 
-
   const fetchPoems = async() => {
     try {
       console.log("pulling trending poems");
@@ -21,6 +20,7 @@ const TrendingPoems = () => {
       console.error(error);
     }
   };
+  
 
   useEffect(() => {
     const fetchLikedPoems = async () => {
@@ -47,7 +47,6 @@ const TrendingPoems = () => {
       <FlatList
         style={styles.poemList}
         data={trendingPoems}
-        keyExtractor={(item) => item._id.toString()}
         renderItem={({ item }) => {
           const wordCount = item.content.split(" ").length;
           let estimatedTime = parseInt(wordCount) / 200;
@@ -65,6 +64,8 @@ const TrendingPoems = () => {
 
           return (
             <PoemCard
+              poemId={item._id}
+              userId={userId}
               title={item.title}
               author={item.author}
               excerpt={item.content.split('\n').slice(0, 2).join('\n')}
