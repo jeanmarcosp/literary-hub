@@ -32,24 +32,16 @@ const ProfileScreen = () => {
 
   const navigateToSinglePoem = (poem, poemId, userLikedPoems ) => {
     console.log("i am here");
-    poemToPage([poem], 15);
     console.log(poem);
     console.log("POEM IS PRESSED????");
     navigation.navigate('SinglePoem', { poem, poemId, userLikedPoems, fromHome:false }); 
   };
 
   
-
   const handlePoemPress = (poem) => {
     console.log("pressed poem card");
-    console.log("this is poem");
-    console.log(poem);
     const poemId = poem._id;
-    console.log("this is poem id");
-    console.log(poemId);
     const likedPoems = user?.likedPoems;
-    console.log("these are liked poems");
-    console.log(likedPoems);
     navigateToSinglePoem(poem, poemId, likedPoems);
   };
 
@@ -103,6 +95,10 @@ const ProfileScreen = () => {
 
     fetchLikedPoems();
   }, [user]);
+
+  if (poems) {
+    poemToPage(poems, 15);
+  }
 
   // fetch created collections
   useEffect(() => {
@@ -202,7 +198,7 @@ const ProfileScreen = () => {
     return (
       <FlatList
         data={poems}
-        keyExtractor={(item) => item._id.toString()}
+        keyExtractor={(item) => item._id}
         renderItem={({ item }) => (
           <PoemCard
             key={item._id}

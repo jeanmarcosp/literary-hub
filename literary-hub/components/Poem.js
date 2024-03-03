@@ -46,6 +46,8 @@ const Poem = ({ route }) => {
   //console.log(route);
   const { poem, poemId, userLikedPoems, fromHome, collection, comments } =
     route.params || {};
+
+    
   const navigation = useNavigation();
   const [annotationMode, handleAnnotationMode] = useState(false);
   const bottomSheetRef = useRef(null);

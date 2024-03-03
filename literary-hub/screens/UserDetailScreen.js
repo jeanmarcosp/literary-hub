@@ -30,6 +30,7 @@ const UserDetailScreen = ({ route }) => {
 
   const handlePoemPress = (poem) => {
     console.log("pressed poem card");
+    //console.log("this is where we are");
     navigation.navigate('SinglePoem', { poem, poemId, userLikedPoems, fromHome:false, collection });
     };
 

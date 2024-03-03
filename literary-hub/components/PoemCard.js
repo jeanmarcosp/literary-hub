@@ -33,11 +33,16 @@ const PoemCard = ({
 
   
   const navigateToSinglePoem = (poem, poemId, userLikedPoems ) => {
-    poemToPage([poem], 15);
-    console.log(poem);
-    console.log(poemId);
-    console.log(userLikedPoems);
-    navigation.navigate('SinglePoem', { poem, poemId, userLikedPoems, fromHome:false }); 
+    //console.log(poem);
+    // console.log(poem);
+    // console.log(poemId);
+    // console.log(userLikedPoems);
+    console.log("I AM GOING TO SINGLE POEM AT NOW");
+    const poemData = poem.poem ? poem.poem : poem;
+    console.log(poemData);
+    poemToPage([poemData], 15);
+    console.log(poemData);
+    navigation.navigate('SinglePoem', { poem:poemData, poemId, userLikedPoems, fromHome:false }); 
   };
 
   const fetchProfile = async () => {
