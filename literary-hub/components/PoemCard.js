@@ -37,11 +37,11 @@ const PoemCard = ({
     // console.log(poem);
     // console.log(poemId);
     // console.log(userLikedPoems);
-    console.log("I AM GOING TO SINGLE POEM AT NOW");
+    //console.log("I AM GOING TO SINGLE POEM AT NOW");
     const poemData = poem.poem ? poem.poem : poem;
-    console.log(poemData);
+    //console.log(poemData);
     poemToPage([poemData], 15);
-    console.log(poemData);
+    //console.log(poemData);
     navigation.navigate('SinglePoem', { poem:poemData, poemId, userLikedPoems, fromHome:false }); 
   };
 

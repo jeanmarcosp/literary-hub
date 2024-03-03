@@ -31,10 +31,12 @@ const ProfileScreen = () => {
   const navigation = useNavigation();
 
   const navigateToSinglePoem = (poem, poemId, userLikedPoems ) => {
-    console.log("i am here");
-    console.log(poem);
-    console.log("POEM IS PRESSED????");
-    navigation.navigate('SinglePoem', { poem, poemId, userLikedPoems, fromHome:false }); 
+    //console.log("i am here");
+    //console.log(poem);
+    //console.log("POEM IS PRESSED????");
+    const poemData = poem.poem ? poem.poem : poem;
+    poemToPage([poemData], 15);
+    navigation.navigate('SinglePoem', { poem:poemData, poemId, userLikedPoems, fromHome:false }); 
   };
 
   
