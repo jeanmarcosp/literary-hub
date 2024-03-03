@@ -242,7 +242,7 @@ const Poem = ({ route }) => {
           }
           style={styles.image}
         >
-          {!fromHome && (
+          {/* {!fromHome && (
             <TouchableOpacity
               style={styles.bannerContainer}
               onPress={() => navigation.goBack()}
@@ -250,20 +250,21 @@ const Poem = ({ route }) => {
               <Ionicons name="chevron-back" size={24} color="white" />
               <Text style={styles.collectionTitle}>{collection.title}</Text>
             </TouchableOpacity>
-          )}
-          <TouchableOpacity
-            onPress={handleGenerateImage}
-            style={styles.reloadContainer}
-          >
+          )} */}
+          <TouchableOpacity onPress={handleGenerateImage} style={styles.reloadContainer}>
             <View style={styles.reloadButton}>
               <Ionicons name="reload-outline" size={20} color="#000" />
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => {navigation.goBack()}}>
-          <View style={styles.backButton}>
-            <Ionicons name="chevron-back" size={23} color="white" />
-          </View>
-        </TouchableOpacity>
+
+          {!fromHome && (
+            <TouchableOpacity onPress={() => {navigation.goBack()}}>
+              <View style={styles.backButton}>
+                <Ionicons name="chevron-back" size={23} color="white" />
+              </View>
+            </TouchableOpacity>
+          )}
+          
         </ImageBackground>
 
         <ScrollView
@@ -505,7 +506,10 @@ const styles = StyleSheet.create({
     left: 20,
     top: 40,
     backgroundColor: '#00000',
+    backgroundColor: '#00000080',
     borderRadius: 100,
+    alignSelf: 'baseline',
+    padding: 5,
   },
 
   image: {
