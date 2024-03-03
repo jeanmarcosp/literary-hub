@@ -43,8 +43,11 @@ import OpenAI from "openai";
 import Dots from "react-native-dots-pagination";
 
 const Poem = ({ route }) => {
+  //console.log(route);
   const { poem, poemId, userLikedPoems, fromHome, collection, comments } =
     route.params || {};
+
+    
   const navigation = useNavigation();
   const [annotationMode, handleAnnotationMode] = useState(false);
   const bottomSheetRef = useRef(null);
@@ -59,6 +62,7 @@ const Poem = ({ route }) => {
   const [fontMenuVisible, setFontMenuVisible] = useState(false);
   const [dyslexicFontEnabled, setDyslexicFontEnabled] = useState(false);
   const [fontSize, setFontSize] = useState(16); 
+  
   const wordCount = poem.content.split(" ").length;
   var estimatedTime = parseInt(wordCount) / 200;
 
