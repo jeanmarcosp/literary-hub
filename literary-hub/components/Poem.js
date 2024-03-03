@@ -284,7 +284,7 @@ const Poem = ({ route }) => {
               {index === 0 && (
                 <React.Fragment>
                   <View style={styles.titleBox}>
-                    <Text style={styles.title}>{poem.title}</Text>
+                    <Text style={styles.title}>{poem?.title}</Text>
                     <View style={styles.estimatedTime}>
                       <Text style={styles.estimatedTimeText}>
                         {estimatedTime} {unit}
