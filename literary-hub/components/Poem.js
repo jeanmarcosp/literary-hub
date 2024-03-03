@@ -251,6 +251,11 @@ const Poem = ({ route }) => {
               <Text style={styles.collectionTitle}>{collection.title}</Text>
             </TouchableOpacity>
           )} */}
+
+          <TouchableOpacity style={styles.infoIcon}>
+            <Ionicons name="information-circle-outline" size={20} color="#fff" />
+          </TouchableOpacity>
+
           <TouchableOpacity onPress={handleGenerateImage} style={styles.reloadContainer}>
             <View style={styles.reloadButton}>
               <Ionicons name="reload-outline" size={20} color="#000" />
@@ -516,6 +521,12 @@ const styles = StyleSheet.create({
     position: "relative",
     width: "100%",
     height: 150,
+  },
+
+  infoIcon: {
+    position: "absolute",
+    bottom: 15,
+    left: 15,
   },
 
   reloadContainer: {
