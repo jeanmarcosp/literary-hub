@@ -200,12 +200,12 @@ const ProfileScreen = () => {
 
     const calculateEstimatedTime = (content) => {
       const wordCount = content.split(" ").length;
-      let estimatedTime = parseInt(wordCount) / 200;  // Assuming 200 words per minute reading speed
+      let estimatedTime = parseInt(wordCount) / 200; 
   
       if (estimatedTime < 1) {
-        return "< 1";  // If less than a minute, show "< 1 min"
+        return "< 1";  
       } else {
-        return `${Math.round(estimatedTime)}`;  // Round to the nearest minute and show
+        return `${Math.round(estimatedTime)}`;  
       }
     };
 

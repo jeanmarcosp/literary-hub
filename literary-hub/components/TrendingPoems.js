@@ -20,6 +20,17 @@ const TrendingPoems = () => {
       console.error(error);
     }
   };
+
+  const refreshCard = async() => {
+    try {
+      const poemsResponse = await axios.get(`http://localhost:3000/trending-poems`);
+      setTrendPoems(poemsResponse.data);
+      const likedPoemsResponse = await axios.get(`${ROOT_URL}/users/${userId}/likedPoems`);
+      setUserLikedPoems(likedPoemsResponse.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   
 
   useEffect(() => {
@@ -72,6 +83,7 @@ const TrendingPoems = () => {
               likes={item.likes.length}
               timeEstimate={estimatedTime} 
               inLikes={userLikedPoems.includes(item._id)}
+              handleRefresh={refreshCard}
             />
           );
         }}
