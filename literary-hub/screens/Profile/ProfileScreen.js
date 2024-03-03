@@ -524,7 +524,7 @@ const styles = StyleSheet.create({
 
   segmentedControlSelectedText: {
     color: "#373F41",
-    fontSize: 15,
+    fontSize: 14,
     fontFamily: "HammersmithOne",
   },
 
@@ -536,7 +536,7 @@ const styles = StyleSheet.create({
   },
 
   segmentedControlUnselectedText: {
-    fontSize: 15,
+    fontSize: 14,
     fontFamily: "HammersmithOne",
     color: "#373F41",
   },
