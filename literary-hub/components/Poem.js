@@ -571,7 +571,7 @@ const styles = StyleSheet.create({
   },
 
   tooltipText: {
-    color: 'white',
+    color: 'lightgray',
     fontFamily: 'Sarabun-Light',
     fontSize: 15,
   },
