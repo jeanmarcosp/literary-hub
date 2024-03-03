@@ -75,7 +75,7 @@ const Comment = ({
       };
       console.log(commentDetails);
 
-      const response = await axios.delete(`${ROOT_URL}/delete-comment`, { data: commentDetails });
+      const response = await axios.delete(`http://localhost:3000/delete-comment`, { data: commentDetails });
 
       console.log("Deleted Comment successfully", response);
       handleLikeRefresh();
@@ -171,11 +171,10 @@ const styles = StyleSheet.create({
   },
 
   likeNumber: {
-    color: "#6C7476",
-    fontFamily: "Sarabun-Bold",
+    color: "#373F41",
+    fontFamily: "Sarabun-Regular",
     fontSize: 13,
   },
-
   textContainer: {
     flexDirection: "column",
     alignItems: "center",

@@ -54,10 +54,11 @@ const CollectionScreen = ({ route }) => {
   }, [])
 
   if (poems) {
-    poemToPage(poems, 20);
+    poemToPage(poems, 15);
   }
 
   const navigateToSinglePoem = (poem, poemId, userLikedPoems ) => {
+    //console.log(poem);
     navigation.navigate('SinglePoem', { poem, poemId, userLikedPoems, fromHome:false, collection }); 
   };
 

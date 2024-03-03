@@ -16,7 +16,9 @@ import getUserId from "../../hooks/getUserId";
 import axios from "axios";
 import PoemCard from "../../components/PoemCard";
 import CollectionCard from "../../components/CollectionCard";
+import { poemToPage } from '../../hooks/poemActions';
 import { StatusBar } from "expo-status-bar";
+
 
 const ProfileScreen = () => {
   const userId = getUserId();
@@ -28,14 +30,21 @@ const ProfileScreen = () => {
     useState("My Collections");
   const navigation = useNavigation();
 
+  const navigateToSinglePoem = (poem, poemId, userLikedPoems ) => {
+    //console.log("i am here");
+    //console.log(poem);
+    //console.log("POEM IS PRESSED????");
+    const poemData = poem.poem ? poem.poem : poem;
+    poemToPage([poemData], 15);
+    navigation.navigate('SinglePoem', { poem:poemData, poemId, userLikedPoems, fromHome:false }); 
+  };
+
+  
   const handlePoemPress = (poem) => {
     console.log("pressed poem card");
-    navigation.navigate("PoemDetailScreen", {
-      poem: poem,
-      isLiked: true,
-      comments: poem.comments,
-      // handleRefresh: { fetchProfile },
-    });
+    const poemId = poem._id;
+    const likedPoems = user?.likedPoems;
+    navigateToSinglePoem(poem, poemId, likedPoems);
   };
 
   // this gets the users information stored in user?.
@@ -60,6 +69,7 @@ const ProfileScreen = () => {
 
   // fetch poems
   useEffect(() => {
+    
     const fetchLikedPoems = async () => {
       try {
         const poemIdsToFetch = user?.likedPoems;
@@ -87,6 +97,10 @@ const ProfileScreen = () => {
 
     fetchLikedPoems();
   }, [user]);
+
+  if (poems) {
+    poemToPage(poems, 15);
+  }
 
   // fetch created collections
   useEffect(() => {
@@ -186,7 +200,7 @@ const ProfileScreen = () => {
     return (
       <FlatList
         data={poems}
-        keyExtractor={(item) => item._id.toString()}
+        keyExtractor={(item) => item._id}
         renderItem={({ item }) => (
           <PoemCard
             key={item._id}
