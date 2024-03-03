@@ -90,6 +90,7 @@ const CollectionScreen = ({ route }) => {
         )}
         keyExtractor={(item) => item.id}
         style={styles.poemList}
+        contentInset={{ bottom: 60 }}
       />
     );
   };

@@ -27,6 +27,7 @@ import React, {
 import { TextInput } from "react-native-gesture-handler";
 import { BlurView } from "@react-native-community/blur";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Tooltip } from '@rneui/themed';
 import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import HomePageLike from "./HomePageLike";
@@ -65,6 +66,7 @@ const Poem = ({ route }) => {
   
   const wordCount = poem.content.split(" ").length;
   var estimatedTime = parseInt(wordCount) / 200;
+  const [open, setOpen] = useState(false);
 
   var unit;
 
@@ -194,6 +196,22 @@ const Poem = ({ route }) => {
     }
   };
 
+  const ControlledTooltip = (props) => {
+    const [open, setOpen] = React.useState(false);
+    return (
+      <Tooltip
+        visible={open}
+        onOpen={() => {
+          setOpen(true);
+        }}
+        onClose={() => {
+          setOpen(false);
+        }}
+        {...props}
+      />
+    );
+  };
+
   return (
     <View>
       {/* {collection && (
@@ -246,7 +264,7 @@ const Poem = ({ route }) => {
           }
           style={styles.image}
         >
-          {!fromHome && (
+          {/* {!fromHome && (
             <TouchableOpacity
               style={styles.bannerContainer}
               onPress={() => navigation.goBack()}
@@ -254,20 +272,41 @@ const Poem = ({ route }) => {
               <Ionicons name="chevron-back" size={24} color="white" />
               <Text style={styles.collectionTitle}>{collection.title}</Text>
             </TouchableOpacity>
-          )}
-          <TouchableOpacity
-            onPress={handleGenerateImage}
-            style={styles.reloadContainer}
-          >
+          )} */}
+
+          <View style={styles.infoIcon}>
+            <Tooltip
+              visible={open}
+              onOpen={() => setOpen(true)}
+              onClose={() => setOpen(false)}
+              popover={
+                <View style={styles.tooltip}>
+                  <Text style={styles.tooltipTitle}>Images are AI-generated.</Text>
+                  <Text style={styles.tooltipText}>Generative AI is experimental and quality may vary.</Text>
+                </View>
+              }
+              backgroundColor={'#000'}
+              width={270}
+              height={80}
+            >
+                <Ionicons name="information-circle-outline" size={25} color="#fff" />
+            </Tooltip>
+          </View>
+
+          <TouchableOpacity onPress={handleGenerateImage} style={styles.reloadContainer}>
             <View style={styles.reloadButton}>
               <Ionicons name="reload-outline" size={20} color="#000" />
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => {navigation.goBack()}}>
-          <View style={styles.backButton}>
-            <Ionicons name="chevron-back" size={23} color="white" />
-          </View>
-        </TouchableOpacity>
+
+          {!fromHome && (
+            <TouchableOpacity onPress={() => {navigation.goBack()}}>
+              <View style={styles.backButton}>
+                <Ionicons name="chevron-back" size={23} color="white" />
+              </View>
+            </TouchableOpacity>
+          )}
+          
         </ImageBackground>
 
         <ScrollView
@@ -287,7 +326,7 @@ const Poem = ({ route }) => {
               {index === 0 && (
                 <React.Fragment>
                   <View style={styles.titleBox}>
-                    <Text style={styles.title}>{poem.title}</Text>
+                    <Text style={styles.title}>{poem?.title}</Text>
                     <View style={styles.estimatedTime}>
                       <Text style={styles.estimatedTimeText}>
                         {estimatedTime} {unit}
@@ -509,7 +548,10 @@ const styles = StyleSheet.create({
     left: 20,
     top: 40,
     backgroundColor: '#00000',
+    backgroundColor: '#00000080',
     borderRadius: 100,
+    alignSelf: 'baseline',
+    padding: 5,
   },
 
   image: {
@@ -518,6 +560,26 @@ const styles = StyleSheet.create({
     height: 150,
   },
 
+  infoIcon: {
+    position: "absolute",
+    bottom: 5,
+    left: 5,
+    padding: 10,
+  },
+
+  tooltipTitle: {
+    color: 'white',
+    fontFamily: 'Sarabun-ExtraBold',
+    fontSize: 15,
+    marginBottom: 5,
+  },
+
+  tooltipText: {
+    color: 'lightgray',
+    fontFamily: 'Sarabun-Light',
+    fontSize: 15,
+  },
+  
   reloadContainer: {
     position: "absolute",
     bottom: 15,

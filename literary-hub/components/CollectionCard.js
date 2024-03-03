@@ -217,11 +217,12 @@ const styles = StyleSheet.create({
     fontFamily: "HammersmithOne",
     fontSize: 18,
     color: "#373F41",
+    maxWidth: 150,
   },
 
   creator: {
     fontFamily: "Sarabun-Regular",
-    fontSize: 16,
+    fontSize: 14,
     color: "gray",
   },
 
