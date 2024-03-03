@@ -60,6 +60,7 @@ const Poem = ({ route }) => {
   const [fontMenuVisible, setFontMenuVisible] = useState(false);
   const [dyslexicFontEnabled, setDyslexicFontEnabled] = useState(false);
   const [fontSize, setFontSize] = useState(16); 
+  
   const wordCount = poem.content.split(" ").length;
   var estimatedTime = parseInt(wordCount) / 200;
 

@@ -31,8 +31,10 @@ const ProfileScreen = () => {
   const navigation = useNavigation();
 
   const navigateToSinglePoem = (poem, poemId, userLikedPoems ) => {
-    //console.log(poem);
+    console.log("i am here");
     poemToPage([poem], 15);
+    console.log(poem);
+    console.log("POEM IS PRESSED????");
     navigation.navigate('SinglePoem', { poem, poemId, userLikedPoems, fromHome:false }); 
   };
 
@@ -40,13 +42,14 @@ const ProfileScreen = () => {
 
   const handlePoemPress = (poem) => {
     console.log("pressed poem card");
-    
-
-    //console.log(poem);
+    console.log("this is poem");
+    console.log(poem);
     const poemId = poem._id;
-    //console.log(poemId);
+    console.log("this is poem id");
+    console.log(poemId);
     const likedPoems = user?.likedPoems;
-    //console.log(likedPoems);
+    console.log("these are liked poems");
+    console.log(likedPoems);
     navigateToSinglePoem(poem, poemId, likedPoems);
   };
 

@@ -33,8 +33,10 @@ const PoemCard = ({
 
   
   const navigateToSinglePoem = (poem, poemId, userLikedPoems ) => {
-    //console.log(poem);
     poemToPage([poem], 15);
+    console.log(poem);
+    console.log(poemId);
+    console.log(userLikedPoems);
     navigation.navigate('SinglePoem', { poem, poemId, userLikedPoems, fromHome:false }); 
   };
 
@@ -60,9 +62,10 @@ const PoemCard = ({
     axios.get(`${ROOT_URL}/poem/${poemId}`)
       .then((response) => {
         const updatedPoem = response.data;
-        console.log(updatedPoem);
         console.log("pressed poem card");
         const likedPoems = user?.likedPoems;
+        //console.log(updatedPoem);
+        //console.log(likedPoems);
         navigateToSinglePoem(updatedPoem, poemId, likedPoems);
       })
       .catch((error) => {
