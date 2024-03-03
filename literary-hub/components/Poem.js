@@ -27,6 +27,7 @@ import React, {
 import { TextInput } from "react-native-gesture-handler";
 import { BlurView } from "@react-native-community/blur";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Tooltip } from '@rneui/themed';
 import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import HomePageLike from "./HomePageLike";
@@ -61,6 +62,7 @@ const Poem = ({ route }) => {
   const [fontSize, setFontSize] = useState(16); 
   const wordCount = poem.content.split(" ").length;
   var estimatedTime = parseInt(wordCount) / 200;
+  const [open, setOpen] = useState(false);
 
   var unit;
 
@@ -190,6 +192,22 @@ const Poem = ({ route }) => {
     }
   };
 
+  const ControlledTooltip = (props) => {
+    const [open, setOpen] = React.useState(false);
+    return (
+      <Tooltip
+        visible={open}
+        onOpen={() => {
+          setOpen(true);
+        }}
+        onClose={() => {
+          setOpen(false);
+        }}
+        {...props}
+      />
+    );
+  };
+
   return (
     <View>
       {/* {collection && (
@@ -252,9 +270,24 @@ const Poem = ({ route }) => {
             </TouchableOpacity>
           )} */}
 
-          <TouchableOpacity style={styles.infoIcon}>
-            <Ionicons name="information-circle-outline" size={20} color="#fff" />
-          </TouchableOpacity>
+          <View style={styles.infoIcon}>
+            <Tooltip
+              visible={open}
+              onOpen={() => setOpen(true)}
+              onClose={() => setOpen(false)}
+              popover={
+                <View style={styles.tooltip}>
+                  <Text style={styles.tooltipTitle}>Images are AI-generated.</Text>
+                  <Text style={styles.tooltipText}>Generative AI is experimental and quality may vary.</Text>
+                </View>
+              }
+              backgroundColor={'#000'}
+              width={270}
+              height={80}
+            >
+                <Ionicons name="information-circle-outline" size={25} color="#fff" />
+            </Tooltip>
+          </View>
 
           <TouchableOpacity onPress={handleGenerateImage} style={styles.reloadContainer}>
             <View style={styles.reloadButton}>
@@ -525,10 +558,24 @@ const styles = StyleSheet.create({
 
   infoIcon: {
     position: "absolute",
-    bottom: 15,
-    left: 15,
+    bottom: 5,
+    left: 5,
+    padding: 10,
   },
 
+  tooltipTitle: {
+    color: 'white',
+    fontFamily: 'Sarabun-ExtraBold',
+    fontSize: 15,
+    marginBottom: 5,
+  },
+
+  tooltipText: {
+    color: 'white',
+    fontFamily: 'Sarabun-Light',
+    fontSize: 15,
+  },
+  
   reloadContainer: {
     position: "absolute",
     bottom: 15,
