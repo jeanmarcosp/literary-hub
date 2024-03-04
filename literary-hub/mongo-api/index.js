@@ -1216,3 +1216,52 @@ app.get('/trending-poems', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+// add to streak - called if the previous date was visited
+app.put('/profile/:userId/increment-streak', async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const user = await User.findById(userId);
+    
+    console.log(user.streak)
+    user.streak += 1;
+    console.log(user.streak)
+    
+    await user.save();
+    res.status(200).json({ message: 'Daily Poem streak incremented successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// reset streak - called if the previous date was not visited
+app.put('/profile/:userId/reset-streak', async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    // Find the user by userId
+    const user = await User.findById(userId);
+    // Reset streak to 0
+    user.streak = 0;
+    // Save the updated user
+    await user.save();
+    res.status(200).json({ message: 'Streak reset successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// Update user's lastDate (last date opened DailyPoem)
+app.put('/profile/:userId/update-lastdate', async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const { lastDate } = req.body;
+    const user = await User.findById(userId);
+    user.lastDate = lastDate;
+    await user.save();
+    res.status(200).json({ message: 'Last date of streak updated successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
