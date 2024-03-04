@@ -1206,8 +1206,8 @@ app.get("/daily-poems/:date", async (req, res) => {
 app.get('/trending-poems', async (req, res) => {
   try {
     const trendingPoems = await Poem.find()
-      .sort({ likes: -1 })
-      .limit(3); 
+      .sort({ likes: -1 }) 
+      .limit(5); 
 
     res.status(200).json(trendingPoems);
     console.log(trendingPoems);
