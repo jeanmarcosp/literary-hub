@@ -121,8 +121,7 @@ app.post("/addpoemtocollection", async (req, res) => {
 //endpoint to create new collection
 app.post("/collection/new", async (req, res) => {
   try {
-    const { userId, title } = req.body; // Change 'user' to 'userId'
-    
+    const { userId, title, username } = req.body; // Change 'user' to 'userId'
     if (!title) {
       return res.status(400).json({ message: "Title is required" });
     }
@@ -132,15 +131,25 @@ app.post("/collection/new", async (req, res) => {
     if (existingCollection) {
       return res.status(400).json({ message: "Collection with same title already exists" });
     }
-
+    const defaultCoverArt =
+      "https://i.pinimg.com/originals/08/90/e2/0890e2a78f1e10a25fbe1e796caf5425.jpg";
     // create new collection
-    const newCollection = new Collection({ user: userId, title: title }); // Change 'user' to 'userId'
+    const newCollection = new Collection({ 
+      user: userId, 
+      title: title, 
+      username:username,
+      likes: [],
+      poemsInCollection: [],
+      coverArt: defaultCoverArt,
+      caption: "New collection",
+    }); 
 
     // Save the new collection to the database
-    await newCollection.save();
-    await User.updateOne(
-      { _id: userId }, // Change '_id' to 'userId'
-      { $push: { createdCollections: newCollection._id } }
+    const savedCollection = await newCollection.save();
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $addToSet: { createdCollections: savedCollection._id } },
+      { new: true }
     );
     res.status(201).json({
       message: "Collection created successfully",
@@ -148,7 +157,7 @@ app.post("/collection/new", async (req, res) => {
     });
   } catch (error) {
     console.log("error", error);
-    res.status(500).json({ message: "Error creating collection" });
+    res.status(500).json({ message: "Error creating collection", error });
   }
 });
 

@@ -27,7 +27,20 @@ const CollectionBottomSheet = forwardRef((props, ref) => {
   const sheetRef = useRef(null);
   const [collections, setCollections] = useState([]);
   const [isDialogVisible, setDialogVisible] = useState(false);
-
+  const [user, setUser] = useState("");
+  const getUser = () => {
+    axios
+    .get(`${ROOT_URL}/getuser`, {
+      params: { id: props.userId },
+    })
+    .then((response) => {
+      setUser(response.data);
+    })
+    .catch((error) => {
+      console.log("Error fetching user");
+    });
+  }
+  getUser();
   const renderBackdrop = useCallback(
     (props) => (
       <BottomSheetBackdrop
@@ -73,6 +86,7 @@ const CollectionBottomSheet = forwardRef((props, ref) => {
     const newCollection = {
       userId: props.userId,
       title: inputText,
+      username:user.username,
     };
     console.log(newCollection);
     axios
