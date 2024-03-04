@@ -849,7 +849,7 @@ app.get("/trending-collections", async (req, res) => {
         }
       },
       { $sort: { likesCount: -1 } },
-      { $sample: { size: 5 } },
+      { $limit: 6 },
     ]);
     res.json(collections);
     // console.log("these are the trending collections", collections)
@@ -1225,7 +1225,7 @@ app.put('/profile/:userId/increment-streak', async (req, res) => {
     console.log(user.streak)
     user.streak += 1;
     console.log(user.streak)
-    
+
     await user.save();
     res.status(200).json({ message: 'Daily Poem streak incremented successfully' });
   } catch (error) {
