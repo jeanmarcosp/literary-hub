@@ -89,7 +89,7 @@ app.get("/getcollections", async (req, res) => {
   }
 });
 //endpoint to add poem to colection
-app.post("/addpoemtocollection", async (req, res) => {
+app.post('/addpoemtocollection', async (req, res) => {
   try {
     const { poemId, collectionId } = req.body;
 
@@ -97,69 +97,105 @@ app.post("/addpoemtocollection", async (req, res) => {
     const collection = await Collection.findById(collectionId);
 
     if (!collection) {
-      return res.status(404).json({ message: "Collection not found" });
+      return res.status(404).json({ message: 'Collection not found' });
     }
 
     // Check if the poemId is already in the poemsInCollection array
     if (collection.poemsInCollection.includes(poemId)) {
-      return res
-        .status(400)
-        .json({ message: "Poem already in the collection" });
+      return res.status(400).json({ message: 'Poem already in the collection' });
     }
 
     // If the poem is not in the collection, add it
     collection.poemsInCollection.push(poemId);
     await collection.save();
 
-    res.status(200).json({ message: "Poem added to collection", collection });
+    res.status(200).json({ message: 'Poem added to collection', collection });
   } catch (error) {
-    console.error("Error adding poem to collection:", error);
-    res.status(500).json({ message: "Could not add poem to collection" });
+    console.error('Error adding poem to collection:', error);
+    if (error.response) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx
+      console.log(error.response.data);
+      console.log(error.response.status);
+      console.log(error.response.headers);
+    } else if (error.request) {
+      // The request was made but no response was received
+      // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+      // http.ClientRequest in node.js
+      console.log(error.request);
+    } else {
+      // Something happened in setting up the request that triggered an Error
+      console.log('Error', error.message);
+    }
+    console.log(error.config);
+    res.status(500).json({ message: 'Could not add poem to collection' });
   }
 });
 
+
 //endpoint to create new collection
 app.post("/collection/new", async (req, res) => {
+  console.log("Received request to create a new collection"); // Add this line
   try {
+    console.log("Received request to create a new collection:", req.body);
+
     const { userId, title, username } = req.body; // Change 'user' to 'userId'
+    console.log("Extracted data:", userId, title, username);
+
     if (!title) {
+      console.log("Title is required. Returning 400.");
       return res.status(400).json({ message: "Title is required" });
     }
 
     const existingCollection = await Collection.findOne({ user: userId, title }); // Change 'user' to 'userId'
+    console.log("Existing collection:", existingCollection);
 
     if (existingCollection) {
-      return res.status(400).json({ message: "Collection with same title already exists" });
+      console.log("Collection with the same title already exists. Returning 400.");
+      return res.status(400).json({ message: "Collection with the same title already exists" });
     }
-    const defaultCoverArt =
-      "https://i.pinimg.com/originals/08/90/e2/0890e2a78f1e10a25fbe1e796caf5425.jpg";
+
+    const defaultCoverArt = "https://i.pinimg.com/originals/08/90/e2/0890e2a78f1e10a25fbe1e796caf5425.jpg";
     // create new collection
-    const newCollection = new Collection({ 
-      user: userId, 
-      title: title, 
-      username:username,
+    const newCollection = new Collection({
+      user: userId,
+      title: title,
+      username: username,
       likes: [],
       poemsInCollection: [],
       coverArt: defaultCoverArt,
       caption: "New collection",
-    }); 
+    });
+
+    console.log("New collection object:", newCollection);
 
     // Save the new collection to the database
-    const savedCollection = await newCollection.save();
+    try{const savedCollection = await newCollection.save();}
+    catch(error){
+      console.log("boom shaka;");
+      res.status(500).json({ message: "Error creating collection", error });
+    }
+    
+    console.log("Collection saved successfully:", savedCollection);
+
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       { $addToSet: { createdCollections: savedCollection._id } },
       { new: true }
     );
+
+    console.log("User updated:", updatedUser);
+
     res.status(201).json({
       message: "Collection created successfully",
       collection: newCollection,
     });
   } catch (error) {
-    console.log("error", error);
+    console.error("Error creating collection:", error);
     res.status(500).json({ message: "Error creating collection", error });
   }
 });
+
 
 // endpoint to get userdata
 app.get("/getuser", async (req, res) => {

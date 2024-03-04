@@ -27,20 +27,29 @@ const CollectionBottomSheet = forwardRef((props, ref) => {
   const sheetRef = useRef(null);
   const [collections, setCollections] = useState([]);
   const [isDialogVisible, setDialogVisible] = useState(false);
-  const [user, setUser] = useState("");
-  const getUser = () => {
-    axios
-    .get(`${ROOT_URL}/getuser`, {
-      params: { id: props.userId },
-    })
-    .then((response) => {
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (props.userId) {
+        await getUser();
+        await getCollections(props.userId);
+      }
+    };
+  
+    fetchData();
+  }, [props.userId]);
+  const getUser = async () => {
+    try {
+      const response = await axios.get(`${ROOT_URL}/getuser`, {
+        params: { id: props.userId },
+      });
       setUser(response.data);
-    })
-    .catch((error) => {
-      console.log("Error fetching user");
-    });
-  }
-  getUser();
+    } catch (error) {
+      console.log("Error fetching user:", error);
+    }
+  };
+  
   const renderBackdrop = useCallback(
     (props) => (
       <BottomSheetBackdrop
@@ -59,11 +68,9 @@ const CollectionBottomSheet = forwardRef((props, ref) => {
     setDialogVisible(false);
   };
 
-  useEffect(() => {
-    if (props.userId) {
-      getCollections(props.userId);
-    }
-  }, [props.userId]);
+  
+  
+  
 
   const getCollections = () => {
     axios
@@ -83,47 +90,47 @@ const CollectionBottomSheet = forwardRef((props, ref) => {
     return isPoemInCollection ?? false;
   };
   const handleSubmitNewCollection = (inputText) => {
-    const newCollection = {
-      userId: props.userId,
-      title: inputText,
-      username:user.username,
-    };
-    console.log(newCollection);
-    axios
-      .post(`${ROOT_URL}/collection/new`, newCollection)
-      .then((response) => {
-        console.log("hrer");
-        console.log(response);
-        addPoemToCollection(props.poem._id, response.data.collection._id);
-        closeDialog();
-      })
-      .catch((error) => {
-        if (error.response && error.response.data) {
-          Alert.alert("Collection Creation Error", error.response.data.message);
-        } else {
-          Alert.alert(
-            "Collection Creation Error",
-            "An error occurred while creating the collection."
-          );
-        }
-        console.log("error", error);
-      });
+    if (props.poem) {
+      console.log('Requesting URL:', `${ROOT_URL}/collection/new`);
+      axios
+        .post(`${ROOT_URL}/collection/new`, {
+          userId: props.userId,
+          title: inputText,
+          username: user.username,
+        })
+        .then((response) => {
+          console.log('New collection:', response.data);
+          addPoemToCollection(props.poem._id, response.data.collection._id)
+          getCollections();
+        })
+        .catch((error) => {
+          console.log('Error adding collection:', error);
+        });
+    } else {
+      console.warn('Invalid poem object');
+    }
   };
+  
 
   const addPoemToCollection = (poemId, collectionId) => {
-    axios
-      .post(`${ROOT_URL}/addpoemtocollection`, {
-        poemId: poemId,
-        collectionId: collectionId,
-      })
-      .then((response) => {
-        console.log("Poem added to collection:", response.data);
-        getCollections();
-      })
-      .catch((error) => {
-        console.log("Error adding poem to collection:", error);
-      });
+    if (props.poem) {
+      axios
+        .post(`${ROOT_URL}/addpoemtocollection`, {
+          poemId: poemId,
+          collectionId: collectionId,
+        })
+        .then((response) => {
+          console.log("Poem added to collection:", response.data);
+          getCollections();
+        })
+        .catch((error) => {
+          console.log("Error adding poem to collection:", error);
+        });
+    } else {
+      console.warn("Invalid poem object");
+    }
   };
+  
 
   return (
     <BottomSheet
