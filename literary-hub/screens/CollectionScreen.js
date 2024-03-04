@@ -54,10 +54,11 @@ const CollectionScreen = ({ route }) => {
   }, [])
 
   if (poems) {
-    poemToPage(poems, 20);
+    poemToPage(poems, 15);
   }
 
   const navigateToSinglePoem = (poem, poemId, userLikedPoems ) => {
+    //console.log(poem);
     navigation.navigate('SinglePoem', { poem, poemId, userLikedPoems, fromHome:false, collection }); 
   };
 
@@ -66,10 +67,8 @@ const CollectionScreen = ({ route }) => {
       <TouchableOpacity onPress={() => navigateToSinglePoem(poem, poemId, userLikedPoems)}>
         <View style={styles.poem}>
           <View style={styles.poemInfo}>
-          <Text style={styles.poemName}>{poem.title}</Text>
-          {hasAuthor && (
+            <Text style={styles.poemName}>{poem.title}</Text>
             <Text style={styles.poemAuthor}>{poem.author}</Text>
-          )}
           </View>
           <Like 
             inLikes={userLikedPoems.includes(poemId)}
@@ -91,6 +90,7 @@ const CollectionScreen = ({ route }) => {
         )}
         keyExtractor={(item) => item.id}
         style={styles.poemList}
+        contentInset={{ bottom: 60 }}
       />
     );
   };
@@ -144,7 +144,7 @@ const CollectionScreen = ({ route }) => {
               <Text style={styles.collectionLikeNumber}>{collection.likes.length}</Text>
             </View>
             {hasAuthor && userIsCreator && (
-              <Ionicons name="create" size={24} color="white" onPress={handleEditCollection}/>
+              <Ionicons name="create-outline" size={24} color="white" onPress={handleEditCollection}/>
             )}
             
           </View>
@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: 20,
+    marginTop: 25,
     paddingHorizontal: 40,
   },
 

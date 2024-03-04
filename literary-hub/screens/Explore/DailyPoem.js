@@ -1,10 +1,11 @@
-import {React, useEffect, useState} from 'react';
+import React, { useState, useEffect } from "react";
 import { View, Text, ImageBackground, StyleSheet, TouchableOpacity } from 'react-native';
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { poemToPage } from '../../hooks/poemActions';
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from 'expo-linear-gradient';
-
+import getUserId from "../../hooks/getUserId";
+import axios from "axios";
 
 const DailyPoem = () => {
   const [poem, setPoem] = useState(null);
@@ -12,6 +13,9 @@ const DailyPoem = () => {
   const formattedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
   const navigation = useNavigation();
   const userLikedPoems = [];
+  const userId = getUserId();
+  const [user, setUser] = useState({});
+
 
   useEffect(() => {
     const fetchDailyPoem = async () => {
@@ -37,12 +41,32 @@ const DailyPoem = () => {
     poemToPage([poem], 17);
   }
 
+  const fetchProfile = async () => {
+    try {
+      const response = await axios.get(`${ROOT_URL}/profile/${userId}`);
+      const user = response.data.user;
+
+      setUser(user);
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchProfile();
+    }, [userId])
+  );
+
   const handlePress = async () => {
     if (!poem) {
       await fetchDailyPoem();
     }
     const poemId = poem._id
-    
+
+    //once a user clicks poem of the day, the poemId should be added to thier poemsOfTheDay field
+
+    fetchProfile();
     navigation.navigate('SinglePoem', { poem, poemId, userLikedPoems, fromHome:false }); 
   };
 
@@ -58,7 +82,7 @@ const DailyPoem = () => {
                 style={styles.gradient}
               />
               <View style={styles.streakContainer}>
-                <Text style={styles.streak}>12</Text>
+                <Text style={styles.streak}>{user?.poemsOfTheDay?.length}</Text>
                 <Ionicons name="flame" size={14} color="#EE6F3F" />
               </View>
               <View style={styles.poemOfTheDayAction}>

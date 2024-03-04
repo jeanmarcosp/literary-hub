@@ -115,7 +115,7 @@ const CreateCollection = ({ route }) => {
           <Text style={styles.header}>Cover photo</Text>
           <View style={styles.emptyCoverPhoto}>
             {!coverArt && (
-              <Image source={require('./../../assets/collection-images/default-collection-cover1.jpeg')} style={styles.coverImage} />
+              <Image source={{uri: 'https://i.pinimg.com/originals/08/90/e2/0890e2a78f1e10a25fbe1e796caf5425.jpg'}} style={styles.coverImage} />
             )}
 
             {coverArt && (

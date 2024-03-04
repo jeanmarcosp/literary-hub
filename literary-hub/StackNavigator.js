@@ -86,12 +86,13 @@ const StackNavigator = () => {
   }
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator
+      screenOptions={{ headerShown: false, gestureEnabled: false }}
+    >
         <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }}/>
         <Stack.Screen name="Main" component={BottomTabs} options={{ headerShown: false }}/>
         <Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: false }}/>
         <Stack.Screen name="Onboarding" component={OnboardingNavigator} options={{ headerShown: false }}/>
-        <Stack.Screen name="PoemDetailScreen" component={PoemDetailScreen} options={{ headerShown: false }}/>
         <Stack.Screen name="UserDetailScreen" component={UserDetailScreen} options={{ headerShown: false }}/>
         <Stack.Screen name="FollowersScreen" component={FollowersScreen} options={{ headerShown: false }}/>
         <Stack.Screen name="FollowingScreen" component={FollowingScreen} options={{ headerShown: false }}/>

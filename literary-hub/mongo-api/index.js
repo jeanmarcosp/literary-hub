@@ -1096,17 +1096,17 @@ app.delete("/delete-comment", async (req, res) => {
     if (!poem) {
       return res.status(404).json({ message: "Poem not found" });
     }
-    
+    //console.log(poem);
     const updatedPoem = await Poem.findByIdAndUpdate(
       poemId,
-      { $pull: { comments: commentId } },
+      { $pull: { comments: { _id: commentId } } },
       { new: true }
     );
 
     if (!updatedPoem) {
       return res.status(404).json({ message: "could not remove comment from poem" });
     }
-
+    //console.log(updatedPoem);
     const user = await User.findById(userId);
 
     if (!user) {
@@ -1210,4 +1210,18 @@ app.get("/daily-poems/:date", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch DailyPoem" });
   }
 
+});
+
+app.get('/trending-poems', async (req, res) => {
+  try {
+    const trendingPoems = await Poem.find()
+      .sort({ likes: -1 })
+      .limit(3); 
+
+    res.status(200).json(trendingPoems);
+    console.log(trendingPoems);
+  } catch (error) {
+    console.error('Error finding trending poems:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });

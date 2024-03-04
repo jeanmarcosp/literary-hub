@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
 
   unfollowButton: {
     backgroundColor: "white",
-    borderColor: "black",
+    borderColor: "#644980",
     borderWidth: 1,
     borderRadius: 100,
     paddingHorizontal: 20,

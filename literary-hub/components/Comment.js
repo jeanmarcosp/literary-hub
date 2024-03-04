@@ -171,11 +171,10 @@ const styles = StyleSheet.create({
   },
 
   likeNumber: {
-    color: "#6C7476",
-    fontFamily: "Sarabun-Bold",
+    color: "#373F41",
+    fontFamily: "Sarabun-Regular",
     fontSize: 13,
   },
-
   textContainer: {
     flexDirection: "column",
     alignItems: "center",
