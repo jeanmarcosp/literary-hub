@@ -344,8 +344,8 @@ const Poem = ({ route }) => {
 
         <HomePageLike
           inLikes={isInitiallyLiked}
-          handleLike={() => handleLike(userId, poemId)}
-          handleDislike={() => handleDislike(userId, poemId)}
+          handleLike={() => handleLike(userId, poemId, fetchPoem)}
+          handleDislike={() => handleDislike(userId, poemId, fetchPoem)}
         />
 
         <View style={styles.pagination}>

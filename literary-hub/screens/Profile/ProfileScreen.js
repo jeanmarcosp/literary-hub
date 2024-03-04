@@ -197,6 +197,18 @@ const ProfileScreen = () => {
   };
 
   const LikedPoemsView = ({ poems }) => {
+
+    const calculateEstimatedTime = (content) => {
+      const wordCount = content.split(" ").length;
+      let estimatedTime = parseInt(wordCount) / 200; 
+  
+      if (estimatedTime < 1) {
+        return "< 1";  
+      } else {
+        return `${Math.round(estimatedTime)}`;  
+      }
+    };
+
     return (
       <FlatList
         data={poems}
@@ -211,6 +223,7 @@ const ProfileScreen = () => {
             excerpt={item.content}
             onPress={() => handlePoemPress(item)}
             likes={item.likes.length}
+            timeEstimate={calculateEstimatedTime(item.content)}
             inLikes={item.likes.includes(userId)}
             handleRefresh={fetchProfile}
           />
