@@ -14,7 +14,7 @@ const TrendingPoems = () => {
   const fetchPoems = async() => {
     try {
       console.log("pulling trending poems");
-      const response = await axios.get(`${ROOT_URL}/trending-poems`);
+      const response = await axios.get(`http://localhost:3000/trending-poems`);
       setTrendPoems(response.data);
     } catch (error) {
       console.error(error);
