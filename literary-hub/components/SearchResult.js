@@ -1,16 +1,80 @@
-import React, { useState } from "react";
+import React, {
+  forwardRef,
+  useRef,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
 import { View, TextInput, FlatList, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
+import getUserId from "../hooks/getUserId";
 import { useNavigation } from "@react-navigation/native";
 
+
 const SearchResult = ({data, type}) => {
+  const [user, setUser] = useState({});
+  userId = getUserId();
+  useEffect(() => {
+    const fetchData = async () => {
+      if (userId) {
+        await getUser();
+      }
+    };
+  
+    fetchData();
+  }, [userId]);
+  const getUser = async () => {
+    try {
+      const response = await axios.get(`${ROOT_URL}/getuser`, {
+        params: { id: userId },
+      });
+      setUser(response.data);
+    } catch (error) {
+      console.log("Error fetching user:", error);
+    }
+  };
+  const handleFollow = async () => {
+    try {
+      await axios.post(`${ROOT_URL}/follow-user`, {
+        loggedInUser: userId,
+        otherUser: data._id,
+      });
+  
+      setIsFollowing(true);
+      console.log("Successfully followed user");
+    } catch (error) {
+      console.error("Error following user:", error);
+    }
+  };
+  
+  const handleUnfollow = async () => {
+    try {
+      await axios.post(`${ROOT_URL}/unfollow-user`, {
+        loggedInUser: userId,
+        otherUser: data._id,
+      });
+  
+      setIsFollowing(false);
+      console.log("Successfully unfollowed user");
+    } catch (error) {
+      console.error("Error unfollowing user:", error);
+    }
+  };
   const navigation = useNavigation();
   const openItem = () => {
     if (type === 'poem') {
       navigation.navigate('Poem', { poem: data });
     } else  {
-      ;
+      const otherUser = data._id
+      navigation.navigate("UserDetailScreen", {
+        otherUserId: otherUser,
+        isFollowing: user.following.includes(otherUser),
+        callbacks: {
+          handleFollow: handleFollow,
+          handleUnfollow: handleUnfollow,
+        },
+      });
     }
 
   }; 
