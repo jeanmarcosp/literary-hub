@@ -42,6 +42,7 @@ import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
 import OpenAI from "openai";
 import Dots from "react-native-dots-pagination";
+import { TextSize } from 'react-native-text-size';
 
 const Poem = ({ route }) => {
   //console.log(route);
@@ -67,6 +68,7 @@ const Poem = ({ route }) => {
   const wordCount = poem.content.split(" ").length;
   var estimatedTime = parseInt(wordCount) / 200;
   const [open, setOpen] = useState(false);
+
 
   var unit;
 
@@ -284,8 +286,8 @@ const Poem = ({ route }) => {
                 </View>
               }
               backgroundColor={'#000'}
-              width={270}
-              height={80}
+              width={300}
+              height={100}
             >
                 <Ionicons name="information-circle-outline" size={25} color="#fff" />
             </Tooltip>
@@ -563,6 +565,11 @@ const styles = StyleSheet.create({
     bottom: 5,
     left: 5,
     padding: 10,
+  },
+
+  tooltip: {
+    // borderWidth: 1,
+    // borderColor: 'white',
   },
 
   tooltipTitle: {

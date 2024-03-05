@@ -17,6 +17,7 @@ import {
   TextInput,
   KeyboardAvoidingView,
   SafeAreaView,
+  Image
 } from "react-native";
 import BottomSheet, {
   BottomSheetScrollView,
@@ -106,6 +107,14 @@ const CommentSection = forwardRef((props, ref) => {
         </View>
 
         <View style={styles.commentsTopDivider}></View>
+
+        {props.comments?.length == 0 && (
+          <View style={styles.noComments}>
+            <Image source={require('../assets/no-comments.jpeg')} style={styles.noCommentsImage}/>
+            <Text style={styles.noCommentsTitle}>No comments yet</Text>
+            <Text style={styles.noCommentsDescription}>Be the first to share your thoughts!</Text>
+          </View>
+        )}
 
         <BottomSheetScrollView style={styles.commentsScroll}>
           <FlatList
@@ -244,6 +253,32 @@ const styles = StyleSheet.create({
     borderBottomColor: "#E2E5E6",
     borderBottomWidth: 1,
     marginTop: 15,
+  },
+
+  noComments: {
+    alignItems: 'center',
+    marginTop: 100,
+  },
+
+  noCommentsImage: {
+    resizeMode: 'cover',
+    width: 200,
+    height: 120,
+  },
+
+  noCommentsTitle: {
+    fontFamily: 'Sarabun-Bold',
+    fontSize: 20,
+    textAlign: 'center',
+    marginBottom: 5,
+    color: '#001E2B'
+  },
+
+  noCommentsDescription: {
+    fontFamily: 'Sarabun-Regular',
+    fontSize: 16,
+    textAlign: 'center',
+    color: '#5C6C75'
   },
 
   commentsScroll: {

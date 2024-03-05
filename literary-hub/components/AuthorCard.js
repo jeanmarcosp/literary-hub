@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     textAlignVertical: "center",
     fontSize: 18,
     lineHeight: 23,
-    marginTop: 17,
+    marginTop: 7,
   },
 
   authorDates: {
