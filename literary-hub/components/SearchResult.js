@@ -10,13 +10,9 @@ import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import getUserId from "../hooks/getUserId";
 import { useNavigation } from "@react-navigation/native";
-import getUserId from "../hooks/getUserId";
-import { poemToPage } from '../hooks/poemActions';
-
 
 
 const SearchResult = ({data, type}) => {
-  const [likedPoems, setUserLikedPoems] = useState([]);
   const [user, setUser] = useState({});
   userId = getUserId();
   useEffect(() => {
@@ -66,21 +62,10 @@ const SearchResult = ({data, type}) => {
     }
   };
   const navigation = useNavigation();
-  const userId = getUserId();
   const openItem = () => {
     if (type === 'poem') {
-      //console.log(data);
-      const poemData = data.poem ? data.poem : data;
-      poemToPage([poemData], 15);
-      axios.get(`${ROOT_URL}/users/${userId}/likedPoems`)
-      .then((response) => {
-        setUserLikedPoems(response.data);
-      })
-      .catch((error) => {
-        console.error("Error finding poem:", error);
-      });
-      navigation.navigate('SinglePoem', { poem: poemData, poemId: poemData._id, userLikedPoems: likedPoems, fromHome:false });
-    } else {
+      navigation.navigate('Poem', { poem: data });
+    } else  {
       const otherUser = data._id
       navigation.navigate("UserDetailScreen", {
         otherUserId: otherUser,
