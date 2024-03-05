@@ -3,13 +3,28 @@ import { View, TextInput, FlatList, Text, StyleSheet, TouchableOpacity, Image } 
 import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
+import getUserId from "../hooks/getUserId";
+import { poemToPage } from '../hooks/poemActions';
+
 
 const SearchResult = ({data, type}) => {
+  const [likedPoems, setUserLikedPoems] = useState([]);
   const navigation = useNavigation();
+  const userId = getUserId();
   const openItem = () => {
     if (type === 'poem') {
-      navigation.navigate('Poem', { poem: data });
-    } else  {
+      //console.log(data);
+      const poemData = data.poem ? data.poem : data;
+      poemToPage([poemData], 15);
+      axios.get(`${ROOT_URL}/users/${userId}/likedPoems`)
+      .then((response) => {
+        setUserLikedPoems(response.data);
+      })
+      .catch((error) => {
+        console.error("Error finding poem:", error);
+      });
+      navigation.navigate('SinglePoem', { poem: poemData, poemId: poemData._id, userLikedPoems: likedPoems, fromHome:false });
+    } else {
       ;
     }
 
