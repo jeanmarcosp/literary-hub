@@ -76,7 +76,6 @@ app.get("/getcollections", async (req, res) => {
 
     // Find collections by user ID
     const collections = await Collection.find({ user: id });
-
     // Store the collections in an array
     const collectionsArray = collections.map((collection) =>
       collection.toObject()
