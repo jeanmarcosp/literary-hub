@@ -3132,10 +3132,10 @@
     opencollective-postinstall "^2.0.3"
     superstruct "^0.6.2"
 
-"@react-native-firebase/storage@^18.7.3":
-  version "18.7.3"
-  resolved "https://registry.npmjs.org/@react-native-firebase/storage/-/storage-18.7.3.tgz"
-  integrity sha512-dRVhjN0xZrJWEJSyMMecqTHVuqopHKqttb7rNNfSjNivk02nn9c5zKGTBSP2Q00ouxzSCw66bocWJ0oBi8wl+g==
+"@react-native-firebase/storage@^19.0.0":
+  version "19.0.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/storage/-/storage-19.0.0.tgz#ed3cce175ba0f02756ec134dbf0a229ae69523d6"
+  integrity sha512-JOjaNJfzeWQHNjpzElNjtk8JUvSdhRnCJtfQzJvgr78Y9L4dQqbTEvpcVOj4ZhwQ7V/NtldvxnQxAb6JM0lIMA==
 
 "@react-native-segmented-control/segmented-control@2.4.1":
   version "2.4.1"
