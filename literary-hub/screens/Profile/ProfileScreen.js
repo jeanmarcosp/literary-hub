@@ -59,6 +59,9 @@ const ProfileScreen = () => {
     }
   };
 
+  // check strek
+  
+
   useFocusEffect(
     React.useCallback(() => {
       fetchProfile();
@@ -197,6 +200,18 @@ const ProfileScreen = () => {
   };
 
   const LikedPoemsView = ({ poems }) => {
+
+    const calculateEstimatedTime = (content) => {
+      const wordCount = content.split(" ").length;
+      let estimatedTime = parseInt(wordCount) / 200; 
+  
+      if (estimatedTime < 1) {
+        return "< 1";  
+      } else {
+        return `${Math.round(estimatedTime)}`;  
+      }
+    };
+
     return (
       <FlatList
         data={poems}
@@ -211,6 +226,7 @@ const ProfileScreen = () => {
             excerpt={item.content}
             onPress={() => handlePoemPress(item)}
             likes={item.likes.length}
+            timeEstimate={calculateEstimatedTime(item.content)}
             inLikes={item.likes.includes(userId)}
             handleRefresh={fetchProfile}
           />
@@ -302,7 +318,7 @@ const ProfileScreen = () => {
         <View style={styles.stats}>
           <View style={styles.stat}>
             <Ionicons name="flame-outline" size={22} color="#658049" />
-            <Text style={styles.statText}>{user?.poemsOfTheDay?.length} PoTDs</Text>
+            <Text style={styles.statText}>{user.streak} PoTDs</Text>
           </View>
 
           <View style={styles.stat}>

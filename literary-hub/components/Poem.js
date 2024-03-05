@@ -132,7 +132,6 @@ const Poem = ({ route }) => {
     }
   };
 
-
   const fetchPoem = async () => {
     try {
       const response = await axios.get(`${ROOT_URL}/poem/${poemId}`);
@@ -160,10 +159,9 @@ const Poem = ({ route }) => {
 
     if (prompt) {
       if (prompt.length < 800) {
-        prompt = "Illustration representing this poem: " + prompt;
+        prompt = prompt;
       } else {
         prompt =
-          "Illustration representing a poem by this title: " +
           currentPoem.title;
       }
     }
@@ -346,8 +344,8 @@ const Poem = ({ route }) => {
 
         <HomePageLike
           inLikes={isInitiallyLiked}
-          handleLike={() => handleLike(userId, poemId)}
-          handleDislike={() => handleDislike(userId, poemId)}
+          handleLike={() => handleLike(userId, poemId, fetchPoem)}
+          handleDislike={() => handleDislike(userId, poemId, fetchPoem)}
         />
 
         <View style={styles.pagination}>

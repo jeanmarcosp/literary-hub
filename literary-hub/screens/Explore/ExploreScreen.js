@@ -30,6 +30,10 @@ const ExploreScreen = () => {
   const handleBlur = ()=>{
     setSearchResults([])
   }
+
+  // handle streak updates
+  
+
   
   return (
     <SafeAreaView style={styles.container}>

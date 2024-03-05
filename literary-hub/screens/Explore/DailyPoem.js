@@ -17,23 +17,25 @@ const DailyPoem = () => {
   const [user, setUser] = useState({});
 
 
-  useEffect(() => {
-    const fetchDailyPoem = async () => {
-      try {
-        const response = await fetch(`${ROOT_URL}/daily-poems/${formattedDate}`); 
-        
-        if (!response.ok) {
-          throw new Error('Failed to fetch daily poem');
-        }
-        
-        const data = await response.json();
-        setPoem(data.poem); 
-  
-      } catch (error) {
-        console.error(error);
+
+  const fetchDailyPoem = async () => {
+    try {
+      const response = await fetch(`${ROOT_URL}/daily-poems/${formattedDate}`); 
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch daily poem');
       }
-  
-    };
+      
+      const data = await response.json();
+      setPoem(data.poem); 
+
+    } catch (error) {
+      console.error(error);
+    }
+
+  };
+
+  useEffect(() => {
     fetchDailyPoem()
   }, []);
 
@@ -54,9 +56,31 @@ const DailyPoem = () => {
 
   useFocusEffect(
     React.useCallback(() => {
+      checkAndUpdateStreak();
       fetchProfile();
+      
     }, [userId])
   );
+
+  const checkAndUpdateStreak = async () => {
+    try {
+
+      const lastDate = new Date(user.lastDate);
+      const dayBefore = new Date(formattedDate);
+      dayBefore.setDate(dayBefore.getDate() - 1);
+
+      // handle if it should be set to 0 if broke streak
+      if (lastDate < dayBefore) {
+        console.log('reset streak')
+        await axios.put(`${ROOT_URL}/profile/${userId}/reset-streak`);
+      }
+
+      // Fetch updated user profile
+      fetchProfile();
+    } catch (error) {
+      console.error("Error updating streak:", error);
+    }
+  };
 
   const handlePress = async () => {
     if (!poem) {
@@ -65,7 +89,18 @@ const DailyPoem = () => {
     const poemId = poem._id
 
     //once a user clicks poem of the day, the poemId should be added to thier poemsOfTheDay field
+    // when it is clicked, then increment the streak and update lastDate
+    const lastDate = new Date(user.lastDate);
+    const dayBefore = new Date(formattedDate);
+    dayBefore.setDate(dayBefore.getDate() - 1);
 
+    // if the streak hasn't already been updated, then increment the streak
+    if (lastDate.getTime() !== formattedDate.getTime()) {
+      await axios.put(`${ROOT_URL}/profile/${userId}/increment-streak`);
+
+    }
+
+    await axios.put(`${ROOT_URL}/profile/${userId}/update-lastdate`, { lastDate: formattedDate });
     fetchProfile();
     navigation.navigate('SinglePoem', { poem, poemId, userLikedPoems, fromHome:false }); 
   };
@@ -82,7 +117,7 @@ const DailyPoem = () => {
                 style={styles.gradient}
               />
               <View style={styles.streakContainer}>
-                <Text style={styles.streak}>{user?.poemsOfTheDay?.length}</Text>
+                <Text style={styles.streak}>{user.streak}</Text>
                 <Ionicons name="flame" size={14} color="#EE6F3F" />
               </View>
               <View style={styles.poemOfTheDayAction}>

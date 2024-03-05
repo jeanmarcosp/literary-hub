@@ -76,7 +76,6 @@ app.get("/getcollections", async (req, res) => {
 
     // Find collections by user ID
     const collections = await Collection.find({ user: id });
-
     // Store the collections in an array
     const collectionsArray = collections.map((collection) =>
       collection.toObject()
@@ -89,7 +88,7 @@ app.get("/getcollections", async (req, res) => {
   }
 });
 //endpoint to add poem to colection
-app.post("/addpoemtocollection", async (req, res) => {
+app.post('/addpoemtocollection', async (req, res) => {
   try {
     const { poemId, collectionId } = req.body;
 
@@ -97,60 +96,105 @@ app.post("/addpoemtocollection", async (req, res) => {
     const collection = await Collection.findById(collectionId);
 
     if (!collection) {
-      return res.status(404).json({ message: "Collection not found" });
+      return res.status(404).json({ message: 'Collection not found' });
     }
 
     // Check if the poemId is already in the poemsInCollection array
     if (collection.poemsInCollection.includes(poemId)) {
-      return res
-        .status(400)
-        .json({ message: "Poem already in the collection" });
+      return res.status(400).json({ message: 'Poem already in the collection' });
     }
 
     // If the poem is not in the collection, add it
     collection.poemsInCollection.push(poemId);
     await collection.save();
 
-    res.status(200).json({ message: "Poem added to collection", collection });
+    res.status(200).json({ message: 'Poem added to collection', collection });
   } catch (error) {
-    console.error("Error adding poem to collection:", error);
-    res.status(500).json({ message: "Could not add poem to collection" });
+    console.error('Error adding poem to collection:', error);
+    if (error.response) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx
+      console.log(error.response.data);
+      console.log(error.response.status);
+      console.log(error.response.headers);
+    } else if (error.request) {
+      // The request was made but no response was received
+      // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+      // http.ClientRequest in node.js
+      console.log(error.request);
+    } else {
+      // Something happened in setting up the request that triggered an Error
+      console.log('Error', error.message);
+    }
+    console.log(error.config);
+    res.status(500).json({ message: 'Could not add poem to collection' });
   }
 });
 
+
 //endpoint to create new collection
 app.post("/collection/new", async (req, res) => {
+  console.log("Received request to create a new collection"); // Add this line
   try {
-    const { userId, title } = req.body; // Change 'user' to 'userId'
-    
+    console.log("Received request to create a new collection:", req.body);
+
+    const { userId, title, username } = req.body; // Change 'user' to 'userId'
+    console.log("Extracted data:", userId, title, username);
+
     if (!title) {
+      console.log("Title is required. Returning 400.");
       return res.status(400).json({ message: "Title is required" });
     }
 
     const existingCollection = await Collection.findOne({ user: userId, title }); // Change 'user' to 'userId'
+    console.log("Existing collection:", existingCollection);
 
     if (existingCollection) {
-      return res.status(400).json({ message: "Collection with same title already exists" });
+      console.log("Collection with the same title already exists. Returning 400.");
+      return res.status(400).json({ message: "Collection with the same title already exists" });
     }
 
+    const defaultCoverArt = "https://i.pinimg.com/originals/08/90/e2/0890e2a78f1e10a25fbe1e796caf5425.jpg";
     // create new collection
-    const newCollection = new Collection({ user: userId, title: title }); // Change 'user' to 'userId'
+    const newCollection = new Collection({
+      user: userId,
+      title: title,
+      username: username,
+      likes: [],
+      poemsInCollection: [],
+      coverArt: defaultCoverArt,
+      caption: "New collection",
+    });
+
+    console.log("New collection object:", newCollection);
 
     // Save the new collection to the database
-    await newCollection.save();
-    await User.updateOne(
-      { _id: userId }, // Change '_id' to 'userId'
-      { $push: { createdCollections: newCollection._id } }
+    try{const savedCollection = await newCollection.save();}
+    catch(error){
+      console.log("boom shaka;");
+      res.status(500).json({ message: "Error creating collection", error });
+    }
+    
+    console.log("Collection saved successfully:", savedCollection);
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $addToSet: { createdCollections: savedCollection._id } },
+      { new: true }
     );
+
+    console.log("User updated:", updatedUser);
+
     res.status(201).json({
       message: "Collection created successfully",
       collection: newCollection,
     });
   } catch (error) {
-    console.log("error", error);
-    res.status(500).json({ message: "Error creating collection" });
+    console.error("Error creating collection:", error);
+    res.status(500).json({ message: "Error creating collection", error });
   }
 });
+
 
 // endpoint to get userdata
 app.get("/getuser", async (req, res) => {
@@ -849,7 +893,7 @@ app.get("/trending-collections", async (req, res) => {
         }
       },
       { $sort: { likesCount: -1 } },
-      { $sample: { size: 5 } },
+      { $limit: 6 },
     ]);
     res.json(collections);
     // console.log("these are the trending collections", collections)
@@ -1206,13 +1250,62 @@ app.get("/daily-poems/:date", async (req, res) => {
 app.get('/trending-poems', async (req, res) => {
   try {
     const trendingPoems = await Poem.find()
-      .sort({ likes: -1 })
-      .limit(3); 
+      .sort({ likes: -1 }) 
+      .limit(5); 
 
     res.status(200).json(trendingPoems);
     console.log(trendingPoems);
   } catch (error) {
     console.error('Error finding trending poems:', error);
     res.status(500).json({ error: 'Internal server error' });
+  }
+});
+// add to streak - called if the previous date was visited
+app.put('/profile/:userId/increment-streak', async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const user = await User.findById(userId);
+    
+    console.log(user.streak)
+    user.streak += 1;
+    console.log(user.streak)
+
+    await user.save();
+    res.status(200).json({ message: 'Daily Poem streak incremented successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// reset streak - called if the previous date was not visited
+app.put('/profile/:userId/reset-streak', async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    // Find the user by userId
+    const user = await User.findById(userId);
+    // Reset streak to 0
+    user.streak = 0;
+    // Save the updated user
+    await user.save();
+    res.status(200).json({ message: 'Streak reset successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// Update user's lastDate (last date opened DailyPoem)
+app.put('/profile/:userId/update-lastdate', async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const { lastDate } = req.body;
+    const user = await User.findById(userId);
+    user.lastDate = lastDate;
+    await user.save();
+    res.status(200).json({ message: 'Last date of streak updated successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
   }
 });

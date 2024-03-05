@@ -80,23 +80,17 @@ const PoemCard = ({
 
   const handleLikePoem = async () => {
     try {
-      const response = await axios.put(`${ROOT_URL}/poems/${poemId}/${loggedUser}/like`);
-      const updatedPoem = response.data;
-
-      setLiked(true);
-      handleRefresh();
+      await axios.put(`${ROOT_URL}/poems/${poemId}/${loggedUser}/like`);
+      handleRefresh();  
     } catch (error) {
       console.error("Error liking poem:", error);
     }
   };
-
+  
   const handleUnlikePoem = async () => {
     try {
-      const response = await axios.put(`${ROOT_URL}/poems/${poemId}/${loggedUser}/unlike`);
-      const updatedPoem = response.data;
-
-      setLiked(false);
-      handleRefresh();
+      await axios.put(`${ROOT_URL}/poems/${poemId}/${loggedUser}/unlike`);
+      handleRefresh(); 
     } catch (error) {
       console.error("Error unliking poem:", error);
     }
