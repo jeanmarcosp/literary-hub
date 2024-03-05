@@ -102,6 +102,8 @@ const CollectionBottomSheet = forwardRef((props, ref) => {
           console.log('New collection:', response.data);
           addPoemToCollection(props.poem._id, response.data.collection._id)
           getCollections();
+          console.log('emily')
+          console.log(collections);
         })
         .catch((error) => {
           console.log('Error adding collection:', error);
