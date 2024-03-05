@@ -72,7 +72,7 @@ const DailyPoem = () => {
       // handle if it should be set to 0 if broke streak
       if (lastDate < dayBefore) {
         console.log('reset streak')
-        await axios.put(`http://localhost:3000/profile/${userId}/reset-streak`);
+        await axios.put(`${ROOT_URL}/profile/${userId}/reset-streak`);
       }
 
       // Fetch updated user profile
@@ -96,12 +96,11 @@ const DailyPoem = () => {
 
     // if the streak hasn't already been updated, then increment the streak
     if (lastDate.getTime() !== formattedDate.getTime()) {
-      console.log('increment streak')
-      await axios.put(`http://localhost:3000/profile/${userId}/increment-streak`);
+      await axios.put(`${ROOT_URL}/profile/${userId}/increment-streak`);
 
     }
 
-    await axios.put(`http://localhost:3000/profile/${userId}/update-lastdate`, { lastDate: formattedDate });
+    await axios.put(`${ROOT_URL}/profile/${userId}/update-lastdate`, { lastDate: formattedDate });
     fetchProfile();
     navigation.navigate('SinglePoem', { poem, poemId, userLikedPoems, fromHome:false }); 
   };

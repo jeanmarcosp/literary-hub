@@ -10,10 +10,14 @@ import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import getUserId from "../hooks/getUserId";
 import { useNavigation } from "@react-navigation/native";
+import { poemToPage } from "../hooks/poemActions";
 
 
 const SearchResult = ({data, type}) => {
   const [user, setUser] = useState({});
+  const poem = data;
+  const poemId = data._id
+  const [userLikedPoems, setUserLikedPoems] = useState([])
   userId = getUserId();
   useEffect(() => {
     const fetchData = async () => {
@@ -24,6 +28,20 @@ const SearchResult = ({data, type}) => {
   
     fetchData();
   }, [userId]);
+
+  const fetchLikedPoems = async () => {
+    try { 
+      const response = await axios.get(`${ROOT_URL}/users/${userId}/likedPoems`);
+      setUserLikedPoems(response.data); 
+    } catch (error) {
+      console.error('Error fetching liked poems:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchLikedPoems();
+  }, [])
+
   const getUser = async () => {
     try {
       const response = await axios.get(`${ROOT_URL}/getuser`, {
@@ -64,7 +82,8 @@ const SearchResult = ({data, type}) => {
   const navigation = useNavigation();
   const openItem = () => {
     if (type === 'poem') {
-      navigation.navigate('Poem', { poem: data });
+      poemToPage([poem], 15);
+      navigation.navigate('SinglePoem', { poem, poemId, userLikedPoems, fromHome:false });
     } else  {
       const otherUser = data._id
       navigation.navigate("UserDetailScreen", {
