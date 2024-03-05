@@ -130,7 +130,6 @@ const Poem = ({ route }) => {
     }
   };
 
-
   const fetchPoem = async () => {
     try {
       const response = await axios.get(`${ROOT_URL}/poem/${poemId}`);
