@@ -59,6 +59,9 @@ const ProfileScreen = () => {
     }
   };
 
+  // check strek
+  
+
   useFocusEffect(
     React.useCallback(() => {
       fetchProfile();
@@ -315,7 +318,7 @@ const ProfileScreen = () => {
         <View style={styles.stats}>
           <View style={styles.stat}>
             <Ionicons name="flame-outline" size={22} color="#658049" />
-            <Text style={styles.statText}>{user?.poemsOfTheDay?.length} PoTDs</Text>
+            <Text style={styles.statText}>{user.streak} PoTDs</Text>
           </View>
 
           <View style={styles.stat}>

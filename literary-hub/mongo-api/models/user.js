@@ -32,6 +32,8 @@ const userSchema = new mongoose.Schema({
   readPoems: [{ type: mongoose.Schema.Types.ObjectId, ref: "Poem" }],
   createdComments: [{ type: mongoose.Schema.Types.ObjectId }],
   poemsOfTheDay: [{ type: mongoose.Schema.Types.ObjectId, ref: "Poem" }],
+  lastDate: { type: Date }, // Last date the user opened the dailyPoem
+  streak: { type: Number, default: 0 } 
 });
 
 const User = mongoose.model("User", userSchema);
