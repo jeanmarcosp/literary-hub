@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, TextInput, FlatList, Text, StyleSheet } from "react-native";
+import { View, TextInput, FlatList, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 
@@ -20,12 +20,18 @@ const SearchBar = ({onSearch, onBlur}) => {
       })
       .then((response) => {
         setSearchResults(response.data);
-        console.log("response.data: ", response.data);
+        //console.log("response.data: ", response.data);
         onSearch(response.data);
       })
       .catch((error) => {
         console.log("Error fetching search results from search bar", error);
       });
+  };
+
+  const clearSearch = () => {
+    setSearchText("");
+    setSearchResults([]);
+    onSearch([]);  // Assuming onSearch updates the parent component's state
   };
 
   return (
@@ -39,6 +45,12 @@ const SearchBar = ({onSearch, onBlur}) => {
         onChangeText={(text) => handleSearch(text)}
         onBlur={onBlur}
       />
+
+      {searchText ? (
+        <TouchableOpacity onPress={clearSearch}>
+          <Ionicons name="close-circle" size={20} color="#888888" style={styles.icon} />
+        </TouchableOpacity>
+      ) : null}
       
     </View>
   );
