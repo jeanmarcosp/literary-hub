@@ -46,10 +46,8 @@ const SearchBar = ({onSearch, onBlur}) => {
       />
 
       {searchText ? (
-        <TouchableOpacity onPress={() => {
-          setSearchText('');
-          setSearchResults([]);
-        }}>
+        <TouchableOpacity onPress={clearSearch
+        }>
           <Ionicons name="close-circle" size={20} color="#888888" style={styles.icon} />
         </TouchableOpacity>
       ) : null}
