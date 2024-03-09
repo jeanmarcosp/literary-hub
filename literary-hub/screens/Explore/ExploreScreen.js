@@ -23,13 +23,19 @@ const ExploreScreen = () => {
   const [segmentedControlView, setSegmentedControlView] =
     useState("Collections");
   const [searchResults, setSearchResults] = useState([]);
+  const [isInteractingWithResults, setIsInteractingWithResults] = useState(false);
+
   const handleSearch = (results) =>{
 
     setSearchResults(results);
   }
-  const handleBlur = ()=>{
-    setSearchResults([])
+  const handleBlur = () => {
+    console.log('Blurring and potential clearing results');
+    if (!isInteractingWithResults) {
+      setSearchResults([]);
+    }
   }
+  
 
   // handle streak updates
   
@@ -41,9 +47,7 @@ const ExploreScreen = () => {
         <SearchBar onSearch={handleSearch} onBlur={handleBlur}/>
         <DailyPoem/>
         <Text style={styles.text}>Author Collections</Text>
-        <AuthorList />
-
-        
+        <AuthorList />      
 
         <Text style={styles.text}>Trending</Text>
         <View style={styles.segmentedControl}>
@@ -103,9 +107,11 @@ const ExploreScreen = () => {
                 type='poem'
                 data={poem}
                 key={poem._id}
-                Poem = {poem}
+                Poem={poem}
+                setIsInteractingWithResults={setIsInteractingWithResults}
                 style={styles.overlayResult}
               />
+              
             ))}
             {searchResults['users']?.map((user) => (
               <SearchResult
@@ -116,6 +122,7 @@ const ExploreScreen = () => {
                 style={styles.overlayResult}
               />
             ))}
+            
         </ScrollView>
        }
        
