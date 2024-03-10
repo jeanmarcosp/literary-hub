@@ -406,6 +406,7 @@ const styles = StyleSheet.create({
 
   centerAligned: {
     alignItems: "center",
+    marginTop: 10,
   },
 
   innerContainer: {
