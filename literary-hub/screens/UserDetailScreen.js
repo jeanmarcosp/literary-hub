@@ -173,24 +173,39 @@ const UserDetailScreen = ({ route }) => {
   };
 
   const LikedPoemsView = ({ poems }) => {
+
+    const calculateEstimatedTime = (content) => {
+      const wordCount = content.split(" ").length;
+      let estimatedTime = parseInt(wordCount) / 200; 
+  
+      if (estimatedTime < 1) {
+        return "< 1";  
+      } else {
+        return `${Math.round(estimatedTime)}`;  
+      }
+    };
+
     return (
       <FlatList
         data={poems}
-        keyExtractor={(item) => item._id.toString()}
+        keyExtractor={(item) => item._id}
         renderItem={({ item }) => (
           <PoemCard
             key={item._id}
             poemId={item._id}
-            userId={otherUserId}
+            userId={userId}
             title={item.title}
             author={item.author}
             excerpt={item.content}
             onPress={() => handlePoemPress(item)}
             likes={item.likes.length}
+            timeEstimate={calculateEstimatedTime(item.content)}
             inLikes={item.likes.includes(userId)}
             handleRefresh={fetchOtherProfile}
           />
         )}
+        style={styles.collections}
+        contentInset={{ bottom: 40 }}
       />
     );
   };
@@ -282,17 +297,17 @@ const UserDetailScreen = ({ route }) => {
           <View style={styles.stats}>
             <View style={styles.stat}>
               <Ionicons name="flame-outline" size={22} color="#658049" />
-              <Text style={styles.statText}>12 PoTDs</Text>
+              <Text style={styles.statText}>{otherUser.streak} PoTDs</Text>
             </View>
 
             <View style={styles.stat}>
               <Ionicons name="book-outline" size={22} color="#658049" />
-              <Text style={styles.statText}>132 poems</Text>
+              <Text style={styles.statText}>{otherUser?.readPoems?.length} poems</Text>
             </View>
 
             <View style={styles.stat}>
               <Ionicons name="globe-outline" size={22} color="#658049" />
-              <Text style={styles.statText}>22 contributions</Text>
+              <Text style={styles.statText}>{otherUser?.createdComments?.length} contributions</Text>
             </View>
           </View>
         </View>
