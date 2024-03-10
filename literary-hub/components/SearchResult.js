@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useCallback,
 } from "react";
-import { View, TextInput, FlatList, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { View, TextInput, FlatList, Text, StyleSheet, TouchableOpacity, Image, TouchableWithoutFeedback } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import getUserId from "../hooks/getUserId";
@@ -19,6 +19,7 @@ const SearchResult = ({data, type}) => {
   const poemId = data._id
   const [userLikedPoems, setUserLikedPoems] = useState([])
   userId = getUserId();
+  
   useEffect(() => {
     const fetchData = async () => {
       if (userId) {
@@ -81,26 +82,32 @@ const SearchResult = ({data, type}) => {
   };
   const navigation = useNavigation();
   const openItem = () => {
+    console.log('Item pressed, type:', type);  // This should now work if focus isn't lost
     if (type === 'poem') {
-      poemToPage([poem], 15);
-      navigation.navigate('SinglePoem', { poem, poemId, userLikedPoems, fromHome:false });
-    } else  {
-      const otherUser = data._id
+      const poemData = poem.poem ? poem.poem : poem;
+      poemToPage([poemData], 15);
+      navigation.navigate('SinglePoem', { poem:poemData, poemId, userLikedPoems, fromHome: false });
+    } else {
+      const otherUserId = data._id;
+      const followCheck = user.following.includes(otherUserId);
+      console.log(otherUserId);
+      console.log(followCheck);
+      //console.log(user.following);
       navigation.navigate("UserDetailScreen", {
-        otherUserId: otherUser,
-        isFollowing: user.following.includes(otherUser),
+        otherUserId: otherUserId,
+        isFollowing: user.following.includes(otherUserId),
         callbacks: {
           handleFollow: handleFollow,
           handleUnfollow: handleUnfollow,
         },
       });
     }
-
-  }; 
+  };
   
     return (
+      
       <View style={styles.container}>
-        <TouchableOpacity onPress={openItem}>
+        <TouchableOpacity onPress={openItem} activeOpacity={0.6}>
           {type === 'poem' && data && data.title? (
             <View style={styles.poemResult}>
               <Ionicons name="book-outline" size={20} color="#658049" />
@@ -192,6 +199,11 @@ const styles = StyleSheet.create({
 
   icon: {
     marginRight: 10,
+  },
+
+  testButton: {
+    padding: 20,
+    backgroundColor: 'blue',
   },
 
   input: {
