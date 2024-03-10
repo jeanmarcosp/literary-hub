@@ -106,9 +106,14 @@ const CollectionCard = ({ collection, handleRefresh }) => {
         </View>
 
         <View style={styles.rightInfo}>
-          <TouchableOpacity onPress={onShare}>
-            <Ionicons name="ellipsis-horizontal" size={20} color="black" />
-          </TouchableOpacity>
+          {userIsCreator ? (
+            <TouchableOpacity onPress={onShare}>
+              <Ionicons name="ellipsis-horizontal" size={20} color="black" />
+            </TouchableOpacity>
+          ) : (
+            null
+          )}
+          
           <View style={styles.poemNumberTag}>
             <Text style={styles.poemNumberText}>
               {collection.poemsInCollection.length} {poemText}
@@ -129,14 +134,14 @@ const CollectionCard = ({ collection, handleRefresh }) => {
         {userIsCreator ? (
           <>
             <View style={styles.actions}>
-              <TouchableOpacity>
+              {/* <TouchableOpacity>
                 <View style={styles.listItems}>
                   <View style={styles.iconContainer}>
                     <Ionicons name="share-outline" size={24} color="#434344" />
                   </View>
                   <Text style={styles.listText}>Share</Text>
                 </View>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
 
               <TouchableOpacity onPress={handleEditCollection}>
                 <View style={styles.listItems}>
